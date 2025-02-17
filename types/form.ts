@@ -1,3 +1,3 @@
-export type TestForm = {
+export type CreateTeamType = {
   text: string;
 };

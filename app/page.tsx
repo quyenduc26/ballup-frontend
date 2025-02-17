@@ -1,9 +1,11 @@
 "use client";
-import { Button, Badge } from "@heroui/react";
+import { Button, Badge, Link } from "@heroui/react";
 import { useRouter } from "next/navigation";
+
 
 export default function App() {
   const router = useRouter();
+  console.log(process.env.SECRET_KEY);
 
   return (
     <Badge className="bg-red-500 text-white" color="warning" content="5">
@@ -13,6 +15,7 @@ export default function App() {
       >
         Button
       </Button>
+      <Link href="/test">Go to Test page</Link>
     </Badge>
   );
 }
