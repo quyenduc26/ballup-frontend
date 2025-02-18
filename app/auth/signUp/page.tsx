@@ -16,12 +16,12 @@ export default function SignUp() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     const [formData, setFormData] = useState<RegisterFormType>({
         username: "",
         email: "",
         password: "",
-        confirmPassword: "",
         role: "",
     });
 
@@ -31,7 +31,7 @@ export default function SignUp() {
         e.preventDefault();
         setErrorMessage(null);
 
-        if (formData.password !== formData.confirmPassword) {
+        if (formData.password !== confirmPassword) {
             setErrorMessage("Passwords do not match!");
             return;
         }
@@ -40,9 +40,7 @@ export default function SignUp() {
             setLoading(true);
             const response = await authApi.signUp(formData);
             console.log("API Response:", response.data);
-
-            alert("Sign-up successful!");
-            router.push("/login"); 
+            router.push("/login");
         } catch (error: any) {
             console.error("Sign-up failed:", error.response?.data?.message || error.message);
             setErrorMessage(error.response?.data?.message || "Sign-up failed. Please try again.");
@@ -112,8 +110,8 @@ export default function SignUp() {
                             <label className="text-sm font-medium">Confirm Password</label>
                             <div className="relative">
                                 <Input
-                                    value={formData.confirmPassword}
-                                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
                                     type={showConfirmPassword ? "text" : "password"}
                                     placeholder="Confirm your password"
                                     required
@@ -139,8 +137,8 @@ export default function SignUp() {
                                 required
                             >
                                 <option value="">Select your role</option>
-                                <option value="player">Player</option>
-                                <option value="owner">Owner</option>
+                                <option value="user">Player</option>
+                                <option value="user">Owner</option>
                             </select>
                         </div>
 
