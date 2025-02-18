@@ -3,5 +3,4 @@ export type RegisterFormType = {
   email: string;
   password: string;
   role: string;
-
 };
