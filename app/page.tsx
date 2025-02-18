@@ -16,7 +16,6 @@ export default function App() {
       >
         Button
       </Button>
-       {/* Link điều hướng đến trang Login */}
        <Link href="/auth/login">Go to Login</Link>
     </Badge>
   );
