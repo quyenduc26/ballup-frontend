@@ -1,10 +1,12 @@
-export type TestForm = {
-  text: string;
+export type RegisterFormType = {
+  username: string;
+  email: string;
+  password: string;
+  role: string;
 };
-export type CreateStadiumForm =  {
+export type CreateStadiumFormType =  {
   name: string;
-  owner: string;
   address: string;
   description: string;
-  image: string;
-  };
+  image: string | null;
+};
