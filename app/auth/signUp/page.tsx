@@ -8,7 +8,7 @@ import { ToastMessage } from "@/components/ToastMessage";
 import image from "@/public/images/image 3.png";
 import player from "@/public/images/player.png";
 import google from "@/public/images/google.png";
-import { Button, Input } from "@heroui/react";
+import { Button, Input, Link } from "@heroui/react";
 import { RegisterFormType } from "@/types";
 import authApi from "@/service/authApi";
 
@@ -80,6 +80,10 @@ export default function SignUp() {
             setLoading(false);
         }
     };
+    
+    const handleLoginWithGoogle = async () => {
+        window.location.href = "http://localhost:8080/auth/google";
+    }
 
 
     return (
@@ -194,10 +198,16 @@ export default function SignUp() {
                         </div>
                     </div>
 
-                    <Button className="w-full">
-                        <Image src={google} alt="Google logo" width={20} height={20} className="mr-2" />
-                        Sign in with Google
-                    </Button>
+                    <Button onPress={handleLoginWithGoogle} className="w-full">
+                            <Image src={google} alt="Google logo" width={20} height={20} className="mr-2" />
+                            Sign in with Google
+                        </Button>
+                    <div className="mt-8 text-center">
+                        <p className="text-sm">
+                            Don't have an account?{" "}
+                            <Link href="login" className="text-blue-500">Log in</Link>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
