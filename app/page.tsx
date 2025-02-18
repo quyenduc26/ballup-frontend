@@ -1,5 +1,5 @@
 "use client";
-import { Button, Badge } from "@heroui/react";
+import { Button, Badge,Link } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 export default function App() {
@@ -13,6 +13,7 @@ export default function App() {
       >
         Button
       </Button>
+      <Link href="/test">Form Stadiums</Link>
     </Badge>
   );
 }
