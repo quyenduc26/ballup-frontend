@@ -1,10 +1,15 @@
 import FormCreateStadium from '@/components/FormCreateStadium'
+import FormCreateFeild from '@/components/FormCreateField'
+
 import React from 'react'
 
 export default function page() {
   return (
     <div>
-      <FormCreateStadium></FormCreateStadium>
+      <FormCreateFeild></FormCreateFeild>
+
+      {/* <FormCreateStadium></FormCreateStadium> */}
+
     </div>
   )
 }
