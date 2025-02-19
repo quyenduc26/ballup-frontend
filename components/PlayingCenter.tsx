@@ -24,11 +24,13 @@ const PlayingCenter = () => {
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      const uploadedImages = [...formData.images];
+      const uploadedImages :string[] = [...formData.images];
 
       for (let i = 0; i < files.length && uploadedImages.length < 4; i++) {
         const filename = await uploadImage(files[i]);
-        uploadedImages.push(filename);
+        if(filename != null) {
+          uploadedImages.push(filename);
+        }
       }
 
       setFormData({ ...formData, images: uploadedImages });

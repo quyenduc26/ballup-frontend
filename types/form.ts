@@ -12,5 +12,5 @@ export type PlayingCenterType =  {
   name: string;
   address: string;
   description: string;
-  images: [];
+  images: string[];
 };
