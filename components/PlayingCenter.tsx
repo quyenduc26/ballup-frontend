@@ -47,7 +47,7 @@ const PlayingCenter = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="mt-20 max-w-2xl mx-auto p-6 border border-gray-300 rounded-lg shadow-md">
       <button
         onClick={() => router.back()}
         className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded mb-4"
