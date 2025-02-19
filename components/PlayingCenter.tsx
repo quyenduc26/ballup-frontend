@@ -3,10 +3,11 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { ArrowLeft,FileDown } from "lucide-react";
+import { ArrowLeft, FileDown, X } from "lucide-react"; // Thêm icon X để xóa
 import { uploadImage } from "@/utils/uploadImage";
 import { PlayingCenterType } from "@/types";
 import { Input } from "@heroui/react";
+import { getImageUrl } from "@/utils/getImage";
 
 const PlayingCenter = () => {
   const router = useRouter();
@@ -14,7 +15,7 @@ const PlayingCenter = () => {
     name: "",
     address: "",
     description: "",
-    images:[],
+    images: [],
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -24,17 +25,21 @@ const PlayingCenter = () => {
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      const uploadedImages :string[] = [...formData.images];
-
-      for (let i = 0; i < files.length && uploadedImages.length < 4; i++) {
+      for (let i = 0; i < files.length && formData.images.length < 4; i++) {
         const filename = await uploadImage(files[i]);
-        if(filename != null) {
-          uploadedImages.push(filename);
+        if (filename != null) {
+          const imageUrl = getImageUrl(filename);
+          setFormData((prev) => ({ ...prev, images: [...prev.images, imageUrl] }));
         }
       }
-
-      setFormData({ ...formData, images: uploadedImages });
     }
+  };
+
+  const handleImageDelete = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -58,27 +63,36 @@ const PlayingCenter = () => {
       </button>
 
       {/* Image Upload Section */}
-      <div className="relative bg-gray-100 p-6 flex items-center justify-center rounded-lg">
-        <label className="cursor-pointer">
-          <div className="grid grid-cols-2 gap-2 ">
-            {formData.images.map((image, index) => (
-              <img key={index} src={image} alt={`Uploaded ${index}`} className="w-80 h-60  object-cover rounded shadow" />
-            ))}
-          </div>
-          {formData.images.length < 4 && (
-            <div className="mt-2 flex items-center gap-2 text-gray-400">
+      <div className="relative bg-gray-100 p-6 flex flex-col items-center justify-center rounded-lg">
+        <div className="grid grid-cols-2 gap-2">
+          {formData.images.map((image, index) => (
+            <div key={index} className="relative w-80 h-60">
+              {/* Hiển thị ảnh */}
+              <img src={image} alt={`Uploaded ${index}`} className="w-72 h-60 object-cover rounded shadow" />
+              {/* Nút xóa ảnh */}
+              <button
+                type="button"
+                className="absolute top-2 left-2 bg-red-500 text-white p-1 rounded-full"
+                onClick={() => handleImageDelete(index)}
+              >
+                <X size={18} />
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {formData.images.length < 4 && (
+          <label className="mt-2 flex items-center gap-2 text-gray-400 cursor-pointer">
             <FileDown />
             <span>Upload up to 4 images</span>
-          </div>
-
-          )}
-          <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} />
-        </label>
+            <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} />
+          </label>
+        )}
       </div>
 
       {/* Form Fields */}
       <form onSubmit={handleSubmit} className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <Input
+        <Input
           isRequired
           errorMessage="Please enter a valid stadium name"
           label="STADIUM NAME"
@@ -88,7 +102,7 @@ const PlayingCenter = () => {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          className="p-2 w-fullfull max-w-smsm"
+          className="p-2 w-full"
         />
 
         <Input

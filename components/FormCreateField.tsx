@@ -6,7 +6,7 @@ import { Input } from "@heroui/react";
 const FormCreateField = () => {
   const [formData, setFormData] = useState({
     name: "",
-    images: ["", "", "", ""], // Chứa 4 trường cho ảnh
+    images: ["", "", "", ""],
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
