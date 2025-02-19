@@ -3,10 +3,14 @@ export type RegisterFormType = {
   email: string;
   password: string;
   role: string;
+};  
+export type LoginFormType = {
+  emailOrUsername: string;
+  password: string;
 };
-export type CreateStadiumFormType =  {
+export type PlayingCenterType =  {
   name: string;
   address: string;
   description: string;
-  image: string | null;
+  images: [];
 };

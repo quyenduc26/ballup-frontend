@@ -1,4 +1,4 @@
-import FormCreateStadium from '@/components/FormCreateStadium'
+import PlayingCenter from '@/components/PlayingCenter'
 import FormCreateFeild from '@/components/FormCreateField'
 
 import React from 'react'
@@ -6,9 +6,9 @@ import React from 'react'
 export default function page() {
   return (
     <div>
-      <FormCreateFeild></FormCreateFeild>
+      {/* <FormCreateFeild></FormCreateFeild> */}
 
-      {/* <FormCreateStadium></FormCreateStadium> */}
+      <PlayingCenter></PlayingCenter>
 
     </div>
   )
