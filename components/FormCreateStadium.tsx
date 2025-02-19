@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { uploadImage } from "@/utils/uploadImage";
 import { CreateStadiumFormType } from "@/types";
 import { Input } from "@heroui/react";
+import { getImageUrl } from "@/utils/getImage";
 
 
 
@@ -28,7 +29,12 @@ const CreateStadiumForm = () => {
     console.log(file)
     if(file) {
       const filename = await uploadImage(file);
-      setFormData({ ...formData, image: filename })
+      if (!filename) {
+        console.error("Upload failed: filename is null");
+        return;
+      }
+      const imageUrl = getImageUrl(filename);
+      setFormData({ ...formData, image: imageUrl })
     }
   };
   
@@ -58,7 +64,7 @@ const CreateStadiumForm = () => {
       <div className="relative bg-gray-100 p-6 flex items-center justify-center rounded-lg">
         <label className="cursor-pointer">
           {formData.image ? (
-            <img src={formData.image} alt="Uploaded" className="w-auto h-80 object-cover rounded shadow" />
+            <img src={formData.image} alt="Uploaded" className="w-[400px] h-[300px] object-cover rounded shadow" />
           ) : (
             <div className="w-24 h-24 flex items-center justify-center bg-white border rounded shadow">
               <span className="text-gray-400">📷</span>

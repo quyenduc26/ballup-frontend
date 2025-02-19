@@ -8,7 +8,7 @@ export default function page() {
     <div>
       <FormCreateFeild></FormCreateFeild>
 
-      {/* <FormCreateStadium></FormCreateStadium> */}
+      <FormCreateStadium></FormCreateStadium>
 
     </div>
   )
