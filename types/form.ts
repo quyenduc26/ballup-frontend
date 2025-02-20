@@ -13,4 +13,11 @@ export type PlayingCenterType =  {
   address: string;
   description: string;
   images: string[];
+  ownerId: number;
+};
+export type PlayingSlotType =  {
+  name: string;
+  primaryPrice:number;
+  nightPrice:number ;
+  playingCenterId :number ;
 };
