@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay } from "date-fns";
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, getDay } from "date-fns";
 
 export default function Calendar({ selected, onSelect }: { selected: Date | null; onSelect: (date: Date) => void }) {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
@@ -21,8 +21,13 @@ export default function Calendar({ selected, onSelect }: { selected: Date | null
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const start = startOfMonth(currentDate);
   const end = endOfMonth(currentDate);
-
   const days = eachDayOfInterval({ start, end });
+
+  // 🛠 Tìm ngày bắt đầu của tháng (thứ mấy) để thêm ngày trống phía trước
+  const startDayIndex = (getDay(start) + 6) % 7; // Điều chỉnh vì date-fns bắt đầu từ Chủ Nhật
+
+  // 🛠 Thêm ngày trống đầu tháng (nếu cần)
+  const blankDays = Array(startDayIndex).fill(null);
 
   return (
     <div className="w-full max-w-[500px] p-4 bg-white shadow-md rounded-md">
@@ -42,6 +47,12 @@ export default function Calendar({ selected, onSelect }: { selected: Date | null
 
       {/* Hiển thị ngày trong tháng */}
       <div className="grid grid-cols-7 gap-1 sm:gap-2 text-black mt-5">
+        {/* Hiển thị ngày trống đầu tháng */}
+        {blankDays.map((_, index) => (
+          <div key={`blank-${index}`} className="p-2 sm:p-3 w-8 h-8 sm:w-10 sm:h-10" />
+        ))}
+
+        {/* Hiển thị ngày trong tháng */}
         {days.map((day) => (
           <button
             key={day.toString()}
