@@ -13,5 +13,5 @@ export type CardFieldType = {
   name: string;
   address: string;
   price: number;
-  imageUrl: string;
+  images: string;
 };
