@@ -9,9 +9,9 @@ export type LoginFormType = {
   password: string;
 };
 
-export type CardFieldProps = {
+export type CardFieldType = {
   name: string;
   address: string;
-  price: string;
+  price: number;
   imageUrl: string;
 };
