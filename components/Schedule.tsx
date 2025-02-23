@@ -43,7 +43,7 @@ export default function Home() {
       <div className="flex flex-col md:flex-row gap-6 w-full max-w-[1200px] bg-white p-6 sm:p-8 shadow-lg rounded-md">
         {/* Calendar */}
         <div className="w-full md:w-[50%]">
-          <h2 className="text-xl font-bold mb-4 text-center text-black md:text-left">MAY 2025</h2>
+          <h2 className="text-xl font-bold mb-4 text-center  text-black md:text-left">MAY 2025</h2>
           <Calendar selected={selectedDate} onSelect={setSelectedDate} />
         </div>
 
@@ -57,7 +57,7 @@ export default function Home() {
               type="time"
               value={bookingTime}
               onChange={(e) => setBookingTime(e.target.value)}
-              className="border p-2 w-full rounded-xl"
+              className="border p-2 w-full rounded-xl h-14"
             />
           </div>
 
@@ -67,7 +67,7 @@ export default function Home() {
               type="time"
               value={returnTime}
               onChange={(e) => setReturnTime(e.target.value)}
-              className="border p-2 w-full rounded-xl"
+              className="border p-2 w-full rounded-xl h-14"
             />
           </div>
 
@@ -78,14 +78,14 @@ export default function Home() {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="Enter your location (Optional)"
-              className="border p-2 w-full rounded-xl"
+              className="border p-2 w-full rounded-xl h-14"
             />
           </div>
 
           <button
             onClick={handleCheck}
             disabled={loading}
-            className={`p-3 w-full mt-10 rounded-xl ${
+            className={`p-3 w-full mt-8 rounded-xl h-14 ${
               loading ? "bg-gray-400" : "bg-black hover:bg-gray-800 text-white"
             }`}
           >
