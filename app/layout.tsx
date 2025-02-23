@@ -9,6 +9,8 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import Banner from "@/components/Banner"
+
 
 
 export const metadata: Metadata = {
@@ -45,6 +47,7 @@ export default function RootLayout({
         )}
       >
         <Header />
+        <Banner/>
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className=" flex flex-col h-screen">
             <main >
