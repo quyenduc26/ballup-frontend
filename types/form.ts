@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 export type RegisterFormType = {
   username: string;
   email: string;
@@ -10,7 +11,7 @@ export type LoginFormType = {
 };
 export type ScheduleType = {
   date: string; 
-  bookingTime: string; 
-  returnTime: string; 
+  fromTime: string; 
+  toTime: string; 
   location?: string; 
 };
