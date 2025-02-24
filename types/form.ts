@@ -8,3 +8,10 @@ export type LoginFormType = {
   emailOrUsername: string;
   password: string;
 };
+  export type FieldDetailType = {
+    name: string;
+    address: string;
+    description: string;
+    imagesUrls: string[];
+    ownerId: number;
+  };
