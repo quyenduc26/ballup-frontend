@@ -12,6 +12,12 @@ export type LoginFormType = {
     name: string;
     address: string;
     description: string;
-    imagesUrls: string[];
-    ownerId: number;
+    imagesUrls:string[];
+    bookingTime: string;
+    returnTime: string;
+    type: string;
+    price: string;
+    hours: number;
+    total: string;
+    mapUrl: string;
   };

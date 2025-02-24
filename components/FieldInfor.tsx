@@ -18,6 +18,8 @@
     const bookingInfo = {
       name: "WIN WIN",
       address: "Mỹ Khê 3, Sơn Trà, Đà Nẵng",
+      description:"Sân chất đẹp mặt cỏ sân chất lượng ",
+      imagesUrls:images,
       bookingTime: "20:00 12/12/2012",
       returnTime: "21:00 12/12/2012",
       type: "5-player",
@@ -66,6 +68,7 @@
           <div className="flex-1 border p-4 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold">{bookingInfo.name}</h2>
             <p className="text-gray-500">{bookingInfo.address}</p>
+            <p className="text-gray-500">{bookingInfo.description}</p>
 
             {/* Google Map */}
             <div className="mt-2">

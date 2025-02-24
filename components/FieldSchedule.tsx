@@ -37,12 +37,12 @@ const FieldSchedule = () => {
       {/* Tiêu đề + Chọn sân */}
       <div className="flex flex-col sm:flex-row justify-between items-center">
         <div className="text-center sm:text-left">
-          <h1 className="text-xl sm:text-2xl font-bold">FIELD SCHEDULE</h1>
+          <h1 className="text-xl sm:text-2xl font-bold mb-16">FIELD SCHEDULE</h1>
           <h2 className="text-sm sm:text-lg font-semibold mt-2">MAY 24, 2025</h2>
         </div>
 
         {/* Thanh chọn sân */}
-        <div className="flex flex-wrap justify-center gap-1 sm:gap-2 mt-3 sm:mt-0">
+        <div className="flex flex-wrap justify-center gap-1 sm:gap-2 sm:mt-0 mt-20  ">
           {fields.map((field) => (
             <button
               key={field}
