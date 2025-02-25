@@ -21,3 +21,10 @@ export type PlayingSlotType =  {
   nightPrice:number ;
   playingCenterId :number ;
 };
+export type CreateTeamData = {
+  images: File | null;
+  logoImage: File | null;
+  name: string;
+  location: string;
+  description: string;
+};
