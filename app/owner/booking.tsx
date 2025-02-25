@@ -26,21 +26,21 @@ export default function BookingTable() {
     const [loading, setLoading] = useState(false);
 
     // Fetch booking list
-    useEffect(() => {
-        const fetchBookings = async () => {
-            setLoading(true);
-            try {
-                const response = await bookingRequestApi.getBookings();
-                console.log("Fetched bookings:", response.data);
-                setBookings(response.data);
-            } catch (error) {
-                console.error("Error fetching bookings:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchBookings();
-    }, []);
+    // useEffect(() => {
+    //     const fetchBookings = async () => {
+    //         setLoading(true);
+    //         try {
+    //             const response = await bookingRequestApi.getBookings();
+    //             console.log("Fetched bookings:", response.data);
+    //             setBookings(response.data);
+    //         } catch (error) {
+    //             console.error("Error fetching bookings:", error);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+    //     fetchBookings();
+    // }, []);
 
     // Confirm booking (always send id = 1)
     const handleConfirm = async () => {
