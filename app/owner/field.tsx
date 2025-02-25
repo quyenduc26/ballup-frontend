@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import Image from "next/image";
 import { ChevronDown, ChevronUp, Edit } from "lucide-react";
@@ -49,8 +50,8 @@ export default function FieldList() {
   return (
     <div className="flex w-full">
       <div className="w-full p-1 sm:p-2 md:p-4 lg:p-6">
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 md:mb-4 border-b text-center md:text-left">
-          Management Field
+        <h1 className="text-xl font-bold mb-4">
+          Management Booking Request
         </h1>
 
         <div className="flex items-center justify-between font-semibold border-b pb-2 text-xs sm:text-sm md:text-base w-full">
@@ -59,7 +60,7 @@ export default function FieldList() {
           <div className="flex-1 flex justify-center">Location</div>
           <div className="flex justify-end pr-2 md:pr-6">Action</div>
         </div>
-    
+
 
 
         {/* Field List */}

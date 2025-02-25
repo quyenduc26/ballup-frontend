@@ -1,3 +1,6 @@
+"use client";
+import React, { useState, useEffect } from "react";
+import TakeslotApi from "@/service/bookingRequestApi";
 import { Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
 
 interface BookingField {
@@ -18,6 +21,21 @@ const subFields: BookingField[] = [
 ];
 
 export default function BookingTable() {
+    // const [takeSlot, setTakeSlot] = useState<BookingField[]>([]);
+
+    // useEffect(() => {
+    //     const fetchTakeSlot = async () => {
+    //         try {
+    //             const response = await TakeslotApi.getSlots();
+    //             console.log(response.data);
+    //             setTakeSlot(response.data);
+    //         } catch (error) {
+    //             console.error("Error fetching take slot:", error);
+    //         }
+    //     };
+    //     fetchTakeSlot();
+    // }, []);
+
     return (
         <div className="p-4">
             <h1 className="text-xl font-bold mb-4">
@@ -25,7 +43,6 @@ export default function BookingTable() {
             </h1>
             <Card className="p-4">
                 <Table>
-                    {/* Table Header */}
                     <TableHeader>
                         <TableColumn>ID</TableColumn>
                         <TableColumn>Playing Slot</TableColumn>
@@ -36,8 +53,6 @@ export default function BookingTable() {
                         <TableColumn>Created At</TableColumn>
                         <TableColumn className="text-center">Action</TableColumn>
                     </TableHeader>
-
-                    {/* Table Body */}
                     <TableBody>
                         {subFields.map((sub) => (
                             <TableRow key={sub.id}>

@@ -32,18 +32,29 @@ export default function Login() {
     
         try {
             setLoading(true);
-            const response = await authApi.login(formData); 
-            const token = response.data; 
+            const response = await authApi.login(formData);
+            const { token, role } = response.data; 
+    
             if (token) {
                 localStorage.setItem("token", token); 
+                localStorage.setItem("role", role); 
             }
+    
             setToastData({
                 type: "success",
                 heading: "Login Successful",
-                message: "Your account has been created successfully!",
+                message: "You have successfully logged in!",
                 duration: 3000,
             });
-            router.push("/home");
+    
+            if (role === "admin") {
+                router.push("/admin");
+            } else if (role === "owner") {
+                router.push("/owner");
+            } else {
+                router.push("/home"); 
+            }
+    
         } catch (error: any) {
             console.error("Login failed:", error.response?.data?.message || error.message);
             setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
@@ -51,6 +62,7 @@ export default function Login() {
             setLoading(false);
         }
     };
+    
 
     const handleLoginWithGoogle = async () => {
         window.location.href = "http://localhost:8080/auth/google";
