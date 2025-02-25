@@ -52,7 +52,7 @@ export default function Login() {
             } else if (role === "owner") {
                 router.push("/owner");
             } else {
-                router.push("/home"); 
+                router.push("/owner"); 
             }
     
         } catch (error: any) {

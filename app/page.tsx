@@ -12,7 +12,7 @@ export default function App() {
     <Badge className="bg-red-500 text-white" color="warning" content="5">
       <Button
         className="text-white font-medium rounded-none"
-        onPress={() => router.push("/auth/signUp")}
+        onPress={() => router.push("/teamCard")}
       >
         Button
       </Button>

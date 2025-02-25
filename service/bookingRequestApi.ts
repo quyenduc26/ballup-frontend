@@ -1,7 +1,9 @@
-import api from '@/config/api';
+import api from "@/config/api";
 
-const takeslotApi = {
-    takeSlot: () => api.post('/slot/takeSlot'),
+const bookingRequestApi = {
+    getBookings: () => api.get("/booking/requests"),
+    confirmBooking: (id) => api.patch(`/booking/${id}/confirm`),
+    rejectBooking: (id) => api.patch(`/booking/${id}/reject`),
 };
 
-export default takeslotApi;
+export default bookingRequestApi;
