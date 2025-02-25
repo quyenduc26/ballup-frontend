@@ -15,3 +15,16 @@ export type CardFieldType = {
   price: number;
   images: string;
 };
+export type PlayingCenterType =  {
+  name: string;
+  address: string;
+  description: string;
+  images: string[];
+  ownerId: number;
+};
+export type PlayingSlotType =  {
+  name: string;
+  primaryPrice:number;
+  nightPrice:number ;
+  playingCenterId :number ;
+};
