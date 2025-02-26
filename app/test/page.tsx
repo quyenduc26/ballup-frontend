@@ -1,6 +1,6 @@
 import PlayingCenter from '@/components/PlayingCenter'
 import PlayingSlot from '@/components/PlayingSlot'
-import FormCreateTeam from '@/components/FormCreateTeam'
+import FormCreateTeam from '@/components/team/FormCreateTeam'
 
 
 
