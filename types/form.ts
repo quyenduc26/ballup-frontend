@@ -8,13 +8,16 @@ export type LoginFormType = {
   emailOrUsername: string;
   password: string;
 };
-
-export type CardFieldType = {
-  name: string;
-  address: string;
-  price: number;
-  images: string;
-};
+  export type CardFieldType = {
+    id: number;
+    name: string;
+    address: string;
+    type: PlayingCenterType;
+    bookingCount: number;
+    image: string;
+    primaryPrice: number;
+    nightPrice: number;
+  };
 export type PlayingCenterType =  {
   name: string;
   address: string;

@@ -3,16 +3,19 @@ import { useState } from "react";
 import { Heart, MapPinned, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { CardFieldType } from "@/types";
 
-export type CardFieldType = {
-  id: string;
-  name: string;
-  address: string;
-  price: number;
-  images: string;
-};
 
-const CardField: React.FC<CardFieldType> = ({ id, name, address, price, images }) => {
+const CardField: React.FC<CardFieldType> = ({
+  id,
+  name,
+  address,
+  type = "",
+  bookingCount = 0,
+  image,
+  primaryPrice = 0,
+  nightPrice = 0,
+}) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   return (
@@ -20,7 +23,7 @@ const CardField: React.FC<CardFieldType> = ({ id, name, address, price, images }
       {/* Image (Wrapped in Link) */}
       <Link href={`/field/${id}`} className="block relative">
         <Image
-          src={images || "/images/image 3.png"}
+          src={image || "/images/image 3.png"}
           alt="sân bóng đá"
           width={400}
           height={400}
@@ -31,8 +34,8 @@ const CardField: React.FC<CardFieldType> = ({ id, name, address, price, images }
           <span className="flex items-center bg-gray-400 text-black px-2 py-1 rounded-md text-xs sm:text-sm font-semibold">
             ⭐ 4.5
           </span>
-          <span className="bg-black text-white text-xs px-2 py-1 rounded-md">
-            FOOTBALL
+          <span className="bg-black text-white text-xs px-2 py-1 rounded-md">Football
+           {type.toString()}
           </span>
         </div>
       </Link>
@@ -46,17 +49,17 @@ const CardField: React.FC<CardFieldType> = ({ id, name, address, price, images }
 
         {/* Address */}
         <p className="text-gray-500 text-xs sm:text-lg flex items-center mt-1 line-clamp-1">
-          <MapPinned size={14} className="mr-1" /> {address}
+          <MapPinned size={24} className="mr-1" /> {address}
         </p>
 
         {/* Booking Count */}
         <p className="text-gray-500 text-xs sm:text-lg flex items-center mt-1">
-          📈 1.3K Bookings
+          📈 {bookingCount.toLocaleString()} Bookings
         </p>
 
         {/* Price */}
         <p className="text-sm sm:text-xl font-bold mt-2 text-black">
-          {price} VND
+          {primaryPrice.toLocaleString()} VND - {nightPrice.toLocaleString()} VND
         </p>
 
         {/* Action Buttons */}
