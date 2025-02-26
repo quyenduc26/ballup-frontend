@@ -1,5 +1,5 @@
 import { supabase } from "@/config/supabaseClient";
 
-export function getImageUrl(fileName: string): string {
-  return supabase.storage.from("images").getPublicUrl(fileName).data.publicUrl;
+export function getImageUrl(fileName: string) {
+  return supabase.storage.from("photo").getPublicUrl(fileName).data.publicUrl;
 } 
