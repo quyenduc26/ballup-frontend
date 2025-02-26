@@ -26,21 +26,22 @@ export default function BookingTable() {
     const [loading, setLoading] = useState(false);
 
     // Fetch booking list
-    // useEffect(() => {
-    //     const fetchBookings = async () => {
-    //         setLoading(true);
-    //         try {
-    //             const response = await bookingRequestApi.getBookings();
-    //             console.log("Fetched bookings:", response.data);
-    //             setBookings(response.data);
-    //         } catch (error) {
-    //             console.error("Error fetching bookings:", error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     fetchBookings();
-    // }, []);
+    useEffect(() => {
+        const fetchBookings = async () => {
+            setLoading(true);
+            try {
+                const response = await bookingRequestApi.getBookings(1);
+                console.log("Fetched bookings:", response.data);
+                setBookings(response.data);
+            } catch (error) {
+                console.error("Error fetching bookings:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchBookings();
+    }, []);
+    
 
     // Confirm booking (always send id = 1)
     const handleConfirm = async () => {
@@ -76,7 +77,6 @@ export default function BookingTable() {
                             <TableColumn>ID</TableColumn>
                             <TableColumn>Playing Slot</TableColumn>
                             <TableColumn>Creator</TableColumn>
-                            <TableColumn>Amount</TableColumn>
                             <TableColumn>From Time</TableColumn>
                             <TableColumn>To Time</TableColumn>
                             <TableColumn>Created At</TableColumn>
@@ -88,7 +88,6 @@ export default function BookingTable() {
                                     <TableCell>{booking.id}</TableCell>
                                     <TableCell>{booking.playingSlot}</TableCell>
                                     <TableCell>{booking.creator}</TableCell>
-                                    <TableCell>{booking.amount.toLocaleString()} VND</TableCell>
                                     <TableCell>{booking.fromTime}</TableCell>
                                     <TableCell>{booking.toTime}</TableCell>
                                     <TableCell>{booking.createdAt}</TableCell>
