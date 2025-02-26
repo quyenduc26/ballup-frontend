@@ -10,7 +10,7 @@ const CardField: React.FC<CardFieldType> = ({
   id,
   name,
   address,
-  type = "",
+  type,
   bookingCount = 0,
   image,
   primaryPrice = 0,
@@ -35,7 +35,7 @@ const CardField: React.FC<CardFieldType> = ({
             ⭐ 4.5
           </span>
           <span className="bg-black text-white text-xs px-2 py-1 rounded-md">Football
-           {type.toString()}
+           
           </span>
         </div>
       </Link>
