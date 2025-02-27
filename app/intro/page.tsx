@@ -5,7 +5,7 @@ export default function Home() {
     const sports = [
         { name: "FOOTBALL", link: "/football" },
         { name: "BADMINTON", link: "/badminton" },
-        { name: "FOOTBALL", link: "/football" },
+        { name: "PICKLEBALL", link: "/pickleball" },
     ];
 
     return (
