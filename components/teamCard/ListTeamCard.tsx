@@ -1,6 +1,7 @@
 // components/ListTeamCard.tsx
 import { useEffect, useState } from "react";
 import TeamCard from "./CardTeam";
+import joinTeamApi from "@/service/teamCardApi";
 
 interface Team {
   id: number;
@@ -20,16 +21,10 @@ const ListTeamCard: React.FC = () => {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await fetch(
-          "https://6520d354906e276284c4b3a6.mockapi.io/api/v1/products"
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch teams");
-        }
-        const data = await response.json();
-        setTeams(data);
+        const response = await joinTeamApi.getJoinTeam();
+        setTeams(response.data); 
       } catch (err: any) {
-        setError(err.message);
+        setError(err.response?.data?.message || "Failed to fetch teams");
       } finally {
         setLoading(false);
       }
