@@ -15,7 +15,7 @@ export default function SibavSidebar() {
   useEffect(() => {
     const fetchOwners = async () => {
       try {
-        const response = await ownerApi.getAll();
+        const response = await ownerApi.getOwner();
         console.log("Fetched owners:", response);
 
         setOwners(response.data);
