@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ToastMessage } from "@/components/ToastMessage";
-import { Button, Link } from "@heroui/react";
-import { RegisterFormType } from "@/types";
-import authApi from "@/service/authApi";
-import Image from "next/image";
 import image from "@/public/images/image 3.png";
 import player from "@/public/images/player.png";
 import google from "@/public/images/google.png";
+import { Button, Input, Link } from "@heroui/react";
+import { RegisterFormType } from "@/types";
+import authApi from "@/service/authApi";
+
+
 
 export default function SignUp() {
     const router = useRouter();
@@ -18,6 +20,7 @@ export default function SignUp() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
+
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [toastData, setToastData] = useState<{ heading?: string; message?: string; type?: "error" | "success" | "info" | "warn"; duration?: number } | undefined>();
 
@@ -45,6 +48,31 @@ export default function SignUp() {
         e.preventDefault();
         if (!validateForm()) return;
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!formData.email.includes("@")) {
+            setToastData({
+                type: "warn",
+                heading: "Invalid Email",
+                message: "Email must contain '@'",
+                duration: 3000,
+            });
+            return;
+        }
+
+
+        if (formData.password !== confirmPassword) {
+            setToastData({
+                type: "warn",
+                heading: "Warning",
+                message: "Passwords do not match!",
+                duration: 3000,
+            });
+            return;
+        }
+
+
         try {
             setLoading(true);
             const response = await authApi.signUp(formData);
@@ -52,10 +80,37 @@ export default function SignUp() {
             setTimeout(() => router.push("/auth/login"), 3000);
         } catch (error: any) {
             setToastData({ type: "error", heading: "Registration failed", message: error.response?.data?.message || "An error occurred.!", duration: 4000 });
+            console.log("API Response:", response.data);
+
+            setToastData({
+                type: "success",
+                heading: "Signup Successful",
+                message: "Your account has been created successfully!",
+                duration: 3000,
+            });
+
+            setTimeout(() => {
+                router.push("/login");
+            }, 3000);
+        } catch (error: any) {
+            console.error("Sign-up failed:", error.response?.data?.message || error.message);
+
+            setToastData({
+                type: "error",
+                heading: "Signup Failed",
+                message: error.response?.data?.message || "Something went wrong. Please try again.",
+                duration: 4000,
+            });
+
         } finally {
             setLoading(false);
         }
     };
+    
+    const handleLoginWithGoogle = async () => {
+        window.location.href = "http://localhost:8080/auth/google";
+    }
+
 
     const handleLoginWithGoogle = async () => {
         window.location.href = "http://localhost:8080/auth/google";
@@ -64,10 +119,15 @@ export default function SignUp() {
 
     return (
         <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
+            {/* ✅ Toast Component */}
             <ToastMessage toast={toastData} />
+
             <div className="relative w-full h-[500px] sm:h-[600px] md:h-full">
                 <Image src={image} alt="Soccer player illustration" fill className="object-cover" priority />
-                <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">BALLUP</div>
+                <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">
+                    BALLUP
+                </div>
+              
                 <Image src={player} alt="Small Player" width={450} height={350} className="absolute top-1/3 left-3 transform -translate-y-1/2" />
             </div>
 
@@ -138,7 +198,7 @@ export default function SignUp() {
                             {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
                         </div>
 
-                        {/* Role */}
+
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Role</label>
                             <select className="w-full p-2 border rounded-md text-sm" value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value })}>
@@ -167,6 +227,7 @@ export default function SignUp() {
                         <Image src={google} alt="Google logo" width={20} height={20} className="mr-2" />
                         Sign in with Google
                     </Button>
+
                     <div className="mt-8 text-center">
                         <p className="text-sm">
                             Don't have an account?{" "}

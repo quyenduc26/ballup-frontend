@@ -3,4 +3,21 @@ export type RegisterFormType = {
   email: string;
   password: string;
   role: string;
+};  
+export type LoginFormType = {
+  emailOrUsername: string;
+  password: string;
+};
+export type PlayingCenterType =  {
+  name: string;
+  address: string;
+  description: string;
+  images: string[];
+  ownerId: number;
+};
+export type PlayingSlotType =  {
+  name: string;
+  primaryPrice:number;
+  nightPrice:number ;
+  playingCenterId :number ;
 };

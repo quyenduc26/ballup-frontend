@@ -1,6 +1,7 @@
 "use client";
-import { Button, Badge, Link } from "@heroui/react";
+import { Button, Badge,Link } from "@heroui/react";
 import { useRouter } from "next/navigation";
+
 
 
 export default function App() {
@@ -11,11 +12,12 @@ export default function App() {
     <Badge className="bg-red-500 text-white" color="warning" content="5">
       <Button
         className="text-white bg-black font-medium rounded-none"
-        onPress={() => router.push("/auth/signUp")}
+        onPress={() => router.push("/auth/sigUp")}
       >
         Button
       </Button>
-      <Link href="/test">Go to Test page</Link>
+      <Link href="/test">Form Stadiums</Link>
+       <Link href="/auth/login">Go to Login</Link>
     </Badge>
   );
 }
