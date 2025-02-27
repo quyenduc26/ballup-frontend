@@ -12,7 +12,7 @@ export type LoginFormType = {
     id: number;
     name: string;
     address: string;
-    type: PlayingCenterType;
+    type: string;
     bookingCount: number;
     image: string;
     primaryPrice: number;
@@ -31,3 +31,4 @@ export type PlayingSlotType =  {
   nightPrice:number ;
   playingCenterId :number ;
 };
+

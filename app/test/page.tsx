@@ -9,7 +9,7 @@ import React from 'react'
 export default function page() {
   return (
     <div>
-      <CardList/>
+      {/* <CardList/> */}
       {/* <PlayingSlot></PlayingSlot>
       <PlayingCenter></PlayingCenter> */}
 
