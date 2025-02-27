@@ -22,9 +22,11 @@ export type PlayingSlotType =  {
   playingCenterId :number ;
 };
 export type CreateTeamData = {
-  images: File | null;
-  logoImage: File | null;
   name: string;
-  location: string;
-  description: string;
-};
+  address: string;
+  intro: string;
+  logo: File | string | null; // URL của ảnh sau khi upload
+  cover: File | string | null; // URL của ảnh bìa
+  sport: string; // Enum hoặc ID môn thể thao
+  userId: number; // ID người dùng tạo team
+};  

@@ -1,10 +1,13 @@
 import api from '@/config/api';
-import { CreateTeamData } from '@/types/form';
 
-const playingApi = {
-  createTeam: (formData: CreateTeamData) => api.post('/', formData ), 
-
+const createTeamApi = {
+  createTeam: (formData: FormData, token: string) => 
+    api.post('/team/create', formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }),
 };
-    
-export default playingApi;
-  
+
+export default createTeamApi;
