@@ -1,7 +1,7 @@
 import api from '@/config/api'
 
 const ownerApi = {
-  getAll: () => api.get('/owner'),
+  getOwner: () => api.get('/owner'),
 };
 
 export default ownerApi;
