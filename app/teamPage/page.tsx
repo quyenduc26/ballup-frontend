@@ -1,4 +1,4 @@
-import Team from "@/components/Teampage/TeamPage";
+import Team from "@/components/team/Teampage/TeamPage";
 
 export default function Home() {
   return (
