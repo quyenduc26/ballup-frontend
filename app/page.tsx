@@ -11,13 +11,16 @@ export default function App() {
   return (
     <Badge className="bg-red-500 text-white" color="warning" content="5">
       <Button
-        className="text-white bg-black font-medium rounded-none"
-        onPress={() => router.push("/auth/sigUp")}
+        className="text-white font-medium rounded-none"
+        onPress={() => router.push("/teamCard")}
       >
         Button
       </Button>
       <Link href="/test">Form Stadiums</Link>
        <Link href="/auth/login">Go to Login</Link>
+       <Link href="/intro">Go to Intro</Link>
+       <Link href="/teamPage">Go to Teampage</Link>
+
     </Badge>
   );
 }

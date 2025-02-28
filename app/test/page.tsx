@@ -1,3 +1,4 @@
+
 import Schedule from '@/components/Schedule'; 
 import PlayingCenter from '@/components/PlayingCenter'
 import PlayingSlot from '@/components/PlayingSlot'
@@ -14,3 +15,4 @@ export default function page() {
     </div>
   )
 }
+
