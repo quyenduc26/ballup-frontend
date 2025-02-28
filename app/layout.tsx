@@ -7,6 +7,11 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import Banner from "@/components/Banner"
+
+
 
 export const metadata: Metadata = {
   title: {
@@ -33,6 +38,7 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning lang="en">
+      
       <head />
       <body
         className={clsx(
@@ -40,6 +46,8 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
+        <Header />
+
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className=" flex flex-col h-screen">
             <main >
@@ -47,6 +55,7 @@ export default function RootLayout({
             </main>
           </div>
         </Providers>
+        <Footer/>
       </body>
     </html>
   );
