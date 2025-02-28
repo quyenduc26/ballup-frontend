@@ -11,17 +11,12 @@
 
                 <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 md:gap-8 p-4">
                     <Link
-                        href="/teamPage/explore"
+                        href="/bookingPage/oursport"
                         className="text-lg md:text-2xl font-semibold text-black hover:text-blue-500 transition-all hover:underline"
                     >
-                        EXPLORE
+                        OUR SPORTS
                     </Link>
-                    <Link
-                        href="/teamPage/team"
-                        className="text-lg md:text-2xl font-semibold text-black hover:text-blue-500 transition-all hover:underline"
-                    >
-                        MY TEAM
-                    </Link>
+
                 </div>
                 <SearchBar/>
 
