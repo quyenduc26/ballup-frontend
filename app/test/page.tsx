@@ -1,5 +1,5 @@
 
-import Schedule from '@/components/Schedule'; 
+import Schedule from '@/components/booking/Schedule'; 
 import PlayingCenter from '@/components/PlayingCenter'
 import PlayingSlot from '@/components/PlayingSlot'
 
