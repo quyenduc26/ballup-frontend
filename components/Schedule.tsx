@@ -44,7 +44,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex w-full flex-col items-center p-4 sm:p-8 bg-gray-100">
+    <div className="flex  w-[1200px] flex-col items-center p-4 sm:p-8 bg-gray-100">
       <div className="flex flex-col md:flex-row gap-6 w-full max-w-[1200px] bg-white p-6 sm:p-8 shadow-lg rounded-md">
         {/* Calendar */}
         <div className="w-full md:w-[50%]">
