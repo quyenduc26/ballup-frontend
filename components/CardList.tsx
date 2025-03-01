@@ -1,13 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import CardField from "./CardField";
-import playingApi from "@/service/playingApi";
 import { CardFieldType } from "@/types";
-
-// Kiểm tra kiểu dữ liệu trả về từ API
-interface ApiResponse {
-  data: CardFieldType[];
-}
 
 const CardList = () => {
   const [fields, setFields] = useState<CardFieldType[]>([]);
@@ -18,19 +13,18 @@ const CardList = () => {
     const fetchFields = async () => {
       try {
         setLoading(true);
-        setError(null); // Reset lỗi trước khi gọi API
+        setError(null);
 
-        const response: ApiResponse = await playingApi.getCardFields();
-        console.log("API Response:", response); // Kiểm tra dữ liệu từ API
+        const response = await axios.get("https://6520d2b6906e276284c4b174.mockapi.io/product");
+        console.log("API Response:", response.data);
 
-        // Kiểm tra response có phải là mảng không
-        if (response && Array.isArray(response.data)) {
+        if (Array.isArray(response.data)) {
           setFields(response.data);
         } else {
-          setFields([]); // Nếu không phải mảng, set mảng rỗng
+          setFields([]);
           setError("Dữ liệu trả về không hợp lệ.");
         }
-      } catch (err: any) {
+      } catch (err) {
         console.error("Lỗi khi gọi API:", err);
         setError("Không thể tải dữ liệu. Vui lòng thử lại!");
       } finally {
