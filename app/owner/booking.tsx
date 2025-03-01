@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import bookingRequestApi from "@/service/bookingRequestApi";
+
 import {
     Card,
     Table,
@@ -13,9 +14,8 @@ import {
 
 interface BookingField {
     id: string;
-    playingSlot: string;
+    slotId: string;
     creator: string;
-    amount: number;
     fromTime: string;
     toTime: string;
     createdAt: string;
@@ -41,7 +41,7 @@ export default function BookingTable() {
         };
         fetchBookings();
     }, []);
-    
+
 
     // Confirm booking (always send id = 1)
     const handleConfirm = async () => {
@@ -65,6 +65,21 @@ export default function BookingTable() {
         }
     };
 
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "N/A"; 
+        return new Intl.DateTimeFormat("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+        }).format(new Date(dateString));
+    };
+    
+
+
     return (
         <div className="p-4">
             <h1 className="text-xl font-bold mb-4">Management Booking Request</h1>
@@ -86,18 +101,19 @@ export default function BookingTable() {
                             {bookings.map((booking) => (
                                 <TableRow key={booking.id}>
                                     <TableCell>{booking.id}</TableCell>
-                                    <TableCell>{booking.playingSlot}</TableCell>
+                                    <TableCell>{booking.slotId}</TableCell>
                                     <TableCell>{booking.creator}</TableCell>
-                                    <TableCell>{booking.fromTime}</TableCell>
-                                    <TableCell>{booking.toTime}</TableCell>
-                                    <TableCell>{booking.createdAt}</TableCell>
+                                    <TableCell>{formatDate(booking.fromTime)}</TableCell>
+                                    <TableCell>{formatDate(booking.toTime)}</TableCell>
+                                    <TableCell>{formatDate(booking.createdAt)}</TableCell>
+
                                     <TableCell>
                                         <div className="flex flex-col sm:flex-row justify-center gap-2">
                                             <button
                                                 className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                                                 onClick={handleConfirm}
                                             >
-                                                Receive
+                                                Confirm
                                             </button>
                                             <button
                                                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"

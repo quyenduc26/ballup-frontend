@@ -73,7 +73,7 @@ export default function Login() {
             } else if (role === "ROLE_OWNER") {
                 router.push("/owner");
             } else {
-                router.push("/home");
+                router.push("/owner");
             }
 
         } catch (error: any) {
