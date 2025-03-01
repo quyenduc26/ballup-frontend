@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+
 export type RegisterFormType = {
   username: string;
   email: string;
@@ -10,12 +10,23 @@ export type LoginFormType = {
   password: string;
 };
 
+  export type CardFieldType = {
+    id: number;
+    name: string;
+    address: string;
+    type: string;
+    bookingCount: number;
+    image: string;
+    primaryPrice: number;
+    nightPrice: number;
+  };
+
 export type ScheduleType = {
   date: string; 
   fromTime: string; 
   toTime: string; 
   location?: string; 
-
+};
 export type PlayingCenterType =  {
   name: string;
   address: string;
@@ -30,3 +41,5 @@ export type PlayingSlotType =  {
   playingCenterId :number ;
 
 };
+
+
