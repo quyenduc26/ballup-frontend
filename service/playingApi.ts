@@ -6,7 +6,6 @@
       createCreatePlayingCenter: (formData: PlayingCenterType) => api.post('/owner/center', formData),
       createPlayingSlot: (formData: PlayingSlotType) => api.post('/owner/slot', formData ), 
       cardField: (formData: CardFieldType) => api.post('/center/{id}', formData ), 
-      getCardFields: () => api.get<CardFieldType[]>('/owner/center'),
 
     };
 

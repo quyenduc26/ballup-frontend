@@ -3,13 +3,13 @@ import { FaYoutube, FaInstagram, FaFacebook } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-100 py-10">
+    <footer className="bg-gray-100 py-10 w-full mt-auto">
       <div className="container mx-auto flex flex-col md:flex-row justify-between px-6">
         {/* Cột 1: Menu chính */}
         <div className="mb-6 md:mb-0">
           <ul className="space-y-2 text-black text-2xl font-bold ">
             <li>
-              <Link  href="/team">Team</Link>
+              <Link href="/team">Team</Link>
             </li>
             <li>
               <Link href="/booking">Booking</Link>
@@ -28,7 +28,7 @@ const Footer = () => {
           <h3 className="text-lg font-semibold text-black hover:text-[#FF8811]">Product</h3>
           <ul className="space-y-2 text-gray-600">
             <li className="hover:text-[#FF8811]">
-              <Link  href="/package">Package</Link>
+              <Link href="/package">Package</Link>
             </li>
             <li className="hover:text-[#FF8811]">
               <Link href="/pricing">Pricing</Link>
@@ -51,7 +51,7 @@ const Footer = () => {
 
         {/* Cột 4: Earn Money */}
         <div className="mb-6 md:mb-0">
-          <h3 className="text-lg font-semibold text-black hover:text-[#FF8811]  ">Earn Money</h3>
+          <h3 className="text-lg font-semibold text-black hover:text-[#FF8811]">Earn Money</h3>
           <ul className="space-y-2 text-gray-600">
             <li className="hover:text-[#FF8811]">
               <Link href="/partner">Become Partner</Link>
