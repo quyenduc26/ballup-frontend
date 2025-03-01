@@ -32,31 +32,31 @@ const Header = () => {
         >
           <Link
             href="/"
-            className="block ml-16 px-6 py-3 text-black font-bold hover:text-[#FF8811] md:inline-block"
+            className="block sm:ml-16 px-6 py-1 text-black font-bold hover:text-[#FF8811] md:inline-block"
           >
             HOME
           </Link>
           <Link
             href="/booking"
-            className="block px-6 py-3 text-gray-600  hover:text-[#FF8811] md:inline-block"
+            className="block px-6 py-1 text-gray-600  hover:text-[#FF8811] md:inline-block"
           >
             BOOKING
           </Link>
           <Link
             href="/team"
-            className="block px-6 py-3 text-gray-600 hover:text-[#FF8811] md:inline-block"
+            className="block px-6 py-1 text-gray-600 hover:text-[#FF8811] md:inline-block"
           >
             TEAM
           </Link>
           <Link
             href="/schedule"
-            className="block px-6 py-3 text-gray-600 hover:text-[#FF8811] md:inline-block"
+            className="block px-6 py-1 text-gray-600 hover:text-[#FF8811] md:inline-block"
           >
             SCHEDULE
           </Link>
           <Link
             href="/about"
-            className="block px-6 py-3 text-gray-600 hover:text-[#FF8811] md:inline-block"
+            className="block px-6 py-1 text-gray-600 hover:text-[#FF8811] md:inline-block"
           >
             ABOUT US
           </Link>

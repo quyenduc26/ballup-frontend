@@ -7,6 +7,9 @@ import React from 'react'
 export default function Booking() {
   return (
     <div> 
+      <div className="text-4xl md:text-6xl ml-8 font-extrabold text-black  text-center md:text-left">
+        BOOKING
+      </div>
         <Banner/>  
         <Schedule />
         <SearchBooking/>
