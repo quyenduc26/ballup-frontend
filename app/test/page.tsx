@@ -2,6 +2,7 @@ import Schedule from '@/components/Schedule';
 import PlayingCenter from '@/components/PlayingCenter'
 import PlayingSlot from '@/components/PlayingSlot'
 
+
 import React from 'react'
 
 export default function page() {
@@ -10,7 +11,9 @@ export default function page() {
       <Schedule />
       <PlayingSlot></PlayingSlot>
       <PlayingCenter></PlayingCenter>
+   
 
     </div>
   )
 }
+
