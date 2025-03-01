@@ -1,3 +1,4 @@
+import Schedule from '@/components/Schedule'; 
 import PlayingCenter from '@/components/PlayingCenter'
 import PlayingSlot from '@/components/PlayingSlot'
 import FormCreateTeam from '@/components/team/FormCreateTeam'
@@ -12,6 +13,9 @@ export default function page() {
       {/* <PlayingSlot></PlayingSlot>
       <PlayingCenter></PlayingCenter> */}
       <FormCreateTeam/>
+      <Schedule />
+      <PlayingSlot></PlayingSlot>
+      <PlayingCenter></PlayingCenter>
 
     </div>
   )
