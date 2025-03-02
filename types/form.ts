@@ -14,7 +14,7 @@ export type LoginFormType = {
     id: number;
     name: string;
     address: string;
-    type: string;
+    type: PlayingCenterType;
     bookingCount: number;
     image: string;
     primaryPrice: number;
