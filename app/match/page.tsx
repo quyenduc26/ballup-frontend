@@ -1,9 +1,9 @@
-
+import TeamPage from "@/components/Teampage/TeamPage"
 
 export default function MatchPage() {
   return (
     <div>
-      <h1 className="">Match</h1>
+      <TeamPage/>
     </div>
   );
 }

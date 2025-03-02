@@ -1,18 +1,15 @@
-import TeamCard from "@/components/teamCard";
+"use client";
+
+import ListTeamCard from "@/components/team/teamCard/ListTeamCard";
 
 export default function Home() {
-  const teamData = {
-    name: "Manchester United",
-    logo: "/manutd-logo.png", 
-    description: "Đá giao lưu cuối tuần hoặc khi có thời gian",
-    createdAt: "14/2/2024",
-    location: "Đà Nẵng",
-    members: 6,
-  };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <TeamCard team={teamData} />
-    </div>
-  );
+
+    return (
+        <div className="min-h-screen ">
+            <ListTeamCard />
+        </div>
+    );
 }
+
+

@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Field from "./field";
-import PaymentHistory from "./paymentHistory";
-import BookingTable from "./booking";
-import PaymentRequest from "./paymentRequest";
+import Field from "../../components/owner/field";
+import PaymentHistory from "../../components/owner/paymentHistory";
+import BookingTable from "../../components/owner/booking";
+import PaymentRequest from "../../components/owner/paymentRequest";
 import { Menu, X } from "lucide-react";
 import ownerApi from "@/service/ownerApi";
 

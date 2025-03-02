@@ -12,7 +12,6 @@ import image from "@/public/images/image 3.png";
 import player from "@/public/images/player.png";
 import google from "@/public/images/google.png";
 
-
 export default function SignUp() {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
@@ -45,17 +44,6 @@ export default function SignUp() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validateForm()) return;
-        }
-        if (formData.password !== confirmPassword) newErrors.confirmPassword = "Passwords do not match!";
-        if (!formData.role) newErrors.role = "Please select role!";
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!validateForm()) return;
-
 
         try {
             setLoading(true);
@@ -64,16 +52,10 @@ export default function SignUp() {
             setTimeout(() => router.push("/auth/login"), 3000);
         } catch (error: any) {
             setToastData({ type: "error", heading: "Registration failed", message: error.response?.data?.message || "An error occurred.!", duration: 4000 });
-
         } finally {
             setLoading(false);
         }
     };
-
-    const handleLoginWithGoogle = async () => {
-        window.location.href = "http://localhost:8080/auth/google";
-    };
-
 
     const handleLoginWithGoogle = async () => {
         window.location.href = "http://localhost:8080/auth/google";
@@ -86,7 +68,6 @@ export default function SignUp() {
             <div className="relative w-full h-[500px] sm:h-[600px] md:h-full">
                 <Image src={image} alt="Soccer player illustration" fill className="object-cover" priority />
                 <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">BALLUP</div>
-
                 <Image src={player} alt="Small Player" width={450} height={350} className="absolute top-1/3 left-3 transform -translate-y-1/2" />
             </div>
 
@@ -158,7 +139,6 @@ export default function SignUp() {
                         </div>
 
                         {/* Role */}
-
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Role</label>
                             <select className="w-full p-2 border rounded-md text-sm" value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value })}>
@@ -187,7 +167,6 @@ export default function SignUp() {
                         <Image src={google} alt="Google logo" width={20} height={20} className="mr-2" />
                         Sign in with Google
                     </Button>
-
                     <div className="mt-8 text-center">
                         <p className="text-sm">
                             Don't have an account?{" "}

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react"
-import SibavSidebar from "../owner/sibav"
+import SibavSidebar from "@/components/owner/sibav"
 
 export default function Sidebar() {
   return (
