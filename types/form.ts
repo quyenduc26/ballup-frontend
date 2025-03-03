@@ -39,7 +39,15 @@ export type PlayingSlotType =  {
   primaryPrice:number;
   nightPrice:number ;
   playingCenterId :number ;
-
 };
+export type CreateTeamData = {
+  name: string;
+  address: string;
+  intro: string;
+  logo: string ; 
+  cover:string ; 
+  sport?: string;
+  userId: number; 
+};  
 
 

@@ -52,7 +52,7 @@ export default function Login() {
                 localStorage.setItem("token", token);
                 console.log("Token saved:", token);
             }
-            setToastData({
+            setToastData({                    
                 type: "success",
                 heading: "Login Successful",
                 message: "You have successfully logged in!",
