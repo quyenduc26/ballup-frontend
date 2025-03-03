@@ -7,24 +7,18 @@ import playingApi from "@/service/playingApi"; // Import API
 import { CardFieldType } from "@/types";
 
 const CardField: React.FC<{ id: number }> = ({ id }) => {
-  const [field, setField] = useState<CardFieldType | null>({
-    id: 1,
-    name: "Sân bóng A",
-    address: "123 Đường ABC, Quận 1",
-    bookingCount: 50,
-    primaryPrice: 100000,
-    nightPrice: 150000,
-    image: "/images/image 3.png",
-  });
+  const [field, setField] = useState<CardFieldType | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const fetchField = async () => {
       try {
-        const response = await playingApi.cardField(id);
+        const response = await playingApi.getAllCenter();
         if (response.data) {
-          setField(response.data);
+          console.log(response.data)
+          // setField(response.data);
         }
+
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu sân bóng:", error);
       }
@@ -44,13 +38,16 @@ const CardField: React.FC<{ id: number }> = ({ id }) => {
     );
   }
 
+  // ✅ Giải cấu trúc dữ liệu từ field
+  const { image, name, address,type, bookingCount, primaryPrice, nightPrice } = field;
+
   return (
     <div className="relative w-full max-w-lg mx-auto p-2 sm:p-6 bg-white shadow-md rounded-lg overflow-hidden">
       {/* Image (Wrapped in Link) */}
-      <Link href={`/field/${field.id}`} className="block relative">
+      <Link href={`/field/${id}`} className="block relative">
         <Image
-          src={field.image || "/images/image 3.png"}
-          alt={field.name}
+          src={image || "/images/image 3.png"}
+          alt="sân bóng đá"
           width={400}
           height={400}
           className="w-full h-40 sm:h-72 object-cover bg-yellow-300 rounded-lg"
@@ -60,9 +57,7 @@ const CardField: React.FC<{ id: number }> = ({ id }) => {
           <span className="flex items-center bg-gray-400 text-black px-2 py-1 rounded-md text-xs sm:text-sm font-semibold">
             ⭐ 4.5
           </span>
-          <span className="bg-black text-white text-xs px-2 py-1 rounded-md">
-            Football
-          </span>
+          <span className="bg-black text-white text-xs px-2 py-1 rounded-md">Football</span>
         </div>
       </Link>
 
@@ -70,22 +65,22 @@ const CardField: React.FC<{ id: number }> = ({ id }) => {
       <div className="p-2 sm:p-4">
         {/* Title */}
         <h2 className="text-sm sm:text-3xl font-bold text-black line-clamp-1">
-          {field.name}
+          {name}
         </h2>
 
         {/* Address */}
         <p className="text-gray-500 text-xs sm:text-lg flex items-center mt-1 line-clamp-1">
-          <MapPinned size={24} className="mr-1" /> {field.address}
+          <MapPinned size={24} className="mr-1" /> {address}
         </p>
 
         {/* Booking Count */}
         <p className="text-gray-500 text-xs sm:text-lg flex items-center mt-1">
-          📈 {field.bookingCount.toLocaleString()} Bookings
+          📈 {bookingCount.toLocaleString()} Bookings
         </p>
 
         {/* Price */}
         <p className="text-sm sm:text-xl font-bold mt-2 text-black">
-          {field.primaryPrice.toLocaleString()} VND - {field.nightPrice.toLocaleString()} VND
+          {primaryPrice.toLocaleString()} VND - {nightPrice.toLocaleString()} VND
         </p>
 
         {/* Action Buttons */}
