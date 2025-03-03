@@ -1,6 +1,6 @@
 
     import api from '@/config/api';
-    import { PlayingCenterType, PlayingSlotType,CardFieldType } from '@/types/form';
+    import { PlayingCenterType, PlayingSlotType } from '@/types/form';
 
     const playingApi = {
       createCreatePlayingCenter: (formData: PlayingCenterType) => api.post('/owner/center', formData),

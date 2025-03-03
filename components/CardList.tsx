@@ -1,44 +1,47 @@
 "use client";
+import { useEffect, useState } from "react";
 import CardField from "./CardField";
+import playingApi from "@/service/playingApi";
+import { CardFieldType } from "@/types";
 
-const fields = [
-  {
-    id: 1,
-    name: "Sân bóng A",
-    address: "123 Đường ABC, Quận 1",
-    image: "/images/field1.jpg",
-    bookingCount: 120,
-    primaryPrice: 200000,
-    nightPrice: 250000,
-  },
-  {
-    id: 2,
-    name: "Sân bóng B",
-    address: "456 Đường XYZ, Quận 2",
-    image: "/images/field2.jpg",
-    bookingCount: 95,
-    primaryPrice: 180000,
-    nightPrice: 220000,
-  },
-  {
-    id: 3,
-    name: "Sân bóng C",
-    address: "789 Đường LMN, Quận 3",
-    image: "/images/field3.jpg",
-    bookingCount: 150,
-    primaryPrice: 220000,
-    nightPrice: 270000,
-  },
-];
+const ListCard = () => {
+  const [fields, setFields] = useState<CardFieldType[]>([]);
 
-const CardList = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await playingApi.getAllCenter();
+        const data = response.data;
+
+        if (data?.content && Array.isArray(data.content)) {
+          setFields(data.content);
+        } else {
+          console.error("API không trả về danh sách sân hợp lệ:", data);
+          setFields([]);
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu sân bóng:", error);
+        setFields([]);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
-      {fields.map((field) => (
-        <CardField key={field.id} {...field} />
-      ))}
+    <div className="container mx-auto p-4">
+      {/* <h1 className="text-6xl font-bold text-center mb-4">Danh sách sân bóng</h1> */}
+      {fields.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {fields.map((field) => (
+            <CardField key={field.id} field={field} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500 text-center">Không có dữ liệu sân bóng.</p>
+      )}
     </div>
   );
 };
 
-export default CardList;
+export default ListCard;
