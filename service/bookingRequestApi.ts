@@ -1,7 +1,7 @@
 import api from "@/config/api";
 
 const getAuthHeaders = () => {
-    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    const token = localStorage.getItem("token"); 
     return {
         headers: {
             Authorization: `Bearer ${token}`,
