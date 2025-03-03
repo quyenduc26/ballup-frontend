@@ -1,38 +1,85 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import feedbackApi from "@/service/contactFormApi";
+import { ToastMessage } from "../ToastMessage";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
+    name: "",
+    email: "",
+    content: "",
   });
 
-  const handleChange = (e: { target: { name: any; value: any; }; }) => {
+  const [toast, setToast] = useState<{ type: string; message: string } | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await feedbackApi.GetFeedbackApi();
+        console.log("API Response:", response.data);
+      } catch (error) {
+        console.error("Error fetching feedback:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    setFormData({ name: '', email: '', message: '' });
+
+    try {
+      console.log("Form data before submission:", formData);
+
+      const response = await feedbackApi.PostFeedbackApi(formData);
+
+      console.log("Full API Response:", response);
+      console.log("API Response Data:", response?.data);
+
+      if (response?.data?.message) {
+        setToast({ type: "success", message: "🎉 Feedback submitted successfully!" });
+
+        setFormData({ name: "", email: "", content: "" });
+      } else {
+        setToast({ type: "error", message: "API error: " + (response?.data?.message || "No error details available") });
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setToast({ type: "error", message: "Error submitting form: " + (error.message || "Unknown error") });
+      } else {
+        setToast({ type: "error", message: "Error submitting form: Unknown error" });
+      }
+    }
   };
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   return (
     <div className="max-w-4xl mx-auto py-16 px-4">
+      {toast && <ToastMessage type={toast.type} message={toast.message} />}
+
       <div className="mb-8">
         <h2 className="text-sm uppercase text-gray-600 font-medium">CONTACT US</h2>
         <h1 className="text-5xl font-bold mt-2 mb-8">SEND A MAIL</h1>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block text-gray-700 mb-2">HOW CAN WE CALLED YOU?</label>
+              <label className="block text-gray-700 mb-2">HOW CAN WE CALL YOU?</label>
               <input
                 type="text"
                 name="name"
@@ -42,7 +89,7 @@ const ContactForm = () => {
                 className="w-full border border-gray-300 p-3 focus:outline-none focus:ring-1 focus:ring-gray-400"
               />
             </div>
-            
+
             <div>
               <label className="block text-gray-700 mb-2">WHAT IS YOUR EMAIL?</label>
               <input
@@ -50,23 +97,23 @@ const ContactForm = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter you message"
+                placeholder="Enter your email"
                 className="w-full border border-gray-300 p-3 focus:outline-none focus:ring-1 focus:ring-gray-400"
               />
             </div>
           </div>
-          
+
           <div className="mb-6">
-            <label className="block text-gray-700 mb-2">WHAT YOU WANT TO TELL US?</label>
+            <label className="block text-gray-700 mb-2">WHAT DO YOU WANT TO TELL US?</label>
             <textarea
-              name="message"
-              value={formData.message}
+              name="content"
+              value={formData.content}
               onChange={handleChange}
-              placeholder="Enter you message"
+              placeholder="Enter your message"
               className="w-full border border-gray-300 p-3 focus:outline-none focus:ring-1 focus:ring-gray-400 h-40"
             />
           </div>
-          
+
           <div className="flex justify-center">
             <button
               type="submit"
@@ -80,5 +127,4 @@ const ContactForm = () => {
     </div>
   );
 };
-
 export default ContactForm;
