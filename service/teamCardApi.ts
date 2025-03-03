@@ -1,8 +1,7 @@
 import api from "@/config/api";
 
-
-const joinTeamApi = {
-    getJoinTeam: () => api.post(`/team/join`),
+const teamApi = {
+    getAllTeams: (params: any) => api.get(`/team`, { params }),
 };
 
-export default joinTeamApi;
+export default teamApi;
