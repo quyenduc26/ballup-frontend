@@ -47,7 +47,6 @@ export default function RootLayout({
         )}
       >
         <Header />
-        <Banner/>
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className=" flex flex-col h-screen">
             <main >
@@ -55,7 +54,7 @@ export default function RootLayout({
             </main>
           </div>
         </Providers>
-        <Footer/>
+        {/* <Footer/> */}
       </body>
     </html>
   );

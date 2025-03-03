@@ -1,5 +1,6 @@
 "use client";
 
+
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
@@ -24,6 +25,7 @@ export default function Login() {
         password: "",
     });
 
+
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -46,7 +48,23 @@ export default function Login() {
             router.push("/home");
         } catch (error: any) {
             console.error("Login failed:", error.response?.data?.message || error.message);
-            setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
+
+
+            // Xử lý lỗi từ API
+            const errorResponse = error.response?.data?.message;
+            if (errorResponse) {
+                if (errorResponse.includes("Invalid email")) {
+                    setErrorMessage("Không tìm thấy email");
+                } else if (errorResponse.includes("Incorrect password")) {
+                    setErrorMessage("Mật khẩu không đúng");
+                } else if (errorResponse.includes("Invalid credentials")) {
+                    setErrorMessage("Email hoặc mật khẩu không hợp lệ");
+                } else {
+                    setErrorMessage(errorResponse);
+                }
+            } else {
+                setErrorMessage("Đăng nhập thất bại. Vui lòng thử lại.");
+            }
         } finally {
             setLoading(false);
         }
@@ -59,7 +77,6 @@ export default function Login() {
 
     return (
         <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-            <ToastMessage toast={toastData} />
             <div className="relative w-full h-[500px] sm:h-[600px] md:h-full">
                 <Image src={image} alt="Soccer player illustration" fill className="object-cover" priority />
                 <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">
@@ -69,10 +86,10 @@ export default function Login() {
             </div>
 
 
-
             <div className="flex items-center justify-center p-8">
                 <div className="w-full max-w-md space-y-8">
                     <h1 className="text-4xl font-bold">Welcome</h1>
+
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
@@ -85,6 +102,7 @@ export default function Login() {
                                 required
                             />
                         </div>
+
 
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Password</label>
@@ -106,17 +124,21 @@ export default function Login() {
                             </div>
                         </div>
 
+
                         <div className="flex justify-center">
                             <Button type="submit" disabled={loading} className="w-full">
                                 {loading ? "Logging in..." : "Log In"}
                             </Button>
                         </div>
-                        <Button onPress={handleLoginWithGoogle} className="w-full">
+                        <Button className="w-full">
                             <Image src={google} alt="Google logo" width={20} height={20} className="mr-2" />
                             Sign in with Google
                         </Button>
+
+
                         {errorMessage && <p className="text-red-500 text-sm text-center">{errorMessage}</p>}
                     </form>
+
 
                     <div className="mt-8 text-center">
                         <p className="text-sm">
