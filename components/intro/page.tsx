@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { FiExternalLink } from "react-icons/fi";
 
-export default function Home() {
+export default function IntroHomePage() {
     const sports = [
         { name: "FOOTBALL", link: "/football" },
         { name: "BADMINTON", link: "/badminton" },
@@ -9,7 +9,7 @@ export default function Home() {
     ];
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-white px-10">
+        <div className=" flex items-center justify-center bg-white px-10 py-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-5xl w-full">
                 <div>
                     <h2 className="text-2xl font-bold text-black">OUR SPORTS</h2>

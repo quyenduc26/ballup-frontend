@@ -1,5 +1,5 @@
 "use client";
-import { Button, Badge,Link } from "@heroui/react";
+import IntroHomePage from "@/components/intro/page";
 import { useRouter } from "next/navigation";
 
 
@@ -9,18 +9,6 @@ export default function App() {
   console.log(process.env.SECRET_KEY);
 
   return (
-    <Badge className="bg-red-500 text-white" color="warning" content="5">
-      <Button
-        className="text-white font-medium rounded-none"
-        onPress={() => router.push("/teamCard")}
-      >
-        Button
-      </Button>
-      <Link href="/test">Form Stadiums</Link>
-       <Link href="/auth/login">Go to Login</Link>
-       <Link href="/intro">Go to Intro</Link>
-       <Link href="/teamPage">Go to Teampage</Link>
-
-    </Badge>
+    <IntroHomePage />
   );
 }
