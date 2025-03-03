@@ -12,8 +12,8 @@ const getAuthHeaders = () => {
 
 const bookingRequestApi = {
     getBookings: (id: number) => api.get(`/owner/booking/requests/${id}`, getAuthHeaders()),
-    confirmBooking: (id: number) => api.patch(`/owner/booking/${id}/confirm`, {}, getAuthHeaders()),
-    rejectBooking: (id: number) => api.patch(`/owner/booking/${id}/reject`, {}, getAuthHeaders()),
+    confirmBooking: (id: number) => api.patch(`/owner/booking/${id}/confirm`, getAuthHeaders()),
+    rejectBooking: (id: number) => api.patch(`/owner/booking/${id}/reject`,getAuthHeaders()),
 };
 
 export default bookingRequestApi;

@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 export type RegisterFormType = {
   username: string;
   email: string;
@@ -8,6 +9,14 @@ export type LoginFormType = {
   emailOrUsername: string;
   password: string;
 };
+
+export type ScheduleType = {
+  date: string; 
+  fromTime: string; 
+  toTime: string; 
+  location?: string; 
+};
+
 export type PlayingCenterType =  {
   name: string;
   address: string;
@@ -21,3 +30,13 @@ export type PlayingSlotType =  {
   nightPrice:number ;
   playingCenterId :number ;
 };
+export type CreateTeamData = {
+  name: string;
+  address: string;
+  intro: string;
+  logo: File | string | null; // URL của ảnh sau khi upload
+  cover: File | string | null; // URL của ảnh bìa
+  sport: string; // Enum hoặc ID môn thể thao
+  userId: number; // ID người dùng tạo team
+};  
+

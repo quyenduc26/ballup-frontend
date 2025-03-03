@@ -45,6 +45,7 @@ export default function SignUp() {
         e.preventDefault();
         if (!validateForm()) return;
 
+
         try {
             setLoading(true);
             const response = await authApi.signUp(formData);
@@ -60,6 +61,8 @@ export default function SignUp() {
     const handleLoginWithGoogle = async () => {
         window.location.href = "http://localhost:8080/auth/google";
     };
+
+
 
 
     return (
