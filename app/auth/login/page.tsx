@@ -7,16 +7,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import image from "@/public/images/image 3.png";
 import player from "@/public/images/player.png";
-import google from "@/public/images/google.png";
-import { Button, Input } from "@heroui/react";
-import { LoginFormType } from "@/types";
-import authApiLogin from "@/service/authApi";
-
+import google from "@/public/images/google.png";        
+import { Button, Input, Link } from "@heroui/react";
+import { LoginFormType } from "@/types"; 
+import authApi from "@/service/authApi";
+import { ToastMessage } from "@/components/ToastMessage";
 
 export default function Login() {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [toastData, setToastData] = useState<{ heading?: string; message?: string; type?: "error" | "success" | "info" | "warn"; duration?: number } | undefined>();
 
 
     const [formData, setFormData] = useState<LoginFormType>({
@@ -27,51 +28,23 @@ export default function Login() {
 
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-
-    const validateEmail = (email: string) => {
-        // Kiểm tra email có khoảng trắng
-        if (/\s/.test(email)) {
-            return "Định dạng email không hợp lệ";
-        }
-
-
-        // Kiểm tra định dạng email hợp lệ
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return "Email không hợp lệ";
-        }
-
-
-        return null;
-    };
-
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMessage(null);
-
-
-        // Kiểm tra email hợp lệ trước khi gửi yêu cầu đăng nhập
-        const emailError = validateEmail(formData.emailOrUsername);
-        if (emailError) {
-            setErrorMessage(emailError);
-            return;
-        }
-
-
+    
         try {
             setLoading(true);
-            const response = await authApiLogin.login(formData);
-
-
-            const token = response.data.token;
+            const response = await authApi.login(formData); 
+            const token = response.data; 
             if (token) {
-                localStorage.setItem("token", token);
-                console.log("Token saved:", token);
+                localStorage.setItem("token", token); 
             }
-
-
-            alert("Login successful!");
+            setToastData({
+                type: "success",
+                heading: "Login Successful",
+                message: "Your account has been created successfully!",
+                duration: 3000,
+            });
             router.push("/home");
         } catch (error: any) {
             console.error("Login failed:", error.response?.data?.message || error.message);
@@ -97,15 +70,19 @@ export default function Login() {
         }
     };
 
+    const handleLoginWithGoogle = async () => {
+        window.location.href = "http://localhost:8080/auth/google";
+    }
+
 
     return (
         <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
             <div className="relative w-full h-[500px] sm:h-[600px] md:h-full">
                 <Image src={image} alt="Soccer player illustration" fill className="object-cover" priority />
                 <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">
-                    BALLUP
+                BALLUP
                 </div>
-                <Image src={player} alt="Small Player" width={450} height={350} className="absolute top-1/3 left-3 transform -translate-y-1/2" />
+              <Image src={player} alt="Small Player" width={450} height={350} className="absolute top-1/3 left-3 transform -translate-y-1/2" />
             </div>
 
 
@@ -166,7 +143,7 @@ export default function Login() {
                     <div className="mt-8 text-center">
                         <p className="text-sm">
                             Don't have an account?{" "}
-                            <a href="/signup" className="text-blue-500">Sign Up</a>
+                            <Link href="signup" className="text-blue-500">Sign Up</Link>
                         </p>
                     </div>
                 </div>

@@ -43,7 +43,7 @@ const Header = () => {
             BOOKING
           </Link>
           <Link
-            href="/teamPage"
+            href="/teamCard"
             className="block px-6 py-3 text-gray-600 hover:text-[#FF8811] md:inline-block"
           >
             TEAM
