@@ -15,6 +15,7 @@ export type ScheduleType = {
   fromTime: string; 
   toTime: string; 
   location?: string; 
+};
 
 export type PlayingCenterType =  {
   name: string;
@@ -28,5 +29,14 @@ export type PlayingSlotType =  {
   primaryPrice:number;
   nightPrice:number ;
   playingCenterId :number ;
-
 };
+export type CreateTeamData = {
+  name: string;
+  address: string;
+  intro: string;
+  logo: File | string | null; // URL của ảnh sau khi upload
+  cover: File | string | null; // URL của ảnh bìa
+  sport: string; // Enum hoặc ID môn thể thao
+  userId: number; // ID người dùng tạo team
+};  
+
