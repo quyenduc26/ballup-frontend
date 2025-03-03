@@ -19,6 +19,7 @@ export default function App() {
       <Link href="/test">Form Stadiums</Link>
        <Link href="/auth/login">Go to Login</Link>
        <Link href="/intro">Go to Intro</Link>
+       <Link href="/teamPage">Go to Teampage</Link>
 
     </Badge>
   );

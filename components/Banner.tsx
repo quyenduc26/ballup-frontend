@@ -2,8 +2,15 @@ import Image from "next/image";
 
 const HeroSection = () => {
   return (
-    <section className="container mx-auto px-5 sm:px-6 py-10">
-      <div className="mt-6 relative max-w-full rounded-xl overflow-hidden">
+    <section className="container mx-auto px-6">
+      {/* Tiêu đề HOME */}
+      {/* <h1 className="text-5xl font-extrabold relative inline-block">
+        HOME
+        <span className="absolute left-0 bottom-0 w-full h-1 bg-blue-500"></span>
+      </h1> */}
+
+      {/* Banner */}
+      <div className="relative w-full rounded-xl overflow-hidden">
         <Image
           src="/images/Banner.png"
           alt="Innovibe Squads"
