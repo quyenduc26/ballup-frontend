@@ -31,7 +31,7 @@ const Header = () => {
           }`}
         >
           <Link
-            href="/"
+            href="/home"
             className="block ml-16 px-6 py-3 text-black font-bold hover:text-[#FF8811] md:inline-block"
           >
             HOME

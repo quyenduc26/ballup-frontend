@@ -5,6 +5,7 @@ import FormCreateTeam from '@/components/team/FormCreateTeam'
 
 
 
+
 import React from 'react'
 
 export default function page() {
@@ -16,6 +17,7 @@ export default function page() {
       <Schedule />
       <PlayingSlot></PlayingSlot>
       <PlayingCenter></PlayingCenter>
+   
 
     </div>
   )
