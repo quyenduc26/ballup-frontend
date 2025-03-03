@@ -1,8 +1,8 @@
 "use client";
 import Schedule from '@/components/booking/Schedule'; 
-import CardList from "@/components/CardList";
-import PlayingCenter from '@/components/PlayingCenter'
-import PlayingSlot from '@/components/PlayingSlot'
+import CardList from "@/components/center/CardList";
+import PlayingCenter from '@/components/center/PlayingCenter'
+import PlayingSlot from '@/components/center/PlayingSlot'
 
 import React from 'react'
 

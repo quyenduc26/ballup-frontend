@@ -2,7 +2,7 @@ import Schedule from '@/components/booking/Schedule';
 import SearchBooking from "@/components/booking/SearchBooking"
 import Banner from "@/components/Banner"
 import React from 'react'
-import CardList from '@/components/CardList';
+import CardList from '@/components/center/CardList';
 
 export default function Booking() {
   return (
@@ -10,9 +10,9 @@ export default function Booking() {
       <div className="text-4xl md:text-6xl ml-8 font-extrabold text-black  text-center md:text-left">
         BOOKING
       </div>
-        <Banner/>  
+        {/* <Banner/>  
         <Schedule />
-        <SearchBooking/>
+        <SearchBooking/> */}
         <CardList/>
       
     </div>

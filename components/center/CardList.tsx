@@ -7,26 +7,21 @@ import { CardFieldType } from "@/types";
 const ListCard = () => {
   const [fields, setFields] = useState<CardFieldType[]>([]);
 
+  const fetchData = async () => {
+    try {
+      const response = await playingApi.getAllCenter();
+      const data = response.data.content;
+      setFields(data);
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu sân bóng:", error);
+      setFields([]);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await playingApi.getAllCenter();
-        const data = response.data;
-
-        if (data?.content && Array.isArray(data.content)) {
-          setFields(data.content);
-        } else {
-          console.error("API không trả về danh sách sân hợp lệ:", data);
-          setFields([]);
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu sân bóng:", error);
-        setFields([]);
-      }
-    };
-
     fetchData();
   }, []);
+
 
   return (
     <div className="container mx-auto p-4">

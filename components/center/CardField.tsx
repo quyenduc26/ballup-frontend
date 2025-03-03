@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { CardFieldType } from "@/types";
+import { getImageUrl } from "@/utils/getImage";
 
 const CardField = ({ field }: { field: CardFieldType }) => {
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -16,16 +17,13 @@ const CardField = ({ field }: { field: CardFieldType }) => {
 
   return (
     <div className="relative w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg overflow-hidden">
-      {/* Hình ảnh */}
       <Link href={`/field/${field.id}`} className="block relative">
-        <Image
-          src={field.image || "/images/image-3.png"}
-          alt="sân bóng đá"
-          width={400}
-          height={400}
-          className="w-full h-40 sm:h-72 object-cover bg-yellow-300 rounded-lg"
-        />
-      </Link>
+      <img
+        src={getImageUrl(field.image)}
+        alt="sân bóng đá" 
+        className="w-full h-40 sm:h-72 object-cover bg-yellow-300 rounded-lg"
+      />
+    </Link>
 
       {/* Nội dung */}
       <div className="p-4">
