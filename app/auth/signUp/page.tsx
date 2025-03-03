@@ -30,7 +30,7 @@ export default function SignUp() {
 
     const validateForm = () => {
         let newErrors: Record<string, string> = {};
-        if (!formData.username.trim()) newErrors.username = "Plaese enter your name!";
+        if (!formData.username.trim()) newErrors.username = "Please enter your name!";
         if (!formData.email.includes("@")) newErrors.email = "Email must contain'@'";
         if (!formData.password.match(/^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]{8,}$/)) {
             newErrors.password = "Password must be 8 characters and numbers";
@@ -60,6 +60,8 @@ export default function SignUp() {
     const handleLoginWithGoogle = async () => {
         window.location.href = "http://localhost:8080/auth/google";
     };
+
+
 
 
     return (

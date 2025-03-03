@@ -49,8 +49,7 @@ export default function Login() {
             const response = await authApi.login(formData);
             const token = response.data;
             if (token) {
-                localStorage.setItem("token", token);
-                console.log("Token saved:", token);
+                localStorage.setItem("token", token); 
             }
             setToastData({
                 type: "success",
@@ -89,9 +88,9 @@ export default function Login() {
             <div className="relative w-full h-[500px] sm:h-[600px] md:h-full">
                 <Image src={image} alt="Soccer player illustration" fill className="object-cover" priority />
                 <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">
-                    BALLUP
+                BALLUP
                 </div>
-                <Image src={player} alt="Small Player" width={450} height={350} className="absolute top-1/3 left-3 transform -translate-y-1/2" />
+              <Image src={player} alt="Small Player" width={450} height={350} className="absolute top-1/3 left-3 transform -translate-y-1/2" />
             </div>
 
             <div className="flex items-center justify-center p-8">

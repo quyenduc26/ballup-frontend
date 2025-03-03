@@ -15,8 +15,6 @@ const Team = () => {
             </h1>
 
                 <Banner/>
-                
-            
 
             {/* Links */}
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 md:gap-8 p-4">
