@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import bookingRequestApi from "@/service/bookingRequestApi";
+import { BookingField } from "@/types/owner";
 
 import {
     Card,
@@ -12,14 +13,7 @@ import {
     TableCell,
 } from "@heroui/react";
 
-interface BookingField {
-    id: string;
-    slotId: string;
-    creator: string;
-    fromTime: string;
-    toTime: string;
-    createdAt: string;
-}
+
 
 export default function BookingTable() {
     const [bookings, setBookings] = useState<BookingField[]>([]);

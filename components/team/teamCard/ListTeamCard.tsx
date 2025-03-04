@@ -1,17 +1,8 @@
 import { useEffect, useState } from "react";
 import TeamCard from "./CardTeam";
 import teamApi from "@/service/teamCardApi";
+import { Team } from "@/types/form";
 
-interface Team {
-  id: number;
-  name: string;
-  logo: string;
-  cover: string;
-  intro: string;
-  address: string;
-  sport: string;
-  totalMembers: number;
-}
 
 const ListTeamCard: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);

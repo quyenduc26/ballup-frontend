@@ -1,12 +1,6 @@
 import { Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
+import  { SubPayment } from "@/types/owner";
 
-interface SubPayment {
-    id: string;
-    name: string;
-    date: string;
-    time: string;
-    amount: number;
-}
 
 const subFields: SubPayment[] = [
     { id: "1", name: "Winwin Field", date: "Mar 1, 2023", time: "10:30AM", amount: 100 },
