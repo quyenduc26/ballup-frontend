@@ -11,7 +11,11 @@ import playingApi from "@/service/playingApi";
 
 const MAX_IMAGES = 4;
 
-const PlayingCenter = () => {
+type PlayingCenterProps = {
+  setActiveTab: (tab: string) => void;
+};
+
+export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>  {
   const router = useRouter();
   const [formData, setFormData] = useState<PlayingCenterType>({
     name: "",
@@ -33,7 +37,7 @@ const PlayingCenter = () => {
         const imageUrl = getImageUrl(filename);
         setFormData((prev) => {
           const updatedImages = [...prev.images];
-          updatedImages[index] = imageUrl;
+          if(imageUrl) updatedImages[index] = imageUrl;
           return { ...prev, images: updatedImages };
         });
       }
@@ -74,10 +78,10 @@ const PlayingCenter = () => {
   };
 
   return (
-    <div className="mt-10 max-w-2xl mx-auto p-4 sm:p-6 border border-gray-300 rounded-lg shadow-md w-full">
+    <div className="mt-10  p-4 sm:p-6 border border-gray-300 rounded-lg shadow-md w-full">
       <h2 className="text-center font-bold text-lg">CREATE PLAYING CENTER</h2>
       <button
-        onClick={() => router.back()}
+        onClick={() => setActiveTab("Field")}
         className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded mb-4"
       >
         <ArrowLeft size={18} />
@@ -86,7 +90,7 @@ const PlayingCenter = () => {
       {/* Image Upload Section */}
       <div className="relative bg-gray-100 p-4 sm:p-6 rounded-lg grid grid-cols-1 sm:grid-cols-2 gap-4">
         {formData.images.map((image, index) => (
-          <div key={index} className="relative w-full h-48 sm:w-72 sm:h-72 flex items-center justify-center border border-gray-400 rounded-lg">
+          <div key={index} className="relative w-fullsm:w-72 sm:h-72 flex items-center justify-center border border-gray-400 rounded-lg">
             {image ? (
               <>
                 <img src={image} alt={`Uploaded ${index}`} className="w-full h-full object-cover rounded-lg" />

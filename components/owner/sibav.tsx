@@ -1,11 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Field from "../../components/owner/field";
+// import { Field } from "../../components/owner/field";
 import PaymentHistory from "../../components/owner/paymentHistory";
 import BookingTable from "../../components/owner/booking";
 import PaymentRequest from "../../components/owner/paymentRequest";
 import { Menu, X } from "lucide-react";
 import ownerApi from "@/service/ownerApi";
+import { FieldList } from "@/components/owner/field";
+import PlayingCenter from "@/components/center/PlayingCenter";
 
 export default function SibavSidebar() {
   const [activeTab, setActiveTab] = useState("Field");
@@ -79,10 +81,11 @@ export default function SibavSidebar() {
 
       {/* Main Content */}
       <div className="flex-1 p-4 md:p-6 md:w-4/5 pt-16 md:pt-6">
-        {activeTab === "Field" && <Field />}
+        {activeTab === "Field" && <FieldList setActiveTab={setActiveTab} />}
         {activeTab === "PaymentHistory" && <PaymentHistory />}
         {activeTab === "BookingField" && <BookingTable />}
         {activeTab === "PaymentRequest" && <PaymentRequest />}
+        {activeTab === "CreateCenter" && <PlayingCenter setActiveTab={setActiveTab} />}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Eye, Pencil } from "lucide-react";
 import { Player } from "@/types/form";
+import { getImageUrl } from "@/utils/getImage";
 
 interface PlayerTableProps {
     players: Player[];
@@ -24,12 +25,10 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
                     {players.map((player) => (
                         <tr key={player.id} className="border-b">
                             <td className="px-4 md:px-6 py-3">
-                                <Image
-                                    src={player.avatar || "/default-avatar.png"}
+                                <img
+                                    src={player.avatar ? getImageUrl(player.avatar) : "/default-avatar.png"}
                                     alt={player.name}
-                                    width={40}
-                                    height={40}
-                                    className="rounded-full object-cover"
+                                    className="w-12 h-12 rounded-full object-cover"
                                 />
                             </td>
                             <td className="px-4 md:px-6 py-3 font-semibold">{player.name}</td>

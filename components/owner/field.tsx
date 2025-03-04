@@ -8,6 +8,7 @@ import image from "@/public/images/image 3.png";
 // import { Field } from "@/types/owner";
 
 import ownerApi from "@/service/ownerApi";
+import PlayingCenter from "@/components/center/PlayingCenter";
 
 
 interface Field {
@@ -37,7 +38,11 @@ interface Field {
 //   // { id: "5", name: "Van Son Field", location: "Mỹ khê 3 Sơn Trà Đà Nẵng" },
 // ];
 
-export default function FieldList() {
+type FieldListProps = {
+  setActiveTab: (tab: string) => void;
+};
+
+export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) =>  {
   const [fields, setFields] = useState<Field[]>([]);
   const [expandedFields, setExpandedFields] = useState<Record<string, boolean>>({});
 
@@ -70,9 +75,12 @@ export default function FieldList() {
   return (
     <div className="flex w-full">
       <div className="w-full p-1 sm:p-2 md:p-4 lg:p-6">
-        <h1 className="text-xl font-bold mb-4">
-          Management Booking Request
-        </h1>
+        <div className="flex justify-between mb-6">
+          <h1 className="text-xl font-bold mb-4">
+            Management Booking Request
+          </h1>
+          <Button className="bg-black rounded-none text-white" onPress={() => setActiveTab("CreateCenter")}>Create center</Button>
+        </div>
 
         <div className="flex items-center justify-between font-semibold border-b pb-2 text-xs sm:text-sm md:text-base w-full">
           <div className="pl-2 md:pl-4 lg:pl-6">Field Name</div>
