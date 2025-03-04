@@ -7,6 +7,10 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+
+
 
 export const metadata: Metadata = {
   title: {
@@ -33,20 +37,23 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning lang="en">
+      
       <head />
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
+          " bg-background font-sans antialiased",
           fontSans.variable,
         )}
       >
+        <Header />
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className=" flex flex-col h-screen">
+          <div className="flex flex-col">
             <main >
               {children}
             </main>
           </div>
         </Providers>
+        <Footer/>
       </body>
     </html>
   );

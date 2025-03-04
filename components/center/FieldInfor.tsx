@@ -31,7 +31,7 @@
       };
 
       return (
-        <div className="max-w-5xl mx-auto p-4 mt-2020">
+        <div className="max-w-5xl mx-auto p-4 mt-10">
           {/* Nút BACK */}
           <button
             onClick={() => router.back()}

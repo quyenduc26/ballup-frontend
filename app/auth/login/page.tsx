@@ -6,9 +6,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import image from "@/public/images/image 3.png";
 import player from "@/public/images/player.png";
-import google from "@/public/images/google.png";        
+import google from "@/public/images/google.png";
 import { Button, Input, Link } from "@heroui/react";
-import { LoginFormType } from "@/types"; 
+import { LoginFormType } from "@/types";
 import authApi from "@/service/authApi";
 import { ToastMessage } from "@/components/ToastMessage";
 
@@ -17,36 +17,62 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [toastData, setToastData] = useState<{ heading?: string; message?: string; type?: "error" | "success" | "info" | "warn"; duration?: number } | undefined>();
-
-
     const [formData, setFormData] = useState<LoginFormType>({
         emailOrUsername: "",
         password: "",
     });
-
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    const validateEmail = (email: string) => {
+        if (/\s/.test(email)) {
+            return "Invalid email format";
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return "Invalid email";
+        }
+        return null;
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMessage(null);
-    
+
+        const emailError = validateEmail(formData.emailOrUsername);
+        if (emailError) {
+            setErrorMessage(emailError);
+            return;
+        }
+
         try {
             setLoading(true);
-            const response = await authApi.login(formData); 
-            const token = response.data; 
-            if (token) {
-                localStorage.setItem("token", token); 
+            const response = await authApi.login(formData);
+            const data = response.data;
+            if (data) {
+                localStorage.setItem("data", JSON.stringify(data)); 
             }
-            setToastData({
+            setToastData({                    
                 type: "success",
                 heading: "Login Successful",
-                message: "Your account has been created successfully!",
+                message: "You have successfully logged in!",
                 duration: 3000,
             });
-            router.push("/home");
+            router.push("/");
         } catch (error: any) {
-            console.error("Login failed:", error.response?.data?.message || error.message);
-            setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
+            const errorResponse = error.response?.data?.message;
+            if (errorResponse) {
+                if (errorResponse.includes("Invalid email")) {
+                    setErrorMessage("Email not found");
+                } else if (errorResponse.includes("Incorrect password")) {
+                    setErrorMessage("Incorrect password");
+                } else if (errorResponse.includes("Invalid credentials")) {
+                    setErrorMessage("Invalid email or password");
+                } else {
+                    setErrorMessage(errorResponse);
+                }
+            } else {
+                setErrorMessage("Login failed. Please try again.");
+            }
         } finally {
             setLoading(false);
         }
@@ -54,8 +80,7 @@ export default function Login() {
 
     const handleLoginWithGoogle = async () => {
         window.location.href = "http://localhost:8080/auth/google";
-    }
-
+    };
 
     return (
         <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
@@ -68,12 +93,9 @@ export default function Login() {
               <Image src={player} alt="Small Player" width={450} height={350} className="absolute top-1/3 left-3 transform -translate-y-1/2" />
             </div>
 
-
-
             <div className="flex items-center justify-center p-8">
                 <div className="w-full max-w-md space-y-8">
                     <h1 className="text-4xl font-bold">Welcome</h1>
-
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Email</label>
@@ -85,7 +107,6 @@ export default function Login() {
                                 required
                             />
                         </div>
-
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Password</label>
                             <div className="relative">
@@ -105,7 +126,6 @@ export default function Login() {
                                 </button>
                             </div>
                         </div>
-
                         <div className="flex justify-center">
                             <Button type="submit" disabled={loading} className="w-full">
                                 {loading ? "Logging in..." : "Log In"}
@@ -117,7 +137,6 @@ export default function Login() {
                         </Button>
                         {errorMessage && <p className="text-red-500 text-sm text-center">{errorMessage}</p>}
                     </form>
-
                     <div className="mt-8 text-center">
                         <p className="text-sm">
                             Don't have an account?{" "}
