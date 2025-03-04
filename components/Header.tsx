@@ -44,7 +44,7 @@ const Header = () => {
           </Link>
           <Link
             href="/booking"
-            className={`block px-6 py-1 hover:font-boldmd:inline-block ${
+            className={`block px-6 py-1 hover:font-bold md:inline-block ${
               pathname === "/booking" ? "font-bold" : "text-black"
             }`}
             onClick={() => setMenuOpen(false)}
@@ -54,7 +54,7 @@ const Header = () => {
           </Link>
           <Link
             href="/team"
-            className={`block px-6 py-1 hover:font-boldmd:inline-block ${
+            className={`block px-6 py-1 hover:font-bold md:inline-block ${
               pathname === "/team" ? "font-bold" : "text-black"
             }`}
             onClick={() => setMenuOpen(false)}
@@ -88,14 +88,14 @@ const Header = () => {
         <div className="hidden md:flex space-x-4">
           <Link
             href="/auth/login"
-            className="border w-[70px] rounded-full px-4 py-2 text-black hover:bg-gray-100"
+            className="  border-3 border-black px-4 py-2 text-black hover:bg-gray-100"
 
           >
             Login 
           </Link>
           <Link
             href="/auth/signUp"
-            className="bg-black border rounded-full text-white px-4 py-2 hover:bg-gray-800 w-[90px]"
+            className="bg-black border-3 border-black text-white px-4 py-2 hover:bg-gray-800 "
 
           >
             Signup
