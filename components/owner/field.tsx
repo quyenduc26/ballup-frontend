@@ -5,19 +5,8 @@ import { ChevronDown, ChevronUp, Edit } from "lucide-react";
 import { Button } from "@heroui/react";
 import { Card, CardBody, CardHeader } from "@heroui/react";
 import image from "@/public/images/image 3.png";
+import { Field } from "@/types/owner";
 
-interface Field {
-  id: string;
-  name: string;
-  location: string;
-  price?: string;
-  hasSubFields?: boolean;
-  subFields?: {
-    id: string;
-    name: string;
-    price: string;
-  }[];
-}
 
 const fields: Field[] = [
   {

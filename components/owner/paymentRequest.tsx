@@ -1,14 +1,6 @@
 import { Card, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
+import { PaymentRequest } from "@/types/owner";
 
-interface PaymentRequest {
-    id: string;
-    playingSlot: string;
-    creator: string;
-    amount: number;
-    fromTime: string;
-    toTime: string;
-    createdAt: string;
-}
 
 const subFields: PaymentRequest[] = [
     { id: "1", playingSlot: "Winwin Field - Slot 1", creator: "John Doe", amount: 100000, fromTime: "10:30AM", toTime: "12:00PM", createdAt: "Mar 1, 2023" },

@@ -1,17 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AlignJustify } from "lucide-react";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="w-full border-b bg-white">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
-        <Link href="/" className="text-3xl font-bold text-black">
+        <Link href="/home" className="text-3xl font-bold text-black">
           BALLUP
         </Link>
 
@@ -32,31 +34,46 @@ const Header = () => {
         >
           <Link
             href="/home"
-            className="block sm:ml-16 px-6 py-1 text-black font-bold hover:text-[#FF8811] md:inline-block"
+            className={`block sm:ml-16 px-6 py-1 font-bold hover:text-[#FF8811] md:inline-block ${
+              pathname === "/home" ? "text-[#FF5500]" : "text-black"
+            }`}
+            onClick={() => setMenuOpen(true)}
           >
             HOME
           </Link>
           <Link
             href="/booking"
-            className="block px-6 py-1 text-gray-600  hover:text-[#FF8811] md:inline-block"
+            className={`block px-6 py-1 font-bold hover:text-[#FF8811] md:inline-block ${
+              pathname === "/booking" ? "text-[#FF5500]" : "text-black"
+            }`}
+            onClick={() => setMenuOpen(false)}
           >
             BOOKING
           </Link>
           <Link
-            href="/teamCard"
-            className="block px-6 py-3 text-gray-600 hover:text-[#FF8811] md:inline-block"
+            href="/team"
+            className={`block px-6 py-1 font-bold hover:text-[#FF8811] md:inline-block ${
+              pathname === "/team" ? "text-[#FF5500]" : "text-black"
+            }`}
+            onClick={() => setMenuOpen(false)}
           >
             TEAM
           </Link>
           <Link
             href="/schedule"
-            className="block px-6 py-1 text-gray-600 hover:text-[#FF8811] md:inline-block"
+            className={`block px-6 py-1 font-bold hover:text-[#FF8811] md:inline-block ${
+              pathname === "/schedule" ? "text-[#FF5500]" : "text-black"
+            }`}
+            onClick={() => setMenuOpen(false)}
           >
-            SCHEDULE
+            MATCH
           </Link>
           <Link
             href="/about"
-            className="block px-6 py-1 text-gray-600 hover:text-[#FF8811] md:inline-block"
+            className={`block px-6 py-1 font-bold hover:text-[#FF8811] md:inline-block ${
+              pathname === "/about" ? "text-[#FF5500]" : "text-black"
+            }`}
+            onClick={() => setMenuOpen(false)}
           >
             ABOUT US
           </Link>
@@ -65,16 +82,16 @@ const Header = () => {
         {/* Auth Buttons - Hidden on mobile, shown on desktop */}
         <div className="hidden md:flex space-x-4">
           <Link
-            href="/signin"
-            className="border w-[100px] border-black px-4 py-2 text-black hover:bg-gray-100"
+            href="/auth/login"
+            className="border w-[70px] rounded-full px-4 py-2 text-black hover:bg-gray-100"
           >
-            Sign In
+            Login 
           </Link>
           <Link
-            href="/register"
-            className="bg-black text-white px-4 py-2 hover:bg-gray-800"
+            href="/auth/signUp"
+            className="bg-black border rounded-full text-white px-4 py-2 hover:bg-gray-800 w-[90px]"
           >
-            Register
+            Signup
           </Link>
         </div>
       </div>
