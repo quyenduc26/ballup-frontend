@@ -57,10 +57,8 @@ const Header = () => {
             TEAM
           </Link>
           <Link
-            href="/schedule"
-            className={`block px-6 py-1 md:inline-block ${
-              pathname === "/match" ? "text-black font-bold" : "text-gray-600 hover:text-[#FF8811]"
-            }`}
+            href="/match"
+            className="block px-6 py-1 text-gray-600 hover:text-[#FF8811] md:inline-block"
           >
             MATCH
           </Link>
@@ -77,13 +75,13 @@ const Header = () => {
         {/* Auth Buttons */}
         <div className="hidden md:flex space-x-4">
           <Link
-            href="/signin"
+            href="/auth/login"
             className="border w-[100px] border-black px-4 py-2 text-black hover:bg-gray-100"
           >
             Sign In
           </Link>
           <Link
-            href="/register"
+            href="/auth/signup"
             className="bg-black text-white px-4 py-2 hover:bg-gray-800"
           >
             Register

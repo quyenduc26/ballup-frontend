@@ -42,7 +42,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
             {/* Logo */}
             <div className="relative -mt-12 flex justify-end mr-6">
                 <Image
-                    src={Field}
+                    src={Arsenal}
                     alt="Team Cover"
                     layout="fill"
                     objectFit="cover"

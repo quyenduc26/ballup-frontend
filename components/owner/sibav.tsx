@@ -12,23 +12,6 @@ export default function SibavSidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [owners, setOwners] = useState([]);
 
-  useEffect(() => {
-    const fetchOwners = async () => {
-      try {
-        const response = await ownerApi.getOwner();
-        console.log("Fetched owners:", response);
-
-        setOwners(response.data);
-        console.log("Fetched owners:", response.data);
-      } catch (error) {
-        console.error("Error fetching owners:", error);
-        
-      }
-    };
-
-    fetchOwners();
-  }, []);
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };

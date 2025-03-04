@@ -16,7 +16,7 @@ const CardField = ({ field }: { field: CardFieldType }) => {
   };
 
   return (
-    <div className="relative w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg overflow-hidden">
+    <div className="relative w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg overflow-hidden transition transform hover:scale-105">
       <Link href={`/field/${field.id}`} className="block relative">
       <img
         src={getImageUrl(field.image)}

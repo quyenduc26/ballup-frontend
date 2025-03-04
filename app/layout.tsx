@@ -9,7 +9,6 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import Banner from "@/components/Banner"
 
 
 
@@ -42,19 +41,19 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
+          " bg-background font-sans antialiased",
           fontSans.variable,
         )}
       >
         <Header />
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className=" flex flex-col h-screen min-h-screen">
+          <div className="flex flex-col">
             <main >
               {children}
             </main>
           </div>
         </Providers>
-        {/* <Footer/> */}
+        <Footer/>
       </body>
     </html>
   );

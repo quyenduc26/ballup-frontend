@@ -24,7 +24,7 @@ const ListCard = () => {
 
 
   return (
-    <div className="container mx-auto p-4 mt-10">
+    <div className="container mx-auto p-4 mt-10 mb-10">
       {/* <h1 className="text-6xl font-bold text-center mb-4">Danh sách sân bóng</h1> */}
       {fields.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
