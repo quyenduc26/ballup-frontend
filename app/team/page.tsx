@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import SearchBar from "@/components/search/searchPage";
 import HeroSection from "@/components/Banner";
-import TeamCard from "@/app/teamCard/page";
 import TeamIntro from "@/app/introTeam/page";
+import ListTeamCard from "@/components/team/teamCard/ListTeamCard";
 
 const Team = () => {
   const [showExplore, setShowExplore] = useState(true);
@@ -34,7 +34,7 @@ const Team = () => {
       </div>
       <SearchBar />
 
-      {showExplore && <TeamCard />}
+      {showExplore &&  <ListTeamCard />}
       {!showExplore && <TeamIntro />}
     </div>
   );
