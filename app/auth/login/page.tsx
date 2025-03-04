@@ -47,9 +47,9 @@ export default function Login() {
         try {
             setLoading(true);
             const response = await authApi.login(formData);
-            const token = response.data;
-            if (token) {
-                localStorage.setItem("token", token); 
+            const data = response.data;
+            if (data) {
+                localStorage.setItem("data", JSON.stringify(data)); 
             }
             setToastData({                    
                 type: "success",
@@ -57,7 +57,7 @@ export default function Login() {
                 message: "You have successfully logged in!",
                 duration: 3000,
             });
-            router.push("/home");
+            router.push("/");
         } catch (error: any) {
             const errorResponse = error.response?.data?.message;
             if (errorResponse) {

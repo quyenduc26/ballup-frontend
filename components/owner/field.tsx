@@ -1,32 +1,44 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ChevronDown, ChevronUp, Edit } from "lucide-react";
 import { Button } from "@heroui/react";
 import { Card, CardBody, CardHeader } from "@heroui/react";
 import image from "@/public/images/image 3.png";
-import { Field } from "@/types/owner";
+// import { Field } from "@/types/owner";
+
+import ownerApi from "@/service/ownerApi";
 
 
-const fields: Field[] = [
-  {
-    id: "1",
-    name: "WinWin Field",
-    location: "Mỹ khê 3 Sơn Trà Đà Nẵng",
-    hasSubFields: true,
-    subFields: [
-      { id: "1-1", name: "Field 1", price: "200,000 - 300,000 VND" },
-      { id: "1-2", name: "Field 2", price: "200,000 - 300,000 VND" },
-      { id: "1-3", name: "Field 3", price: "200,000 - 300,000 VND" },
-    ],
-  },
-  // { id: "2", name: "Dana Field", location: "Mỹ khê 3 Sơn Trà Đà Nẵng" },
-  // { id: "3", name: "Le Sat Field", location: "Mỹ khê 3 Sơn Trà Đà Nẵng" },
-  // { id: "4", name: "Thanh Khe Field", location: "Mỹ khê 3 Sơn Trà Đà Nẵng" },
-  // { id: "5", name: "Van Son Field", location: "Mỹ khê 3 Sơn Trà Đà Nẵng" },
-];
+interface Field {
+  id: string;
+  name: string;
+  address: string;
+  description: string;
+  imageUrls: string[];
+  slots: { id: number, name: string, primaryPrice: number, nightPrice: number }[]
+}
+
+// const fields: Field[] = [
+//   {
+//     id: "1",
+//     name: "WinWin Field",
+//     location: "Mỹ khê 3 Sơn Trà Đà Nẵng",
+//     hasSubFields: true,
+//     subFields: [
+//       { id: "1-1", name: "Field 1", price: "200,000 - 300,000 VND" },
+//       { id: "1-2", name: "Field 2", price: "200,000 - 300,000 VND" },
+//       { id: "1-3", name: "Field 3", price: "200,000 - 300,000 VND" },
+//     ],
+//   },
+//   // { id: "2", name: "Dana Field", location: "Mỹ khê 3 Sơn Trà Đà Nẵng" },
+//   // { id: "3", name: "Le Sat Field", location: "Mỹ khê 3 Sơn Trà Đà Nẵng" },
+//   // { id: "4", name: "Thanh Khe Field", location: "Mỹ khê 3 Sơn Trà Đà Nẵng" },
+//   // { id: "5", name: "Van Son Field", location: "Mỹ khê 3 Sơn Trà Đà Nẵng" },
+// ];
 
 export default function FieldList() {
+  const [fields, setFields] = useState<Field[]>([]);
   const [expandedFields, setExpandedFields] = useState<Record<string, boolean>>({});
 
   const toggleSubFields = (fieldId: string) => {
@@ -35,6 +47,25 @@ export default function FieldList() {
       [fieldId]: !prev[fieldId],
     }));
   };
+
+  useEffect(() => {
+    const fetchFields = async () => {
+      try {
+        const data = JSON.parse(localStorage.getItem("data") || "{}");
+        const userId = data?.id;
+
+        if (userId) {
+          const response = await ownerApi.getOwnerCenter(userId);
+          setFields(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching fields:", error);
+      }
+    };
+
+    fetchFields();
+  }, []);
+
 
   return (
     <div className="flex w-full">
@@ -54,8 +85,8 @@ export default function FieldList() {
 
         {/* Field List */}
         <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-2 md:mt-4">
-          {fields.map((field) => (
-            <Card key={field.id} className="overflow-hidden">
+          {fields.map((field, index) => (
+            <Card key={index} className="overflow-hidden">
               <CardHeader className="p-0">
                 <div
                   key={field.id}
@@ -81,12 +112,12 @@ export default function FieldList() {
                   {/* Location */}
                   <div className="w-2/6 flex items-center justify-end">
                     <p className="text-xs md:text-sm text-gray-600">
-                      {field.location}
+                      {field.address}
                     </p>
                   </div>
 
                   {/* Expand/Collapse Button */}
-                  {field.hasSubFields && (
+                  {field.slots?.length > 0 && (
                     <div className="w-1/6 flex justify-end min-w-[60px]">
                       <Button
                         variant="ghost"
@@ -106,43 +137,57 @@ export default function FieldList() {
               </CardHeader>
 
               {/* SubFields */}
-              {field.hasSubFields && expandedFields[field.id] && (
+              {field.slots?.length > 0 && expandedFields[field.id] && (
                 <CardBody className="border-t bg-white p-1 sm:p-2 md:p-4">
                   <div className="space-y-2 sm:space-y-3">
-                    {field.subFields?.map((subField) => (
-                      <div key={subField.id} className="flex items-center gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4 bg-stone-100 rounded-md shadow-sm">
-                        <div className="w-1/6 min-w-fit text-center md:text-left md:pl-4">
-                          <h2 className="text-xs sm:text-sm font-medium">{subField.name}</h2>
-                        </div>
+                    <div className="overflow-auto max-h-[400px]">
+                      {/* Cố định header */}
+                      <div className="sticky top-0 z-10 bg-stone-200">
+                        <div className="flex items-center justify-between gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4">
+                          <div className="w-1/6 min-w-[150px] text-left md:pl-4"> {/* Chỉnh sửa ở đây */}
+                            <h2 className="text-xs sm:text-sm font-medium">Name</h2>
+                          </div>
 
-                        <div className="w-2/6 flex justify-center">
-                          <Image
-                            src={image}
-                            alt=""
-                            width={0}
-                            height={0}
-                            className="rounded-md w-4/5 md:w-44 h-12 sm:h-16 md:h-20 object-cover"
-                          />
-                        </div>
+                          <div className="w-2/6 min-w-[150px] text-left"> {/* Chỉnh sửa ở đây */}
+                            <span className="text-[10px] flex sm:text-xs md:text-sm justify-center md:justify-start">
+                              <b>Price:</b>
+                            </span>
+                          </div>
 
-                        <div className="w-2/6 text-center md:text-left ">
-                          <span className="text-[10px] flex sm:text-xs md:text-sm justify-center md:justify-end">
-                            <b>Price:</b> {subField.price}
-                          </span>
-                        </div>
-
-                        <div className="w-1/6 flex justify-center md:justify-end md:pr-4">
-                          <Button
-                            variant="shadow"
-                            size="sm"
-                            className="flex items-center bg-black h-6 sm:h-8 md:h-10 px-2 sm:px-3"
-                          >
-                            <Edit className="h-2 w-2 sm:h-3 sm:w-3 text-white" />
-                            <span className="ml-1 text-[10px] sm:text-xs text-white">Edit</span>
-                          </Button>
+                          <div className="w-1/6 min-w-[100px] flex justify-center md:justify-start md:pr-4">
+                            <span className="text-xs font-medium">Actions</span>
+                          </div>
                         </div>
                       </div>
-                    ))}
+
+                      {/* Các giá trị chạy theo khi cuộn */}
+                      {field.slots.map((slot) => (
+                        <div key={slot.id} className="flex items-between justify-between gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4 bg-stone-100 rounded-md shadow-sm">
+                          <div className="w-1/6 min-w-[150px] text-left md:pl-4"> {/* Chỉnh sửa ở đây */}
+                            <h2 className="text-xs sm:text-sm font-medium">{slot.name}</h2>
+                          </div>
+
+                          <div className="w-2/6 min-w-[150px] text-left"> {/* Chỉnh sửa ở đây */}
+                            <span className="text-[10px] flex sm:text-xs md:text-sm justify-center md:justify-start">
+                              <b>Price:</b> {slot.primaryPrice + "-" + slot.nightPrice}
+                            </span>
+                          </div>
+
+                          <div className="w-1/6 min-w-[100px] flex justify-center md:justify-start md:pr-4">
+                            <Button
+                              variant="shadow"
+                              size="sm"
+                              className="flex items-center bg-black h-6 sm:h-8 md:h-10 px-2 sm:px-3"
+                            >
+                              <Edit className="h-2 w-2 sm:h-3 sm:w-3 text-white" />
+                              <span className="ml-1 text-[10px] sm:text-xs text-white">Edit</span>
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+
+                    </div>
+
                   </div>
                 </CardBody>
               )}

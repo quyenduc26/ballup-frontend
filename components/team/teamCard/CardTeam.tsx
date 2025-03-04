@@ -1,11 +1,13 @@
 "use client";
 import Image from "next/image";
+
 import Field from "@/public/images/field.png";
 import Arsenal from "@/public/images/arsenal.png";
 import { TeamCardProps } from "@/types/form";
 import { useState } from "react";
 import TeamApi from "@/service/teamCardApi"; 
 import { getImageUrl } from "@/utils/getImage";
+
 
 
 const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
@@ -38,10 +40,12 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105">
             <div className="relative h-40">
                 <img src={  team.cover ? getImageUrl(team.cover) : "/images/field.png"} alt="Team Cover" className="w-full h-full object-cover" />
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
             </div> 
             <div className="relative -mt-12 flex justify-end mr-6">
-                <img src={ team.logo ? getImageUrl(team.logo) :"/images/arsenal.png"} alt="Team Logo" className="w-28 h-28 rounded-full border-2 border-white object-cover" />
+            <img src={ team.logo ? getImageUrl(team.logo) :"/images/arsenal.png"} alt="Team Logo" className="w-28 h-28 rounded-full border-2 border-white object-cover" />
+
             </div>
             <div className="p-5">
                 <h2 className="text-xl font-bold text-black mb-2">{team.name}</h2>
