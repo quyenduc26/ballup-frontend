@@ -1,14 +1,7 @@
 "use client";
 import Image from "next/image";
-<<<<<<< HEAD:components/team/teamCard/CardTeam.tsx
-import image from "@/public/images/image 3.png";
-import Arsenal from "@/public/images/arsenal.png";
-import Field from "@/public/images/field.png";
-
-=======
 import defaultCover from "@/public/images/image 3.png";
 import defaultLogo from "@/public/images/player.png";
->>>>>>> 4e495154ec95793ec2de9b80c22f5629a6334052:components/teamCard/CardTeam.tsx
 
 interface TeamCardProps {
     team: {
@@ -31,11 +24,6 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
     }
 
     return (
-<<<<<<< HEAD:components/team/teamCard/CardTeam.tsx
-        <div className=" bg-white rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105 ">
-            <div className="relative h-40">
-                <Image src={Field} alt="Background" layout="fill" objectFit="cover" />
-=======
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105">
             {/* Cover Image */}
             <div className="relative h-40">
@@ -46,25 +34,16 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
                     objectFit="cover"
                 />
 
->>>>>>> 4e495154ec95793ec2de9b80c22f5629a6334052:components/teamCard/CardTeam.tsx
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
             </div>
 
             {/* Logo */}
             <div className="relative -mt-12 flex justify-end mr-6">
                 <Image
-<<<<<<< HEAD:components/team/teamCard/CardTeam.tsx
-                    src={team.logo || Arsenal}
-                    alt={team.name}
-                    width={0}
-                    height={0}
-                    className="rounded-full border-4 border-white shadow-lg w-36 h-36"
-=======
                     src={team.logo ? `/${team.logo}` : defaultLogo}
                     alt="Team Cover"
                     layout="fill"
                     objectFit="cover"
->>>>>>> 4e495154ec95793ec2de9b80c22f5629a6334052:components/teamCard/CardTeam.tsx
                 />
 
             </div>

@@ -6,9 +6,9 @@ export default function MatchSection() {
      <div className="w-full max-w-full mx-auto p-6 flex flex-col items-center bg-white">
        <div className="flex flex-row w-full justify-between items-center">
          <div className="flex-shrink-0 mt-60">
-           <button className="mt-6 md:mt-10 mx-auto mr-1 flex items-center gap-2 text-sm text-black border border-gray-300 px-6 py-4 rounded-lg hover:bg-gray-100">
-             SEE MORE <FiExternalLink size={16} />
-           </button>
+         <button className="mt-6 md:mt-10 mx-auto mr-1 flex items-center gap-2 text-lg text-black border border-gray-300 px-6 py-4 rounded-lg hover:bg-gray-100">
+          SEE MORE <FiExternalLink size={30} />
+        </button>
          </div>
  
          <div className="flex flex-col items-start">

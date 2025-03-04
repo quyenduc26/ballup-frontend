@@ -20,8 +20,8 @@ export default function BookingSection() {
           BOOKING
         </h2>
         <p className="text-2xl md:text-4xl font-bold text-black">YOUR COURT</p>
-        <button className="mt-6 md:mt-10 mx-auto mr-1 flex items-center gap-2 text-sm text-black border border-gray-300 px-6 py-4 rounded-lg hover:bg-gray-100">
-          SEE MORE <FiExternalLink size={16} />
+        <button className="mt-6 md:mt-10 mx-auto mr-1 flex items-center gap-2 text-lg text-black border border-gray-300 px-6 py-4 rounded-lg hover:bg-gray-100">
+          SEE MORE <FiExternalLink size={30} />
         </button>
         <hr className="w-full border-t border-gray-500 my-6" />
       </div>
