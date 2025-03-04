@@ -1,14 +1,9 @@
 // "use client";
-// import Schedule from '@/components/booking/Schedule'; 
+// import Schedule from '@/components/booking/Schedule';
 // import CardList from "@/components/center/CardList";
 // import PlayingCenter from '@/components/center/PlayingCenter'
 // import PlayingSlot from '@/components/center/PlayingSlot'
 // import FormCreateTeam from '@/components/team/FormCreateTeam'
-
-
-
-
-import React from 'react'
 
 // export default function page() {
 //   return (
@@ -20,4 +15,3 @@ import React from 'react'
 //     </div>
 //   )
 // }
-

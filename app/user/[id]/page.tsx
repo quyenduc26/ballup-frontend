@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 
 interface PageProps {
-  params: { id: string }
+  params: { id: string };
 }
 
 export default function Page({ params }: PageProps) {
-  return <div>User ID: {params.id}</div>
+  return <div>User ID: {params.id}</div>;
 }

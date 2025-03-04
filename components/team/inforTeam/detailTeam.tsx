@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
+
 import TeamHeader from "../inforTeam/intro";
 import PlayerTable from "../inforTeam/tableTeam";
+
 import TeamApi from "@/service/teamCardApi";
 import { DetailTeam } from "@/types/form";
 
 export default function TeamIntro() {
-  const [team, setTeam] = useState<DetailTeam| null>(null);
+  const [team, setTeam] = useState<DetailTeam | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -14,6 +16,7 @@ export default function TeamIntro() {
     const fetchTeamDetail = async () => {
       try {
         const response = await TeamApi.getTeamDetail(20, 1);
+
         console.log("detail team: ", response.data);
         setTeam(response.data);
       } catch (err: any) {
@@ -22,6 +25,7 @@ export default function TeamIntro() {
         setLoading(false);
       }
     };
+
     fetchTeamDetail();
   }, []);
 
@@ -33,16 +37,15 @@ export default function TeamIntro() {
       {team && (
         <>
           <TeamHeader
+            address={team.address}
+            intro={team.intro}
             logo={team.logo}
             name={team.name}
-            intro={team.intro}
             sport={team.sport}
-            address={team.address}
           />
           <PlayerTable players={team.members || []} />
         </>
       )}
     </div>
   );
-  
 }

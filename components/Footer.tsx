@@ -25,7 +25,9 @@ const Footer = () => {
 
         {/* Cột 2: Product */}
         <div className="mb-6 md:mb-0">
-          <h3 className="text-lg font-semibold text-black hover:text-[#FF8811]">Product</h3>
+          <h3 className="text-lg font-semibold text-black hover:text-[#FF8811]">
+            Product
+          </h3>
           <ul className="space-y-2 text-gray-600">
             <li className="hover:text-[#FF8811]">
               <Link href="/package">Package</Link>
@@ -38,7 +40,9 @@ const Footer = () => {
 
         {/* Cột 3: Engage */}
         <div className="mb-6 md:mb-0">
-          <h3 className="text-lg font-semibold text-black hover:text-[#FF8811]">Engage</h3>
+          <h3 className="text-lg font-semibold text-black hover:text-[#FF8811]">
+            Engage
+          </h3>
           <ul className="space-y-2 text-gray-600">
             <li className="hover:text-[#FF8811]">
               <Link href="/policy">Policy</Link>
@@ -51,7 +55,9 @@ const Footer = () => {
 
         {/* Cột 4: Earn Money */}
         <div className="mb-6 md:mb-0">
-          <h3 className="text-lg font-semibold text-black hover:text-[#FF8811]">Earn Money</h3>
+          <h3 className="text-lg font-semibold text-black hover:text-[#FF8811]">
+            Earn Money
+          </h3>
           <ul className="space-y-2 text-gray-600">
             <li className="hover:text-[#FF8811]">
               <Link href="/partner">Become Partner</Link>
