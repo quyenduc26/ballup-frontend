@@ -5,6 +5,8 @@ import { ChevronDown, ChevronUp, Edit } from "lucide-react";
 import { Button } from "@heroui/react";
 import { Card, CardBody, CardHeader } from "@heroui/react";
 import image from "@/public/images/image 3.png";
+// import { Field } from "@/types/owner";
+
 import ownerApi from "@/service/ownerApi";
 
 

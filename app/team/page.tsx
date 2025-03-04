@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import SearchBar from "../../search/searchPage";
-import HeroSection from "../../Banner";
+import SearchBar from "@/components/search/searchPage";
+import HeroSection from "@/components/Banner";
 import TeamCard from "@/app/teamCard/page";
 import TeamIntro from "@/app/introTeam/page";
 

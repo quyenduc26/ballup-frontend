@@ -4,21 +4,15 @@ import Image from "next/image";
 import player from "@/public/images/player.png";
 import Field from "@/public/images/field.png";
 import Arsenal from "@/public/images/arsenal.png";
+import { TeamHeaderProps } from "@/types/form";
 
-interface TeamHeaderProps {
-    logo: string;
-    name: string;
-    description: string;
-    frequency: string;
-    location: string;
-}
 
-const TeamHeader: React.FC<TeamHeaderProps> = ({
+const  TeamHeader: React.FC<TeamHeaderProps> = ({
     logo,
     name,
-    description,
-    frequency,
-    location,
+    intro,  
+    address,
+    sport
 }) => {
     return (
         <div className="w-full border-t border-gray-200 bg-white">
@@ -34,9 +28,8 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
                 {/* Team Info Section */}
                 <div className="flex-1 text-center md:text-left mt-4 md:mt-0">
                     <h1 className="text-xl md:text-2xl font-bold text-black">{name}</h1>
-                    <p className="text-sm text-gray-700">{description}</p>
-                    <p className="text-sm text-gray-600">Tần suất: {frequency}</p>
-                    <p className="text-sm text-gray-600">Địa điểm: {location}</p>
+                    <p className="text-sm text-gray-600">Intro: {intro}</p>
+                    <p className="text-sm text-gray-600">Address: {address}</p>
                 </div>
 
                 {/* Action Buttons */}
