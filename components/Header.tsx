@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AlignJustify } from "lucide-react";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname(); // Lấy đường dẫn hiện tại
 
   return (
     <header className="w-full border-b bg-white">
@@ -24,7 +26,7 @@ const Header = () => {
           <AlignJustify className="w-8 h-8 text-black" />
         </button>
 
-        {/* Navigation Links - Hidden on mobile, shown on desktop */}
+        {/* Navigation Links */}
         <nav
           className={`absolute top-16 left-0 w-full bg-white shadow-md md:static md:flex md:items-center md:space-x-20 md:shadow-none ${
             menuOpen ? "block" : "hidden"
@@ -32,37 +34,47 @@ const Header = () => {
         >
           <Link
             href="/home"
-            className="block sm:ml-16 px-6 py-1 text-black font-bold hover:text-[#FF8811] md:inline-block"
+            className={`block sm:ml-16 px-6 py-1 font-bold md:inline-block ${
+              pathname === "/home" ? "text-black" : " hover:text-[#FF8811]"
+            }`}
           >
             HOME
           </Link>
           <Link
             href="/booking"
-            className="block px-6 py-1 text-gray-600  hover:text-[#FF8811] md:inline-block"
+            className={`block px-6 py-1 md:inline-block ${
+              pathname === "/booking" ? "text-black font-bold" : "text-gray-600 hover:text-[#FF8811]"
+            }`}
           >
             BOOKING
           </Link>
           <Link
             href="/teamCard"
-            className="block px-6 py-3 text-gray-600 hover:text-[#FF8811] md:inline-block"
+            className={`block px-6 py-3 md:inline-block ${
+              pathname === "/teamCard" ? "text-black font-bold" : "text-gray-600 hover:text-[#FF8811]"
+            }`}
           >
             TEAM
           </Link>
           <Link
             href="/schedule"
-            className="block px-6 py-1 text-gray-600 hover:text-[#FF8811] md:inline-block"
+            className={`block px-6 py-1 md:inline-block ${
+              pathname === "/match" ? "text-black font-bold" : "text-gray-600 hover:text-[#FF8811]"
+            }`}
           >
-            SCHEDULE
+            MATCH
           </Link>
           <Link
             href="/about"
-            className="block px-6 py-1 text-gray-600 hover:text-[#FF8811] md:inline-block"
+            className={`block px-6 py-1 md:inline-block ${
+              pathname === "/about" ? "text-black font-bold" : "text-gray-600 hover:text-[#FF8811]"
+            }`}
           >
             ABOUT US
           </Link>
         </nav>
 
-        {/* Auth Buttons - Hidden on mobile, shown on desktop */}
+        {/* Auth Buttons */}
         <div className="hidden md:flex space-x-4">
           <Link
             href="/signin"

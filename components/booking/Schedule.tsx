@@ -44,11 +44,11 @@ export default function Home() {
   };
 
   return (
-    <div className="flex  sm: flex-col p-4 sm:p-8 bg-gray-100 mb-10 mt-20 ml-1 sm:ml-40">
-      <div className="flex flex-col md:flex-row gap-6 w-full max-w-[1200px] bg-white p-6 sm:p-8 shadow-lg rounded-md">
+    <div className="flex  sm: flex-col p-4 sm:p-8 bg-gray-100 mb-10 mt-20 ml-1 ">
+      <div className="flex flex-col sm:ml-40 md:flex-row gap-6 w-full max-w-[1200px] bg-white p-6 sm:p-8 shadow-lg rounded-md">
         {/* Calendar */}
         <div className="w-full md:w-[50%]">
-          <h2 className="text-xl font-bold mb-4 text-center text-black md:text-left">
+          <h2 className="text-2xl  font-bold mb-4 text-center text-black md:text-left bg-clip-text">
             MAY 2025
           </h2>
           <Calendar selected={selectedDate} onSelect={setSelectedDate} />
@@ -56,12 +56,12 @@ export default function Home() {
 
         {/* Schedule */}
         <div className="w-full md:w-[45%]">
-          <h2 className="text-xl font-bold mb-4 text-center md:text-left text-black">
+          <h2 className="text-2xl font-bold mb-4 text-center md:text-left text-black bg-clip-text">
             SCHEDULE
           </h2>
 
           <div className="mb-4">
-            <p className="text-gray-500">BOOKING TIME</p>
+            <p className="text-black text-left flex flex-col ">BOOKING TIME</p>
             <input
               type="time"
               value={fromTime}
@@ -71,7 +71,7 @@ export default function Home() {
           </div>
 
           <div className="mb-4">
-            <p className="text-gray-500">RETURN TIME</p>
+            <p className="text-black text-left flex flex-col">RETURN TIME</p>
             <input
               type="time"
               value={toTime}
@@ -81,7 +81,7 @@ export default function Home() {
           </div>
 
           <div className="mb-4">
-            <p className="text-gray-500">LOCATION</p>
+            <p className="text-black text-left flex flex-col">LOCATION</p>
             <input
               type="text"
               value={location}
@@ -95,7 +95,7 @@ export default function Home() {
             onClick={handleCheck}
             disabled={loading}
             className={`p-3 w-full mt-8 rounded-xl h-14 ${
-              loading ? "bg-gray-400" : "bg-black hover:bg-gray-800 text-white"
+              loading ? "bg-gray-400" : "bg-orange-400 hover:bg-orange-300 text-white"
             }`}
           >
             {loading ? "Processing..." : "CHECK"}

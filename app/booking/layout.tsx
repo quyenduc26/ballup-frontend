@@ -4,7 +4,7 @@ export default function BookingLayout({
     children: React.ReactNode;
   }) {
     return (
-        <section className=" mt-20 items-center justify-center h-screen">
+        <section className=" mt-5 items-center justify-center h-screen">
         <div className="text-center ">
           {children}
         </div>
