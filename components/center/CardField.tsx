@@ -9,15 +9,23 @@ import { getImageUrl } from "@/utils/getImage";
 const CardField = ({ field }: { field: CardFieldType }) => {
   const [favorites, setFavorites] = useState<number[]>([]);
 
-  const toggleFavorite = (id: number) => {
+  const toggleFavorite = (id: number, event: React.MouseEvent) => {
+    event.stopPropagation(); // Ngăn sự kiện lan lên card
     setFavorites((prev) =>
       prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id],
     );
   };
 
+  const handleCardClick = () => {
+    console.log(`Clicked on field: ${field.name}`);
+  };
+
   return (
-    <div className="relative w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg overflow-hidden transition transform hover:scale-105">
-      <Link className="block relative" href={`/field/${field.id}`}>
+    <div
+      className="relative w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg overflow-hidden transition transform hover:scale-105"
+      // Bắt sự kiện click trên toàn bộ card
+    >
+      <Link className="block relative" href={`/booking/${field.id}`}>
         <img
           alt="sân bóng đá"
           className="w-full h-40 sm:h-72 object-cover bg-yellow-300 rounded-lg"
@@ -44,14 +52,14 @@ const CardField = ({ field }: { field: CardFieldType }) => {
         </p>
 
         {/* Nút bấm */}
-        <div className="flex items-center gap-3 mt-4">
+        <div className="flex w-auto items-center gap-3 mt-4">
           <button
             className={`p-2 rounded-full border ${
               favorites.includes(field.id)
                 ? "bg-red-500 text-white"
                 : "text-black hover:bg-red-500"
             }`}
-            onClick={() => toggleFavorite(field.id)}
+            onClick={(event) => toggleFavorite(field.id, event)}
           >
             <Heart
               fill={favorites.includes(field.id) ? "white" : "none"}
@@ -62,10 +70,14 @@ const CardField = ({ field }: { field: CardFieldType }) => {
           <button className="p-2 rounded-full border text-black hover:bg-blue-500">
             <Phone size={20} />
           </button>
-
-          <button className="bg-black text-white px-4 py-2 ml-auto rounded-md hover:bg-orange-500">
-            BOOK NOW
-          </button>
+          <Link className="absolute right-0 " href={`/booking/${field.id}`}>
+            <button
+              className="bg-black text-white px-4 py-2 rounded-md hover:bg-orange-500 mr-20"
+              onClick={() => handleCardClick}
+            >
+              BOOK NOW
+            </button>
+          </Link>
         </div>
       </div>
     </div>

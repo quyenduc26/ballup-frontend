@@ -1,17 +1,22 @@
 import Link from "next/link";
 import { Eye, Pencil, UserX } from "lucide-react";
+import { useState } from "react";
+
 import { Player } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import TeamDetailApi from "@/service/teamDetail";
-import { useState } from "react";
 
 interface PlayerTableProps {
   players: Player[];
-  teamId: number
+  teamId: number;
   onKickMember?: (id: number) => void;
 }
 
-const PlayerTable: React.FC<PlayerTableProps> = ({ players, teamId, onKickMember }) => {
+const PlayerTable: React.FC<PlayerTableProps> = ({
+  players,
+  teamId,
+  onKickMember,
+}) => {
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
   const handleKickMember = async (id: number) => {
@@ -22,8 +27,8 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players, teamId, onKickMember
       const data = localStorage.getItem("data");
       const parsedData = data ? JSON.parse(data) : null;
       const userId = parsedData.id;
-      
-      await TeamDetailApi.kickMember(id, {userId, teamId} );
+
+      await TeamDetailApi.kickMember(id, { userId, teamId });
       alert("Player has been removed successfully!");
       onKickMember?.(id);
       window.location.reload();
@@ -85,8 +90,8 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players, teamId, onKickMember
                 </Link>
                 <button
                   className="text-red-500"
-                  onClick={() => handleKickMember(player.id)}
                   disabled={loadingId === player.id}
+                  onClick={() => handleKickMember(player.id)}
                 >
                   {loadingId === player.id ? "Removing..." : <UserX />}
                 </button>
