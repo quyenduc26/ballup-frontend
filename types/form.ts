@@ -115,3 +115,9 @@ export type DetailTeam = {
   members: Player[];
   owner: boolean;
 };
+
+export type KickMemberType = {
+  userId: number,
+  teamId: number
+};
+
