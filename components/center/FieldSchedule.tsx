@@ -28,74 +28,101 @@ const FieldSchedule = () => {
   const [selectedField, setSelectedField] = useState("Sân 1");
 
   return (
-    <div className="max-w-5xl mx-auto p-4">
-      {/* Nút Back */}
-      <button onClick={() => router.back()} className="mb-4 px-4 py-2 bg-gray-300 rounded-md">
-        Back
-      </button>
-
-      {/* Tiêu đề + Chọn sân */}
-      <div className="flex flex-col sm:flex-row justify-between items-center">
-        <div className="text-center sm:text-left">
-          <h1 className="text-xl sm:text-2xl font-bold mb-16">FIELD SCHEDULE</h1>
-          <h2 className="text-sm sm:text-lg font-semibold mt-2">MAY 24, 2025</h2>
-        </div>
-
-        {/* Thanh chọn sân */}
-        <div className="flex flex-wrap justify-center gap-1 sm:gap-2 sm:mt-0 mt-20  ">
-          {fields.map((field) => (
-            <button
-              key={field}
-              onClick={() => setSelectedField(field)}
-              className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md border text-sm sm:text-base ${
-                selectedField === field ? "bg-black text-white" : "bg-white text-black"
-              }`}
+    <div className="bg-gray-50 min-h-screen py-8">
+      <div className="max-w-6xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden">
+        {/* Header Section */}
+        <div className="bg-gray-100 px-6 py-5 border-b border-gray-200 flex items-center justify-between">
+          <button
+            onClick={() => router.back()}
+            className="flex items-center text-black font-bold text-xl hover:text-black transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              {field}
-            </button>
-          ))}
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+          </button>
+          <div className="flex-grow"></div>
         </div>
-      </div>
 
-      {/* Lịch đặt sân */}
-      <div className="border mt-4 rounded-lg shadow-lg bg-white overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-300 min-w-[600px]">
-          <thead>
-            <tr className="bg-gray-200 text-xs sm:text-sm">
-              <th className="p-1 sm:p-2 text-left border border-gray-300">Time</th>
-              {weekDays.map((day) => (
-                <th key={day.day} className="p-1 sm:p-2 text-center border border-gray-300">
-                  {day.day} <br /> {day.date}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-300">
-            {timeSlots.map((time) => (
-              <tr key={time} className="text-xs sm:text-sm">
-                <td className="p-1 sm:p-2 border border-gray-300 text-black">{time}</td>
-                {weekDays.map((day) => {
-                  const booking = bookings.find(
-                    (b) => b.field === selectedField && b.time === time && b.day === day.date
-                  );
+        {/* Title and Field Selection Section */}
+        <div className="px-6 py-4 bg-white border-b border-gray-100 flex items-center justify-between">
+          <div className="flex flex-col items-start space-y-2">
+            <h1 className="text-2xl font-bold text-gray-800">FIELD SCHEDULE</h1>
+            <h2 className="text-lg text-gray-600 sm:ml-12 ml-5">MAY 24, 2025</h2>
+          </div>
 
-                  return (
-                    <td key={day.day} className="p-1 sm:p-2 text-center border border-gray-300">
-                      {booking ? (
-                        <div className={`text-white p-1 sm:p-2 rounded-md ${booking.color}`}>
-                          <p className="text-[10px] sm:text-sm font-semibold">{booking.name}</p>
-                          <p className="text-[8px] sm:text-xs">1 HOUR</p>
-                        </div>
-                      ) : (
-                        <div className="p-1 sm:p-2 text-gray-400"></div>
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
+          <div className="flex flex-wrap justify-center gap-2">
+            {fields.map((field) => (
+              <button
+                key={field}
+                onClick={() => setSelectedField(field)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${selectedField === field
+                    ? "bg-black text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+              >
+                {field}
+              </button>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
+
+        {/* Schedule Table */}
+        <div className="p-6">
+          <div className="border rounded-lg shadow-sm overflow-x-auto">
+            <table className="w-full border-collapse min-w-[600px]">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="p-3 text-left border-r border-b border-gray-300 text-xs font-semibold text-gray-600">Time</th>
+                  {weekDays.map((day, index) => (
+                    <th
+                      key={day.day}
+                      className={`p-3 text-center border-b border-gray-300 text-xs font-semibold text-gray-600 
+                        ${index < weekDays.length - 1 ? 'border-r' : ''}`}
+                    >
+                      {day.day} <br /> {day.date}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {timeSlots.map((time) => (
+                  <tr key={time} className="hover:bg-gray-50 transition-colors">
+                    <td className="p-3 border-r border-b border-gray-300 text-sm font-medium text-gray-700">{time}</td>
+                    {weekDays.map((day, index) => {
+                      const booking = bookings.find(
+                        (b) => b.field === selectedField && b.time === time && b.day === day.date
+                      );
+
+                      return (
+                        <td
+                          key={day.day}
+                          className={`p-3 border-b border-gray-300 text-center 
+                            ${index < weekDays.length - 1 ? 'border-r' : ''}`}
+                        >
+                          {booking ? (
+                            <div className={`rounded-md p-2 ${booking.color} text-white`}>
+                              <p className="font-semibold text-xs">{booking.name}</p>
+                              <p className="text-[10px] opacity-80">1 HOUR</p>
+                            </div>
+                          ) : (
+                            <div className="text-gray-400 text-xs">-</div>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

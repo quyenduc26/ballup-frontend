@@ -26,7 +26,7 @@ const CardField = ({ field }: { field: CardFieldType }) => {
       className="relative w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg overflow-hidden transition transform hover:scale-105"
       onClick={handleCardClick} // Bắt sự kiện click trên toàn bộ card
     >
-      <Link href={`/field/${field.id}`} className="block relative">
+      <Link href={`/booking/${field.id}`} className="block relative">
         <img
           src={getImageUrl(field.image)}
           alt="sân bóng đá"
@@ -53,7 +53,7 @@ const CardField = ({ field }: { field: CardFieldType }) => {
         </p>
 
         {/* Nút bấm */}
-        <div className="flex items-center gap-3 mt-4">
+        <div className="flex w-auto items-center gap-3 mt-4">
           <button
             onClick={(event) => toggleFavorite(field.id, event)}
             className={`p-2 rounded-full border ${
@@ -71,10 +71,11 @@ const CardField = ({ field }: { field: CardFieldType }) => {
           <button className="p-2 rounded-full border text-black hover:bg-blue-500">
             <Phone size={20} />
           </button>
-
-          <button className="bg-black text-white px-4 py-2 ml-auto rounded-md hover:bg-orange-500">
+          <Link href={`/booking/${field.id}`} className="absolute right-0 ">
+          <button className="bg-black text-white px-4 py-2 rounded-md hover:bg-orange-500 mr-20">
             BOOK NOW
           </button>
+          </Link>
         </div>
       </div>
     </div>
