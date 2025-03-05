@@ -1,12 +1,13 @@
-import FieldInfor from '@/components/center/FieldInfor'
-import FieldSchedule from '@/components/center/FieldSchedule'
-import React from 'react'
+import React from "react";
+
+import FieldInfor from "@/components/center/FieldInfor";
+import FieldSchedule from "@/components/center/FieldSchedule";
 
 export default function page() {
   return (
     <div>
-        <FieldInfor/>
-        <FieldSchedule/>
+      <FieldInfor />
+      <FieldSchedule />
     </div>
-  )
+  );
 }

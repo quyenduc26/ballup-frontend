@@ -8,21 +8,21 @@ export type LoginFormType = {
   emailOrUsername: string;
   password: string;
 };
-  export type FieldDetailType = {
-    id: number;
-    name: string;
-    address: string;
-    description: string;
-    imageUrls:string[];  
-    bookingTime: string;
-    returnTime: string;
-    type: string;
-    price: string;
-    hours: number;
-    total: string;
-    mapUrl: string;
-    slots: [];
-  };
+export type FieldDetailType = {
+  id: number;
+  name: string;
+  address: string;
+  description: string;
+  imageUrls: string[];
+  bookingTime: string;
+  returnTime: string;
+  type: string;
+  price: string;
+  hours: number;
+  total: string;
+  mapUrl: string;
+  slots: [];
+};
 
 export type CardFieldType = {
   id: number;
@@ -117,7 +117,6 @@ export type DetailTeam = {
 };
 
 export type KickMemberType = {
-  userId: number,
-  teamId: number
+  userId: number;
+  teamId: number;
 };
-

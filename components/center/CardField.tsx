@@ -18,19 +18,18 @@ const CardField = ({ field }: { field: CardFieldType }) => {
 
   const handleCardClick = () => {
     console.log(`Clicked on field: ${field.name}`);
-    
   };
 
   return (
     <div
       className="relative w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg overflow-hidden transition transform hover:scale-105"
-      onClick={handleCardClick} // Bắt sự kiện click trên toàn bộ card
+      // Bắt sự kiện click trên toàn bộ card
     >
-      <Link href={`/booking/${field.id}`} className="block relative">
+      <Link className="block relative" href={`/booking/${field.id}`}>
         <img
-          src={getImageUrl(field.image)}
           alt="sân bóng đá"
           className="w-full h-40 sm:h-72 object-cover bg-yellow-300 rounded-lg"
+          src={getImageUrl(field.image)}
         />
       </Link>
 
@@ -55,12 +54,12 @@ const CardField = ({ field }: { field: CardFieldType }) => {
         {/* Nút bấm */}
         <div className="flex w-auto items-center gap-3 mt-4">
           <button
-            onClick={(event) => toggleFavorite(field.id, event)}
             className={`p-2 rounded-full border ${
               favorites.includes(field.id)
                 ? "bg-red-500 text-white"
                 : "text-black hover:bg-red-500"
             }`}
+            onClick={(event) => toggleFavorite(field.id, event)}
           >
             <Heart
               fill={favorites.includes(field.id) ? "white" : "none"}
@@ -71,10 +70,13 @@ const CardField = ({ field }: { field: CardFieldType }) => {
           <button className="p-2 rounded-full border text-black hover:bg-blue-500">
             <Phone size={20} />
           </button>
-          <Link href={`/booking/${field.id}`} className="absolute right-0 ">
-          <button className="bg-black text-white px-4 py-2 rounded-md hover:bg-orange-500 mr-20">
-            BOOK NOW
-          </button>
+          <Link className="absolute right-0 " href={`/booking/${field.id}`}>
+            <button
+              className="bg-black text-white px-4 py-2 rounded-md hover:bg-orange-500 mr-20"
+              onClick={() => handleCardClick}
+            >
+              BOOK NOW
+            </button>
           </Link>
         </div>
       </div>
