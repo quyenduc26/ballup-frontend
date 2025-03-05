@@ -9,21 +9,30 @@ import { getImageUrl } from "@/utils/getImage";
 const CardField = ({ field }: { field: CardFieldType }) => {
   const [favorites, setFavorites] = useState<number[]>([]);
 
-  const toggleFavorite = (id: number) => {
+  const toggleFavorite = (id: number, event: React.MouseEvent) => {
+    event.stopPropagation(); // Ngăn sự kiện lan lên card
     setFavorites((prev) =>
       prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
     );
   };
 
+  const handleCardClick = () => {
+    console.log(`Clicked on field: ${field.name}`);
+    
+  };
+
   return (
-    <div className="relative w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg overflow-hidden transition transform hover:scale-105">
+    <div
+      className="relative w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg overflow-hidden transition transform hover:scale-105"
+      onClick={handleCardClick} // Bắt sự kiện click trên toàn bộ card
+    >
       <Link href={`/field/${field.id}`} className="block relative">
-      <img
-        src={getImageUrl(field.image)}
-        alt="sân bóng đá" 
-        className="w-full h-40 sm:h-72 object-cover bg-yellow-300 rounded-lg"
-      />
-    </Link>
+        <img
+          src={getImageUrl(field.image)}
+          alt="sân bóng đá"
+          className="w-full h-40 sm:h-72 object-cover bg-yellow-300 rounded-lg"
+        />
+      </Link>
 
       {/* Nội dung */}
       <div className="p-4">
@@ -44,7 +53,7 @@ const CardField = ({ field }: { field: CardFieldType }) => {
         {/* Nút bấm */}
         <div className="flex items-center gap-3 mt-4">
           <button
-            onClick={() => toggleFavorite(field.id)}
+            onClick={(event) => toggleFavorite(field.id, event)}
             className={`p-2 rounded-full border ${
               favorites.includes(field.id) ? "bg-red-500 text-white" : "text-black hover:bg-red-500"
             }`}

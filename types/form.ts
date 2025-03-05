@@ -10,10 +10,11 @@ export type LoginFormType = {
   password: string;
 };
   export type FieldDetailType = {
+    id: number;
     name: string;
     address: string;
     description: string;
-    imagesUrls:string[];  
+    imageUrls:string[];  
     bookingTime: string;
     returnTime: string;
     type: string;
