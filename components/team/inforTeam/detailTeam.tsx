@@ -43,7 +43,7 @@ export default function TeamIntro() {
             name={team.name}
             sport={team.sport}
           />
-          <PlayerTable players={team.members || []} />
+          <PlayerTable players={team.members || []} teamId={team.id} />
         </>
       )}
     </div>

@@ -1,14 +1,40 @@
 import Link from "next/link";
-import { Eye, Pencil } from "lucide-react";
-
+import { Eye, Pencil, UserX } from "lucide-react";
 import { Player } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
+import TeamDetailApi from "@/service/teamDetail";
+import { useState } from "react";
 
 interface PlayerTableProps {
   players: Player[];
+  teamId: number
+  onKickMember?: (id: number) => void;
 }
 
-const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
+const PlayerTable: React.FC<PlayerTableProps> = ({ players, teamId, onKickMember }) => {
+  const [loadingId, setLoadingId] = useState<number | null>(null);
+
+  const handleKickMember = async (id: number) => {
+    if (!window.confirm("Are you sure you want to remove this player?")) return;
+
+    setLoadingId(id);
+    try {
+      const data = localStorage.getItem("data");
+      const parsedData = data ? JSON.parse(data) : null;
+      const userId = parsedData.id;
+      
+      await TeamDetailApi.kickMember(id, {userId, teamId} );
+      alert("Player has been removed successfully!");
+      onKickMember?.(id);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error removing player:", error);
+      alert("Failed to remove player!");
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
   return (
     <div className="overflow-x-auto mt-6">
       <table className="min-w-full bg-white shadow-md rounded-lg text-sm md:text-base">
@@ -57,7 +83,13 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players }) => {
                     <Pencil />
                   </span>
                 </Link>
-                <button className="text-red-500">❌</button>
+                <button
+                  className="text-red-500"
+                  onClick={() => handleKickMember(player.id)}
+                  disabled={loadingId === player.id}
+                >
+                  {loadingId === player.id ? "Removing..." : <UserX />}
+                </button>
               </td>
             </tr>
           ))}
