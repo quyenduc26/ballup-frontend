@@ -34,7 +34,7 @@ const Team = () => {
       </div>
       <SearchBar />
 
-      {showExplore &&  <ListTeamCard />}
+      {showExplore && <ListTeamCard />}
       {!showExplore && <TeamIntro />}
     </div>
   );
