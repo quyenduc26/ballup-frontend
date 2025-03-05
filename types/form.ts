@@ -74,6 +74,7 @@ export type TeamCardProps = {
 };
 
 export type TeamHeaderProps = {
+  teamId:number;
   logo?: string;
   name: string;
   intro?: string;
@@ -105,4 +106,10 @@ export type KickMemberType = {
   userId: number,
   teamId: number
 };
+
+export type deleteTeamType = {
+  userId: number,
+  teamId: number
+};
+
 

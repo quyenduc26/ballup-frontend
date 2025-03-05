@@ -37,6 +37,7 @@ export default function TeamIntro() {
       {team && (
         <>
           <TeamHeader
+            teamId={team.id}
             address={team.address}
             intro={team.intro}
             logo={team.logo}
