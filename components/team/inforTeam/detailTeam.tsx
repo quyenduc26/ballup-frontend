@@ -37,12 +37,12 @@ export default function TeamIntro() {
       {team && (
         <>
           <TeamHeader
-            teamId={team.id}
             address={team.address}
             intro={team.intro}
             logo={team.logo}
             name={team.name}
             sport={team.sport}
+            teamId={team.id}
           />
           <PlayerTable players={team.members || []} teamId={team.id} />
         </>

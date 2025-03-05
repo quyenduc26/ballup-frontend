@@ -1,9 +1,16 @@
 import { useState } from "react";
+
 import { TeamHeaderProps } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import TeamDetailApi from "@/service/teamDetail";
 
-const TeamHeader: React.FC<TeamHeaderProps> = ({ logo, name, intro, address, teamId }) => {
+const TeamHeader: React.FC<TeamHeaderProps> = ({
+  logo,
+  name,
+  intro,
+  address,
+  teamId,
+}) => {
   const [loading, setLoading] = useState(false);
   const [showOptions, setShowOptions] = useState(false); // State để hiển thị menu
 
@@ -18,6 +25,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ logo, name, intro, address, tea
 
       if (!userId) {
         alert("User not found. Please log in again.");
+
         return;
       }
       await TeamDetailApi.deleteTeam(teamId, userId);
@@ -65,15 +73,19 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ logo, name, intro, address, tea
 
         {/* Action Buttons */}
         <div className="flex space-x-2 mt-4 md:mt-0">
-          <button className="bg-black text-white px-4 md:px-6 py-2 font-medium">CHAT</button>
-          <button className="border border-gray-300 bg-white text-black px-4 md:px-6 py-2 font-medium">LIKE</button>
+          <button className="bg-black text-white px-4 md:px-6 py-2 font-medium">
+            CHAT
+          </button>
+          <button className="border border-gray-300 bg-white text-black px-4 md:px-6 py-2 font-medium">
+            LIKE
+          </button>
 
           {/* Nút "..." với menu dropdown */}
           <div className="relative">
             <button
               className="border border-gray-300 px-4 py-2 font-medium"
-              onClick={() => setShowOptions(!showOptions)}
               disabled={loading}
+              onClick={() => setShowOptions(!showOptions)}
             >
               {loading ? "Processing..." : "..."}
             </button>

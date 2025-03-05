@@ -47,12 +47,8 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
           <tr>
             <th className="px-4 md:px-6 py-3 text-left">AVATAR</th>
             <th className="px-4 md:px-6 py-3 text-left">NAME</th>
-            <th className="px-4 md:px-6 py-3 text-left ">
-              HEIGHT
-            </th>
-            <th className="px-4 md:px-6 py-3 text-left">
-              WEIGHT
-            </th>
+            <th className="px-4 md:px-6 py-3 text-left ">HEIGHT</th>
+            <th className="px-4 md:px-6 py-3 text-left">WEIGHT</th>
             <th className="px-4 md:px-6 py-3 text-left">ACTION</th>
           </tr>
         </thead>
