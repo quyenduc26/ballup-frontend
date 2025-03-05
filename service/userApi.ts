@@ -1,8 +1,7 @@
-import api from '@/config/api'
+import api from "@/config/api";
 
 const userApi = {
-  getAll: () => api.get('/hello'),
-
+  getAll: () => api.get("/hello"),
 };
 
 export default userApi;

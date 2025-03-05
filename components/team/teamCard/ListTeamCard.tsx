@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+
 import TeamCard from "./CardTeam";
+
 import teamApi from "@/service/teamCardApi";
 import { Team } from "@/types/form";
-
 
 const ListTeamCard: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -12,7 +13,8 @@ const ListTeamCard: React.FC = () => {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await teamApi.getAllTeams({ });
+        const response = await teamApi.getAllTeams({});
+
         console.log("API response:", response.data);
         setTeams(response.data);
       } catch (err: any) {
@@ -28,14 +30,15 @@ const ListTeamCard: React.FC = () => {
   if (loading)
     return <p className="text-center text-gray-500 mt-6">Loading teams...</p>;
 
-  if (error)
-    return <p className="text-center text-red-500 mt-6">{error}</p>;
+  if (error) return <p className="text-center text-red-500 mt-6">{error}</p>;
 
   return (
     <div className="mx-auto p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {teams.length > 0 ? (
-         teams.map((team, index) => <TeamCard key={team.id || index} team={team} />)
+          teams.map((team, index) => (
+            <TeamCard key={team.id || index} team={team} />
+          ))
         ) : (
           <p className="text-center col-span-3 text-gray-500">
             No teams found.

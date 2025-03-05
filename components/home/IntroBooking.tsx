@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image"; 
+import Image from "next/image";
 import { FiExternalLink } from "react-icons/fi";
 
 export default function BookingSection() {
@@ -8,11 +8,11 @@ export default function BookingSection() {
     <div className="w-full max-w-full mx-auto p-6  flex flex-col md:flex-row items-center bg-white">
       <div className="w-full md:w-[350px] h-[300px]">
         <Image
-          src="/images/image 3.png" 
           alt="Innovibe Squads"
-          width={1200}
-          height={200}
           className="w-full object-cover"
+          height={200}
+          src="/images/image 3.png"
+          width={1200}
         />
       </div>
       <div className="w-full md:w-2/3 pl-0 md:pl-6 flex flex-col md:ml-20 text-center md:text-left">

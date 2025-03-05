@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
+
 import CardField from "./CardField";
+
 import playingApi from "@/service/playingApi";
 import { CardFieldType } from "@/types";
 
@@ -11,6 +13,7 @@ const ListCard = () => {
     try {
       const response = await playingApi.getAllCenter();
       const data = response.data.content;
+
       setFields(data);
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu sân bóng:", error);
@@ -21,7 +24,6 @@ const ListCard = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
 
   return (
     <div className="container mx-auto p-4 mt-10 mb-10">

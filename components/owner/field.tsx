@@ -4,12 +4,11 @@ import Image from "next/image";
 import { ChevronDown, ChevronUp, Edit } from "lucide-react";
 import { Button } from "@heroui/react";
 import { Card, CardBody, CardHeader } from "@heroui/react";
+
 import image from "@/public/images/image 3.png";
 // import { Field } from "@/types/owner";
 
 import ownerApi from "@/service/ownerApi";
-import PlayingCenter from "@/components/center/PlayingCenter";
-
 
 interface Field {
   id: string;
@@ -17,7 +16,12 @@ interface Field {
   address: string;
   description: string;
   imageUrls: string[];
-  slots: { id: number, name: string, primaryPrice: number, nightPrice: number }[]
+  slots: {
+    id: number;
+    name: string;
+    primaryPrice: number;
+    nightPrice: number;
+  }[];
 }
 
 // const fields: Field[] = [
@@ -42,9 +46,11 @@ type FieldListProps = {
   setActiveTab: (tab: string) => void;
 };
 
-export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) =>  {
+export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
   const [fields, setFields] = useState<Field[]>([]);
-  const [expandedFields, setExpandedFields] = useState<Record<string, boolean>>({});
+  const [expandedFields, setExpandedFields] = useState<Record<string, boolean>>(
+    {},
+  );
 
   const toggleSubFields = (fieldId: string) => {
     setExpandedFields((prev) => ({
@@ -61,6 +67,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) =>  {
 
         if (userId) {
           const response = await ownerApi.getOwnerCenter(userId);
+
           setFields(response.data);
         }
       } catch (error) {
@@ -71,15 +78,17 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) =>  {
     fetchFields();
   }, []);
 
-
   return (
     <div className="flex w-full">
       <div className="w-full p-1 sm:p-2 md:p-4 lg:p-6">
         <div className="flex justify-between mb-6">
-          <h1 className="text-xl font-bold mb-4">
-            Management Booking Request
-          </h1>
-          <Button className="bg-black rounded-none text-white" onPress={() => setActiveTab("CreateCenter")}>Create center</Button>
+          <h1 className="text-xl font-bold mb-4">Management Booking Request</h1>
+          <Button
+            className="bg-black rounded-none text-white"
+            onPress={() => setActiveTab("CreateCenter")}
+          >
+            Create center
+          </Button>
         </div>
 
         <div className="flex items-center justify-between font-semibold border-b pb-2 text-xs sm:text-sm md:text-base w-full">
@@ -88,8 +97,6 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) =>  {
           <div className="flex-1 flex justify-center">Location</div>
           <div className="flex justify-end pr-2 md:pr-6">Action</div>
         </div>
-
-
 
         {/* Field List */}
         <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-2 md:mt-4">
@@ -102,17 +109,19 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) =>  {
                 >
                   {/* Field Name */}
                   <div className="w-1/6 min-w-[100px]">
-                    <h1 className="text-sm md:text-base font-medium">{field.name}</h1>
+                    <h1 className="text-sm md:text-base font-medium">
+                      {field.name}
+                    </h1>
                   </div>
 
                   {/* Image */}
                   <div className="w-2/6 flex justify-center">
                     <div className="relative w-full max-w-[176px] aspect-[16/9]">
                       <Image
-                        src={image}
-                        alt={field.name}
                         fill
+                        alt={field.name}
                         className="rounded-md object-cover"
+                        src={image}
                       />
                     </div>
                   </div>
@@ -128,10 +137,10 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) =>  {
                   {field.slots?.length > 0 && (
                     <div className="w-1/6 flex justify-end min-w-[60px]">
                       <Button
-                        variant="ghost"
-                        size="sm"
-                        onPress={() => toggleSubFields(field.id)}
                         className="h-8 w-8 md:h-10 md:w-10 "
+                        size="sm"
+                        variant="ghost"
+                        onPress={() => toggleSubFields(field.id)}
                       >
                         {expandedFields[field.id] ? (
                           <ChevronUp className="h-4 w-4 md:h-5 md:w-5" />
@@ -152,11 +161,17 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) =>  {
                       {/* Cố định header */}
                       <div className="sticky top-0 z-10 bg-stone-200">
                         <div className="flex items-center justify-between gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4">
-                          <div className="w-1/6 min-w-[150px] text-left md:pl-4"> {/* Chỉnh sửa ở đây */}
-                            <h2 className="text-xs sm:text-sm font-medium">Name</h2>
+                          <div className="w-1/6 min-w-[150px] text-left md:pl-4">
+                            {" "}
+                            {/* Chỉnh sửa ở đây */}
+                            <h2 className="text-xs sm:text-sm font-medium">
+                              Name
+                            </h2>
                           </div>
 
-                          <div className="w-2/6 min-w-[150px] text-left"> {/* Chỉnh sửa ở đây */}
+                          <div className="w-2/6 min-w-[150px] text-left">
+                            {" "}
+                            {/* Chỉnh sửa ở đây */}
                             <span className="text-[10px] flex sm:text-xs md:text-sm justify-center md:justify-start">
                               <b>Price:</b>
                             </span>
@@ -170,32 +185,42 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) =>  {
 
                       {/* Các giá trị chạy theo khi cuộn */}
                       {field.slots.map((slot) => (
-                        <div key={slot.id} className="flex items-between justify-between gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4 bg-stone-100 rounded-md shadow-sm">
-                          <div className="w-1/6 min-w-[150px] text-left md:pl-4"> {/* Chỉnh sửa ở đây */}
-                            <h2 className="text-xs sm:text-sm font-medium">{slot.name}</h2>
+                        <div
+                          key={slot.id}
+                          className="flex items-between justify-between gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4 bg-stone-100 rounded-md shadow-sm"
+                        >
+                          <div className="w-1/6 min-w-[150px] text-left md:pl-4">
+                            {" "}
+                            {/* Chỉnh sửa ở đây */}
+                            <h2 className="text-xs sm:text-sm font-medium">
+                              {slot.name}
+                            </h2>
                           </div>
 
-                          <div className="w-2/6 min-w-[150px] text-left"> {/* Chỉnh sửa ở đây */}
+                          <div className="w-2/6 min-w-[150px] text-left">
+                            {" "}
+                            {/* Chỉnh sửa ở đây */}
                             <span className="text-[10px] flex sm:text-xs md:text-sm justify-center md:justify-start">
-                              <b>Price:</b> {slot.primaryPrice + "-" + slot.nightPrice}
+                              <b>Price:</b>{" "}
+                              {slot.primaryPrice + "-" + slot.nightPrice}
                             </span>
                           </div>
 
                           <div className="w-1/6 min-w-[100px] flex justify-center md:justify-start md:pr-4">
                             <Button
-                              variant="shadow"
-                              size="sm"
                               className="flex items-center bg-black h-6 sm:h-8 md:h-10 px-2 sm:px-3"
+                              size="sm"
+                              variant="shadow"
                             >
                               <Edit className="h-2 w-2 sm:h-3 sm:w-3 text-white" />
-                              <span className="ml-1 text-[10px] sm:text-xs text-white">Edit</span>
+                              <span className="ml-1 text-[10px] sm:text-xs text-white">
+                                Edit
+                              </span>
                             </Button>
                           </div>
                         </div>
                       ))}
-
                     </div>
-
                   </div>
                 </CardBody>
               )}
@@ -205,4 +230,4 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) =>  {
       </div>
     </div>
   );
-}
+};

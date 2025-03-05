@@ -1,16 +1,13 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@heroui/link";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
-
-
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: {
@@ -37,7 +34,6 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning lang="en">
-      
       <head />
       <body
         className={clsx(
@@ -48,12 +44,10 @@ export default function RootLayout({
         <Header />
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="flex flex-col">
-            <main >
-              {children}
-            </main>
+            <main>{children}</main>
           </div>
         </Providers>
-        <Footer/>
+        <Footer />
       </body>
     </html>
   );
