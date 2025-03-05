@@ -1,17 +1,22 @@
 import Link from "next/link";
 import { Eye, Pencil, UserX } from "lucide-react";
+import { useState } from "react";
+
 import { Player } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import TeamDetailApi from "@/service/teamDetail";
-import { useState } from "react";
 
 interface PlayerTableProps {
   players: Player[];
-  teamId: number
+  teamId: number;
   onKickMember?: (id: number) => void;
 }
 
-const PlayerTable: React.FC<PlayerTableProps> = ({ players, teamId, onKickMember }) => {
+const PlayerTable: React.FC<PlayerTableProps> = ({
+  players,
+  teamId,
+  onKickMember,
+}) => {
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
   const handleKickMember = async (id: number) => {
@@ -22,8 +27,8 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players, teamId, onKickMember
       const data = localStorage.getItem("data");
       const parsedData = data ? JSON.parse(data) : null;
       const userId = parsedData.id;
-      
-      await TeamDetailApi.kickMember(id, {userId, teamId} );
+
+      await TeamDetailApi.kickMember(id, { userId, teamId });
       alert("Player has been removed successfully!");
       onKickMember?.(id);
       window.location.reload();
@@ -42,10 +47,10 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players, teamId, onKickMember
           <tr>
             <th className="px-4 md:px-6 py-3 text-left">AVATAR</th>
             <th className="px-4 md:px-6 py-3 text-left">NAME</th>
-            <th className="px-4 md:px-6 py-3 text-left hidden md:table-cell">
+            <th className="px-4 md:px-6 py-3 text-left ">
               HEIGHT
             </th>
-            <th className="px-4 md:px-6 py-3 text-left hidden md:table-cell">
+            <th className="px-4 md:px-6 py-3 text-left">
               WEIGHT
             </th>
             <th className="px-4 md:px-6 py-3 text-left">ACTION</th>
@@ -66,10 +71,10 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players, teamId, onKickMember
                 />
               </td>
               <td className="px-4 md:px-6 py-3 font-semibold">{player.name}</td>
-              <td className="px-4 md:px-6 py-3 hidden md:table-cell">
+              <td className="px-4 md:px-6 py-3">
                 {player.height ? `${player.height} cm` : "N/A"}
               </td>
-              <td className="px-4 md:px-6 py-3 hidden md:table-cell">
+              <td className="px-4 md:px-6 py-3">
                 {player.weight ? `${player.weight} kg` : "N/A"}
               </td>
               <td className="px-4 md:px-6 py-3 flex space-x-2">
@@ -85,8 +90,8 @@ const PlayerTable: React.FC<PlayerTableProps> = ({ players, teamId, onKickMember
                 </Link>
                 <button
                   className="text-red-500"
-                  onClick={() => handleKickMember(player.id)}
                   disabled={loadingId === player.id}
+                  onClick={() => handleKickMember(player.id)}
                 >
                   {loadingId === player.id ? "Removing..." : <UserX />}
                 </button>

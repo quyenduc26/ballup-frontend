@@ -75,7 +75,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ logo, name, intro, address, tea
               onClick={() => setShowOptions(!showOptions)}
               disabled={loading}
             >
-              {loading ? "Processing..." : "⋮"}
+              {loading ? "Processing..." : "..."}
             </button>
 
             {showOptions && (
