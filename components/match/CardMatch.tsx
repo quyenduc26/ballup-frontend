@@ -1,6 +1,6 @@
 export default function MatchCard() {
   return (
-    <div className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden border mb-10 border-gray-300">
+    <div className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-10 border mb-10 border-gray-300">
       <div className="relative">
         <img
           src="/cover.jpg"
