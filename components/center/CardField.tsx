@@ -1,8 +1,8 @@
 "use client";
 import { Heart, MapPinned, Phone } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+
 import { CardFieldType } from "@/types";
 import { getImageUrl } from "@/utils/getImage";
 
@@ -12,7 +12,7 @@ const CardField = ({ field }: { field: CardFieldType }) => {
   const toggleFavorite = (id: number, event: React.MouseEvent) => {
     event.stopPropagation(); // Ngăn sự kiện lan lên card
     setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id],
     );
   };
 
@@ -36,11 +36,13 @@ const CardField = ({ field }: { field: CardFieldType }) => {
 
       {/* Nội dung */}
       <div className="p-4">
-        <h2 className="text-2xl font-bold text-left flex flex-col text-black">{field.name || "Không có tên"}</h2>
+        <h2 className="text-2xl font-bold text-left flex flex-col text-black">
+          {field.name || "Không có tên"}
+        </h2>
 
         {/* Địa chỉ */}
         <p className="text-black flex items-center mt-2">
-          <MapPinned size={20} className="mr-2" />
+          <MapPinned className="mr-2" size={20} />
           {field.address || "Chưa có địa chỉ"}
         </p>
 
@@ -55,10 +57,15 @@ const CardField = ({ field }: { field: CardFieldType }) => {
           <button
             onClick={(event) => toggleFavorite(field.id, event)}
             className={`p-2 rounded-full border ${
-              favorites.includes(field.id) ? "bg-red-500 text-white" : "text-black hover:bg-red-500"
+              favorites.includes(field.id)
+                ? "bg-red-500 text-white"
+                : "text-black hover:bg-red-500"
             }`}
           >
-            <Heart size={20} fill={favorites.includes(field.id) ? "white" : "none"} />
+            <Heart
+              fill={favorites.includes(field.id) ? "white" : "none"}
+              size={20}
+            />
           </button>
 
           <button className="p-2 rounded-full border text-black hover:bg-blue-500">

@@ -1,84 +1,87 @@
 "use client";
-import Image from "next/image";
 
-import Field from "@/public/images/field.png";
-import Arsenal from "@/public/images/arsenal.png";
-import { TeamCardProps } from "@/types/form";
 import { useState } from "react";
-import TeamApi from "@/service/teamCardApi"; 
+
+import { TeamCardProps } from "@/types/form";
+import TeamApi from "@/service/teamCardApi";
 import { getImageUrl } from "@/utils/getImage";
 
-
-
 const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
-    const [loading, setLoading] = useState(false);
-    const [joined, setJoined] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [joined, setJoined] = useState(false);
 
-    const handleJoinTeam = async () => {
-        if (!team || !team.id) return;
+  const handleJoinTeam = async () => {
+    if (!team || !team.id) return;
 
-        const user_id = 1;
-        setLoading(true);
-        try {
-            await TeamApi.joinTeam(user_id, team.id);
-            setJoined(true);
-            alert("Successfully joined the team!");
-        } catch (error) {
-            console.error("Error joining team:", error);
-            alert("Failed to join the team.");
-        } finally {
-            setLoading(false);
-        }
-    };
+    const user_id = 1;
 
-
-    if (!team) {
-        return <p className="text-red-500">Invalid team data</p>;
+    setLoading(true);
+    try {
+      await TeamApi.joinTeam(user_id, team.id);
+      setJoined(true);
+      alert("Successfully joined the team!");
+    } catch (error) {
+      console.error("Error joining team:", error);
+      alert("Failed to join the team.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return (
-        <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105">
-            <div className="relative h-40">
-                <img src={  team.cover ? getImageUrl(team.cover) : "/images/field.png"} alt="Team Cover" className="w-full h-full object-cover" />
+  if (!team) {
+    return <p className="text-red-500">Invalid team data</p>;
+  }
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-            </div> 
-            <div className="relative -mt-12 flex justify-end mr-6">
-            <img src={ team.logo ? getImageUrl(team.logo) :"/images/arsenal.png"} alt="Team Logo" className="w-28 h-28 rounded-full border-2 border-white object-cover" />
+  return (
+    <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105">
+      <div className="relative h-40">
+        <img
+          alt="Team Cover"
+          className="w-full h-full object-cover"
+          src={team.cover ? getImageUrl(team.cover) : "/images/field.png"}
+        />
 
-            </div>
-            <div className="p-5">
-                <h2 className="text-xl font-bold text-black mb-2">{team.name}</h2>
-                <p className="text-gray-600 text-base mb-4">{team.intro}</p>
-                <div className="grid grid-cols-3 gap-3 text-gray-700 mb-4">
-                    <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50">
-                        <span className="text-base mb-1">📍</span>
-                        <span className="font-medium">{team.address}</span>
-                    </div>
-                    <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50">
-                        <span className="text-base mb-1">🏆</span>
-                        <span className="font-medium">{team.sport}</span>
-                    </div>
-                    <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50">
-                        <span className="text-base mb-1">👥</span>
-                        <span className="font-medium">{team.totalMembers}</span>
-                    </div>
-                </div>
-                <div className="flex flex-col gap-3 mt-4">
-                    <button className="w-full py-2 px-4 border-2 border-black text-black font-semibold rounded-lg hover:bg-gray-100 transition duration-300">
-                        DETAIL
-                    </button>
-                    <button
-                        onClick={handleJoinTeam}
-                        className={`w-full py-2 px-4 rounded-lg font-semibold transition duration-300 ${joined ? "bg-gray-500" : "bg-black text-white hover:bg-gray-800"}`}
-                        disabled={loading || joined}
-                    >
-                        {joined ? "JOINED" : loading ? "JOINING..." : "JOIN TEAM"}
-                    </button>
-                </div>
-            </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+      </div>
+      <div className="relative -mt-12 flex justify-end mr-6">
+        <img
+          alt="Team Logo"
+          className="w-28 h-28 rounded-full border-2 border-white object-cover"
+          src={team.logo ? getImageUrl(team.logo) : "/images/arsenal.png"}
+        />
+      </div>
+      <div className="p-5">
+        <h2 className="text-xl font-bold text-black mb-2">{team.name}</h2>
+        <p className="text-gray-600 text-base mb-4">{team.intro}</p>
+        <div className="grid grid-cols-3 gap-3 text-gray-700 mb-4">
+          <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50">
+            <span className="text-base mb-1">📍</span>
+            <span className="font-medium">{team.address}</span>
+          </div>
+          <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50">
+            <span className="text-base mb-1">🏆</span>
+            <span className="font-medium">{team.sport}</span>
+          </div>
+          <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50">
+            <span className="text-base mb-1">👥</span>
+            <span className="font-medium">{team.totalMembers}</span>
+          </div>
         </div>
-    );
+        <div className="flex flex-col gap-3 mt-4">
+          <button className="w-full py-2 px-4 border-2 border-black text-black font-semibold rounded-lg hover:bg-gray-100 transition duration-300">
+            DETAIL
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-lg font-semibold transition duration-300 ${joined ? "bg-gray-500" : "bg-black text-white hover:bg-gray-800"}`}
+            disabled={loading || joined}
+            onClick={handleJoinTeam}
+          >
+            {joined ? "JOINED" : loading ? "JOINING..." : "JOIN TEAM"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default TeamCard;

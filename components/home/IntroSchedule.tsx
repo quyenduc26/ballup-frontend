@@ -7,18 +7,22 @@ export default function ScheduleSection() {
       {/* Hình ảnh bên trái */}
       <div className="w-full md:w-[350px] h-[250px] md:h-[300px]">
         <Image
-          src="/images/image 3.png"
           alt="Schedule Image"
-          width={300}
-          height={300}
           className="w-full object-cover"
+          height={300}
+          src="/images/image 3.png"
+          width={300}
         />
       </div>
 
       {/* Nội dung chính */}
       <div className="flex-1 px-6 mt-32 text-center md:text-left">
-        <span className="text-4xl md:text-5xl font-bold text-black">CREATE</span>
-        <h2 className="text-6xl md:text-9xl font-bold text-yellow-500">SCHEDULE</h2>
+        <span className="text-4xl md:text-5xl font-bold text-black">
+          CREATE
+        </span>
+        <h2 className="text-6xl md:text-9xl font-bold text-yellow-500">
+          SCHEDULE
+        </h2>
         <hr className="w-full border-t border-gray-500 my-6" />
       </div>
 

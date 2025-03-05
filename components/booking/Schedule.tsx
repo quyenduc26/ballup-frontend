@@ -1,9 +1,8 @@
 "use client";
 import { useState } from "react";
-import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+
 import Calendar from "@/components/booking/Calendar";
-import { ScheduleType } from "@/types/form";
 
 export default function Home() {
   const router = useRouter();
@@ -16,12 +15,14 @@ export default function Home() {
   const handleCheck = () => {
     if (!selectedDate || !fromTime || !toTime) {
       alert("Please fill in all required fields!");
+
       return;
     }
 
     // Convert từ HH:mm sang timestamp (milliseconds)
     const convertToTimestamp = (time: string) => {
       const [hours, minutes] = time.split(":").map(Number);
+
       return selectedDate
         ? new Date(selectedDate.setHours(hours, minutes, 0, 0)).getTime()
         : null;
@@ -32,6 +33,7 @@ export default function Home() {
 
     if (!fromTimestamp || !toTimestamp) {
       alert("Invalid time format!");
+
       return;
     }
 
@@ -39,7 +41,7 @@ export default function Home() {
 
     // Push dữ liệu lên URL
     router.push(
-      `/center/search?location=${location || "Not specified"}&fromTime=${fromTimestamp}&toTime=${toTimestamp}`
+      `/center/search?location=${location || "Not specified"}&fromTime=${fromTimestamp}&toTime=${toTimestamp}`,
     );
   };
 
@@ -63,40 +65,40 @@ export default function Home() {
           <div className="mb-4">
             <p className="text-black text-left flex flex-col ">BOOKING TIME</p>
             <input
+              className="border p-2 w-full rounded-xl h-14"
               type="time"
               value={fromTime}
               onChange={(e) => setBookingTime(e.target.value)}
-              className="border p-2 w-full rounded-xl h-14"
             />
           </div>
 
           <div className="mb-4">
             <p className="text-black text-left flex flex-col">RETURN TIME</p>
             <input
+              className="border p-2 w-full rounded-xl h-14"
               type="time"
               value={toTime}
               onChange={(e) => setReturnTime(e.target.value)}
-              className="border p-2 w-full rounded-xl h-14"
             />
           </div>
 
           <div className="mb-4">
             <p className="text-black text-left flex flex-col">LOCATION</p>
             <input
+              className="border p-2 w-full rounded-xl h-14"
+              placeholder="Enter your location (Optional)"
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="Enter your location (Optional)"
-              className="border p-2 w-full rounded-xl h-14"
             />
           </div>
 
           <button
-            onClick={handleCheck}
-            disabled={loading}
             className={`p-3 w-full mt-8 rounded-xl h-14 ${
               loading ? "bg-black" : "bg-black hover:bg-gray-800 text-white"
             }`}
+            disabled={loading}
+            onClick={handleCheck}
           >
             {loading ? "Processing..." : "CHECK"}
           </button>

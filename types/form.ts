@@ -1,4 +1,3 @@
-
 export type RegisterFormType = {
   username: string;
   email: string;
@@ -74,7 +73,7 @@ export type Team = {
   address: string;
   sport: string;
   totalMembers: number;
-}
+};
 
 export type TeamCardProps = {
   team: {
@@ -87,7 +86,7 @@ export type TeamCardProps = {
     sport: string;
     totalMembers: number;
   };
-}
+};
 
 export type TeamHeaderProps = {
   logo?: string;
@@ -95,7 +94,7 @@ export type TeamHeaderProps = {
   intro?: string;
   address: string;
   sport: string;
-}
+};
 
 export type Player = {
   id: number;
@@ -113,6 +112,6 @@ export type DetailTeam = {
   logo?: string;
   cover?: string;
   sport: string;
-  members: Player[]; 
+  members: Player[];
   owner: boolean;
 };
