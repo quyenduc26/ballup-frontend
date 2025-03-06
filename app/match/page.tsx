@@ -30,7 +30,7 @@ export default function Booking() {
           }`}
           onClick={() => setShowExplore(false)}
         >
-          MY TEAM
+          MY MATCH 
         </button>
       </div>
 
