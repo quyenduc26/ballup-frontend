@@ -28,6 +28,14 @@ export default function Home() {
             Bất kể bạn chơi thể thao nào hoặc ở mức độ nào, ứng dụng của chúng tôi sẽ giúp bạn tìm đồng đội và tham gia
             các hoạt động thể thao mới.
           </p>
+          <p className="text-gray-700 mt-4">
+            Bất kể bạn chơi thể thao nào hoặc ở mức độ nào, ứng dụng của chúng tôi sẽ giúp bạn tìm đồng đội và tham gia
+            các hoạt động thể thao mới.
+          </p>
+          <p className="text-gray-700 mt-4">
+            Bất kể bạn chơi thể thao nào hoặc ở mức độ nào, ứng dụng của chúng tôi sẽ giúp bạn tìm đồng đội và tham gia
+            các hoạt động thể thao mới.
+          </p>
         </div>
         <div className="bg-sky-100 rounded-md overflow-hidden">
           <img
@@ -53,6 +61,14 @@ export default function Home() {
           <p className="text-gray-700">
             Chúng tôi tin rằng thể thao có thể kết nối mọi người và tạo ra những cộng đồng mạnh mẽ. Ứng dụng của chúng
             tôi không chỉ giúp bạn tìm đối tác chơi thể thao mà còn xây dựng tình bạn và mối quan hệ mới.
+          </p>
+          <p className="text-gray-700 mt-4">
+            Bất kể bạn chơi thể thao nào hoặc ở mức độ nào, ứng dụng của chúng tôi sẽ giúp bạn tìm đồng đội và tham gia
+            các hoạt động thể thao mới.
+          </p>
+          <p className="text-gray-700 mt-4">
+            Bất kể bạn chơi thể thao nào hoặc ở mức độ nào, ứng dụng của chúng tôi sẽ giúp bạn tìm đồng đội và tham gia
+            các hoạt động thể thao mới.
           </p>
         </div>
       </section>
