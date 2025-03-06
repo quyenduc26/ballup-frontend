@@ -5,6 +5,7 @@ import { useState } from "react";
 import { TeamCardProps } from "@/types/form";
 import TeamApi from "@/service/teamCardApi";
 import { getImageUrl } from "@/utils/getImage";
+import Link from "next/link";
 
 const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const [loading, setLoading] = useState(false);
@@ -68,9 +69,11 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
           </div>
         </div>
         <div className="flex flex-col gap-3 mt-4">
-          <button className="w-full py-2 px-4 border-2 border-black text-black font-semibold rounded-lg hover:bg-gray-100 transition duration-300">
-            DETAIL
-          </button>
+          <Link href={`/team/${team.id}`} passHref>
+            <button className="w-full py-2 px-4 border-2 border-black text-black font-semibold rounded-lg hover:bg-gray-100 transition duration-300">
+              DETAIL
+            </button>
+          </Link>
           <button
             className={`w-full py-2 px-4 rounded-lg font-semibold transition duration-300 ${joined ? "bg-gray-500" : "bg-black text-white hover:bg-gray-800"}`}
             disabled={loading || joined}
@@ -83,5 +86,5 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
     </div>
   );
 };
-
 export default TeamCard;
+

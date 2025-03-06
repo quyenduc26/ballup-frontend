@@ -22,11 +22,11 @@ export default function SignUp() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [toastData, setToastData] = useState<
     | {
-        heading?: string;
-        message?: string;
-        type?: "error" | "success" | "info" | "warn";
-        duration?: number;
-      }
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warn";
+      duration?: number;
+    }
     | undefined
   >();
 
@@ -42,8 +42,11 @@ export default function SignUp() {
 
     if (!formData.username.trim())
       newErrors.username = "Please enter your name!";
-    if (!formData.email.includes("@"))
-      newErrors.email = "Email must contain'@'";
+    if (!formData.email.trim()) {
+      newErrors.email = "Please enter your email!";
+    } else if (!formData.email.includes("@")) {
+      newErrors.email = "Email must contain '@'";
+    }
     if (!formData.password.match(/^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]{8,}$/)) {
       newErrors.password = "Password must be 8 characters and numbers";
     }

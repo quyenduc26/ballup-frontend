@@ -6,6 +6,7 @@ import SearchBar from "@/components/search/searchPage";
 import HeroSection from "@/components/Banner";
 import TeamIntro from "@/app/introTeam/page";
 import ListTeamCard from "@/components/team/teamCard/ListTeamCard";
+import TeamDetail from "@/service/teamDetail";
 
 const Team = () => {
   const [showExplore, setShowExplore] = useState(true);
