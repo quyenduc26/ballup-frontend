@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { ToastMessage } from "../ToastMessage";
 import feedbackApi from "@/service/contactFormApi";
+import { ToastType } from "@/types/common";
 
 const ContactForm = () => {
     const [formData, setFormData] = useState({
@@ -11,20 +12,7 @@ const ContactForm = () => {
         content: "",
     });
 
-    const [toast, setToast] = useState<{ type: string; message: string } | null>(null);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await feedbackApi.GetFeedbackApi();
-                console.log("API Response:", response.data);
-            } catch (error) {
-                console.error("Error fetching feedback:", error);
-            }
-        };
-
-        fetchData();
-    }, []);
+    const [toastData, setToastData] = useState<ToastType | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -39,40 +27,49 @@ const ContactForm = () => {
 
         try {
             console.log("Form data before submission:", formData);
-
             const response = await feedbackApi.PostFeedbackApi(formData);
 
             console.log("Full API Response:", response);
             console.log("API Response Data:", response?.data);
 
             if (response?.data?.message) {
-                setToast({ type: "success", message: "🎉 Feedback submitted successfully!" });
-
-                console.log("🎉 Feedback submitted successfully!");
-
-                setFormData({ name: "", email: "", content: "" });
+                setToastData({
+                    type: "error",
+                    heading: "Submission Failed ❌",
+                    message: "Failed to send your feedback. Please try again!",
+                    duration: 3000,
+                });
+               
             } else {
-                setToast({ type: "error", message: "API error: " + (response?.data?.message || "No error details available") });
+
+                setToastData({
+                    type: "success",
+                    heading: "Submission Successful 🎉",
+                    message: "Your feedback has been sent successfully!",
+                    duration: 3000,
+                });
             }
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                setToast({ type: "error", message: "Error submitting form: " + (error.message || "Unknown error") });
-            } else {
-                setToast({ type: "error", message: "Error submitting form: Unknown error" });
-            }
+            setToastData({
+                type: "error",
+                heading: "Error ❗",
+                message: "Something went wrong. Please try again later!",
+                duration: 3000,
+            });
         }
     };
 
+    // Tự động ẩn toast sau thời gian duration
     useEffect(() => {
-        if (toast) {
-            const timer = setTimeout(() => setToast(null), 3000);
+        if (toastData) {
+            const timer = setTimeout(() => setToastData(null), toastData.duration);
             return () => clearTimeout(timer);
         }
-    }, [toast]);
+    }, [toastData]);
 
     return (
         <div className="max-w-5xl mx-auto py-16 px-4">
-            {toast && <ToastMessage type={toast.type} message={toast.message} />}
+            {toastData && <ToastMessage toast={toastData} />}
 
             <div className="mb-8">
                 <h2 className="text-sm uppercase text-gray-600 font-medium">CONTACT US</h2>
@@ -124,25 +121,14 @@ const ContactForm = () => {
                             SUBMIT
                         </button>
 
-                        {toast?.type === "success" && (
+                        {toastData?.type === "success" && (
                             <p className="text-green-600 font-medium mt-4">✅ Feedback submitted successfully!</p>
                         )}
                     </div>
-                    {toast && (
-                        <div className="fixed top-5 right-5 bg-white shadow-lg border-l-4 p-4 rounded-lg z-50 transition-opacity duration-500 ease-in-out"
-                            style={{
-                                borderColor: toast.type === "success" ? "green" : "red",
-                            }}
-                        >
-                            <p className={`font-medium ${toast.type === "success" ? "text-green-600" : "text-red-600"}`}>
-                                {toast.message}
-                            </p>
-                        </div>
-                    )}
-
                 </form>
             </div>
         </div>
     );
 };
+
 export default ContactForm;

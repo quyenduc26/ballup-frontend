@@ -81,7 +81,7 @@ export default function Home() {
           lượng cao để kết nối cộng đồng thể thao với nhau.
         </p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 ml-20 items-center justify-center">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:ml-20 ml-2 items-center justify-center">
           {["/images/soccer.png", "/images/soccer.png", "/images/soccer.png", "/images/soccer.png"].map((image, index) => (
             <div key={index} className="flex flex-col items-center w-40">
               <div className="bg-sky-100 rounded-md overflow-hidden w-48 h-48 mb-4">
