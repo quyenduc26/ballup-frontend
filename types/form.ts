@@ -126,3 +126,15 @@ export type deleteTeamType = {
   userId: number;
   teamId: number;
 };
+
+export type queryTime = {
+  fromTime: string,
+  toTime: string
+}
+
+export type BookingDataType = {
+  userId: number,
+  playingSlotId: number,
+  fromTime: number,
+  toTime: number,
+}

@@ -14,7 +14,6 @@ api.interceptors.request.use((config) => {
   const parsedData = data ? JSON.parse(data) : null;
   const authRoutes = ["/auth/login", "/auth/signup"];
 
-  console.log(config.url);
   if (data && config.url && !authRoutes.includes(config.url)) {
     config.headers.Authorization = `Bearer ${parsedData.token}`;
   }

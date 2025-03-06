@@ -3,11 +3,25 @@ import { Heart, MapPinned, Phone } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-import { CardFieldType } from "@/types";
+import { CardFieldType, queryTime } from "@/types";
 import { getImageUrl } from "@/utils/getImage";
 
-const CardField = ({ field }: { field: CardFieldType }) => {
+const CardField = ({ field, queryTime }: { field: CardFieldType, queryTime?: queryTime  }) => {
   const [favorites, setFavorites] = useState<number[]>([]);
+
+  let url = `/booking/${field.id}`;
+  
+  // Nếu queryTime có giá trị, thêm các query params vào URL
+  if (queryTime) {
+    const { fromTime, toTime } = queryTime;
+    const queryParams = new URLSearchParams();
+
+    if (fromTime) queryParams.append('fromTime', fromTime.toString());
+    if (toTime) queryParams.append('toTime', toTime.toString());
+
+    // Thêm query params vào URL
+    url = `${url}?${queryParams.toString()}`;
+  }
 
   const toggleFavorite = (id: number, event: React.MouseEvent) => {
     event.stopPropagation(); // Ngăn sự kiện lan lên card
@@ -16,16 +30,13 @@ const CardField = ({ field }: { field: CardFieldType }) => {
     );
   };
 
-  const handleCardClick = () => {
-    console.log(`Clicked on field: ${field.name}`);
-  };
 
   return (
     <div
       className="relative w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg overflow-hidden transition transform hover:scale-105"
       // Bắt sự kiện click trên toàn bộ card
     >
-      <Link className="block relative" href={`/booking/${field.id}`}>
+      <Link className="block relative" href={url}>
         <img
           alt="sân bóng đá"
           className="w-full h-40 sm:h-72 object-cover bg-yellow-300 rounded-lg"
@@ -70,10 +81,9 @@ const CardField = ({ field }: { field: CardFieldType }) => {
           <button className="p-2 rounded-full border text-black hover:bg-blue-500">
             <Phone size={20} />
           </button>
-          <Link className="absolute right-0 " href={`/booking/${field.id}`}>
+          <Link className="absolute right-0 " href={url}>
             <button
               className="bg-black text-white px-4 py-2 rounded-md hover:bg-orange-500 mr-20"
-              onClick={() => handleCardClick}
             >
               BOOK NOW
             </button>

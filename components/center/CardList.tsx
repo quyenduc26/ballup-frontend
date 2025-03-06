@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import CardField from "./CardField";
 
@@ -8,6 +9,10 @@ import { CardFieldType } from "@/types";
 
 const ListCard = () => {
   const [fields, setFields] = useState<CardFieldType[]>([]);
+  const searchParams = useSearchParams();
+
+  const fromTime = searchParams.get("fromTime");
+  const toTime = searchParams.get("toTime");
 
   const fetchData = async () => {
     try {
@@ -31,7 +36,11 @@ const ListCard = () => {
       {fields.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {fields.map((field) => (
-            <CardField key={field.id} field={field} />
+            fromTime != null && toTime != null ? (
+              <CardField key={field.id} field={field} queryTime={{ fromTime, toTime }} />
+            ) : (
+              <CardField key={field.id} field={field} />
+            )
           ))}
         </div>
       ) : (

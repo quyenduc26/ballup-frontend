@@ -17,7 +17,6 @@ export default function TeamIntro() {
       try {
         const response = await TeamApi.getTeamDetail(20, 1);
 
-        console.log("detail team: ", response.data);
         setTeam(response.data);
       } catch (err: any) {
         setError(err.response?.data?.message || "Lỗi khi tải dữ liệu");
