@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+
 import CardMatch from "@/components/match/CardMatch";
 import Banner from "@/components/Banner";
 import SearchMatch from "@/components/match/SearchMatch";
@@ -30,7 +31,7 @@ export default function Booking() {
           }`}
           onClick={() => setShowExplore(false)}
         >
-          MY MATCH 
+          MY MATCH
         </button>
       </div>
 
