@@ -7,8 +7,9 @@ const TeamDetailApi = {
 
   deleteTeam: (teamId: number, userId: number) =>
     api.delete(`/team/${teamId}?userId=${userId}`),
-  
-  getTeamDetail: (teamId: number, userId: number ) => api.get(`/team/${teamId}/user/${userId}`),
+
+  getTeamDetail: (teamId: number, userId: number) =>
+    api.get(`/team/${teamId}/user/${userId}`),
 };
 
 export default TeamDetailApi;

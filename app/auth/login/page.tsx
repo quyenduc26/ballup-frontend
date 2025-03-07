@@ -11,7 +11,6 @@ import player from "@/public/images/player.png";
 import google from "@/public/images/google.png";
 import { LoginFormType } from "@/types";
 import authApi from "@/service/authApi";
-import { SonnerToast } from "@/components/sonnerMesage";
 
 export default function Login() {
   const router = useRouter();
@@ -19,11 +18,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warn";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warn";
+        duration?: number;
+      }
     | undefined
   >();
   const [formData, setFormData] = useState<LoginFormType>({
@@ -99,7 +98,6 @@ export default function Login() {
 
   return (
     <div>
-      
       <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
         <div className="relative w-full h-[500px] sm:h-[600px] md:h-full">
           <Image
@@ -134,7 +132,10 @@ export default function Login() {
                   type="email"
                   value={formData.emailOrUsername}
                   onChange={(e) =>
-                    setFormData({ ...formData, emailOrUsername: e.target.value })
+                    setFormData({
+                      ...formData,
+                      emailOrUsername: e.target.value,
+                    })
                   }
                 />
               </div>
@@ -180,7 +181,9 @@ export default function Login() {
                 Sign in with Google
               </Button>
               {errorMessage && (
-                <p className="text-red-500 text-sm text-center">{errorMessage}</p>
+                <p className="text-red-500 text-sm text-center">
+                  {errorMessage}
+                </p>
               )}
             </form>
             <div className="mt-8 text-center">

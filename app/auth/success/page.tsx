@@ -10,8 +10,8 @@ export default function AuthSuccess() {
     const token = urlParams.get("token");
 
     if (token) {
-      localStorage.setItem("token", token);
-      router.replace("/home");
+      localStorage.setItem("data", JSON.stringify({ token: token }));
+      router.replace("/");
     }
   }, []);
 
