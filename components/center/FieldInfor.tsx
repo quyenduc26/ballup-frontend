@@ -1,24 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@heroui/react";
 
 import { FieldDetailType } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import { ToastMessage } from "@/components/ToastMessage";
 import bookingRequestApi from "@/service/bookingRequestApi";
-import {Spinner} from "@heroui/react";
 
 const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
   const router = useRouter();
 
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warn";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warn";
+        duration?: number;
+      }
     | undefined
   >();
 
@@ -30,13 +30,15 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
     const userId = parseInt(parsedData.id);
 
     const queryParams = new URLSearchParams(location.search);
-    const fromTime = queryParams.get('fromTime');
-    const toTime = queryParams.get('toTime');
-    const slotId = queryParams.get('slotId');
-    if(slotId == null) {
-      alert("Please choose playing slot")
-      return 
-    } 
+    const fromTime = queryParams.get("fromTime");
+    const toTime = queryParams.get("toTime");
+    const slotId = queryParams.get("slotId");
+
+    if (slotId == null) {
+      alert("Please choose playing slot");
+
+      return;
+    }
 
     const bookingData = {
       userId: userId,
@@ -45,7 +47,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
       toTime: toTime ? parseInt(toTime) : 0,
     };
 
-    console.log(bookingData)
+    console.log(bookingData);
 
     setLoading(true); // Set loading true khi bắt đầu thực hiện đặt phòng
 
@@ -179,16 +181,12 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
             </div>
 
             {/* Deposit Button */}
-            <button 
-              onClick={submitBooking} 
+            <button
               className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors text-lg font-semibold"
               disabled={loading} // Disable button khi đang loading
+              onClick={submitBooking}
             >
-              {loading ? (
-                 <Spinner color="default" />
-              ) : (
-                "BOOK"
-              )}
+              {loading ? <Spinner color="default" /> : "BOOK"}
             </button>
           </div>
         </div>

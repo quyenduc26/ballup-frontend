@@ -6,18 +6,24 @@ import { useState } from "react";
 import { CardFieldType, queryTime } from "@/types";
 import { getImageUrl } from "@/utils/getImage";
 
-const CardField = ({ field, queryTime }: { field: CardFieldType, queryTime?: queryTime  }) => {
+const CardField = ({
+  field,
+  queryTime,
+}: {
+  field: CardFieldType;
+  queryTime?: queryTime;
+}) => {
   const [favorites, setFavorites] = useState<number[]>([]);
 
   let url = `/booking/${field.id}`;
-  
+
   // Nếu queryTime có giá trị, thêm các query params vào URL
   if (queryTime) {
     const { fromTime, toTime } = queryTime;
     const queryParams = new URLSearchParams();
 
-    if (fromTime) queryParams.append('fromTime', fromTime.toString());
-    if (toTime) queryParams.append('toTime', toTime.toString());
+    if (fromTime) queryParams.append("fromTime", fromTime.toString());
+    if (toTime) queryParams.append("toTime", toTime.toString());
 
     // Thêm query params vào URL
     url = `${url}?${queryParams.toString()}`;
@@ -29,7 +35,6 @@ const CardField = ({ field, queryTime }: { field: CardFieldType, queryTime?: que
       prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id],
     );
   };
-
 
   return (
     <div
@@ -82,9 +87,7 @@ const CardField = ({ field, queryTime }: { field: CardFieldType, queryTime?: que
             <Phone size={20} />
           </button>
           <Link className="absolute right-0 " href={url}>
-            <button
-              className="bg-black text-white px-4 py-2 rounded-md hover:bg-orange-500 mr-20"
-            >
+            <button className="bg-black text-white px-4 py-2 rounded-md hover:bg-orange-500 mr-20">
               BOOK NOW
             </button>
           </Link>

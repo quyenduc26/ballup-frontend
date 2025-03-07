@@ -128,13 +128,13 @@ export type deleteTeamType = {
 };
 
 export type queryTime = {
-  fromTime: string,
-  toTime: string
-}
+  fromTime: string;
+  toTime: string;
+};
 
 export type BookingDataType = {
-  userId: number,
-  playingSlotId: number,
-  fromTime: number,
-  toTime: number,
-}
+  userId: number;
+  playingSlotId: number;
+  fromTime: number;
+  toTime: number;
+};

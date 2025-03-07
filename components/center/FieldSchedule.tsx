@@ -2,17 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Slot } from "@/types";
 import { DatePicker, DateValue } from "@heroui/react";
-import { getLocalTimeZone} from "@internationalized/date";
-import { formatDateTime } from "@/utils/formatVNTime";
 
+import { Slot } from "@/types";
+import { formatDateTime } from "@/utils/formatVNTime";
 
 const FieldSchedule = ({ slotList }: { slotList: Slot[] }) => {
   const router = useRouter();
   const [selectedField, setSelectedField] = useState<Slot>(slotList[0]);
 
-  const [checkDate, setCheckDate] = useState<DateValue| null>();
+  const [checkDate, setCheckDate] = useState<DateValue | null>();
 
   const fields = ["Sân 1", "Sân 2", "Sân 3", "Sân 4"];
   const timeSlots = [
@@ -67,11 +66,10 @@ const FieldSchedule = ({ slotList }: { slotList: Slot[] }) => {
   const handleSelectSlot = (slot: Slot) => {
     setSelectedField(slot);
     const currentUrl = new URL(window.location.href);
+
     currentUrl.searchParams.set("slotId", slot.id.toString());
     router.push(currentUrl.toString(), { scroll: false });
-
-  }
-
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen py-8">
@@ -103,7 +101,12 @@ const FieldSchedule = ({ slotList }: { slotList: Slot[] }) => {
 
         {/* Title and Field Selection Section */}
         <div className="px-6 py-4 bg-white border-b border-gray-100 flex items-center justify-between">
-          <DatePicker className="max-w-[284px] text-start" label="Booking date" value={checkDate} onChange={(date) => setCheckDate(date)} />
+          <DatePicker
+            className="max-w-[284px] text-start"
+            label="Booking date"
+            value={checkDate}
+            onChange={(date) => setCheckDate(date)}
+          />
           <p className="text-default-500 text-sm">
             Selected date: {formatDateTime(checkDate, false)}
           </p>

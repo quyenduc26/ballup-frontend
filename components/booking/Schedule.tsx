@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Spinner } from "@heroui/react";
 
 import Calendar from "@/components/booking/Calendar";
-import {Spinner} from "@heroui/react";
 
 export default function Home() {
   const router = useRouter();
@@ -18,16 +18,19 @@ export default function Home() {
   const handleCheck = () => {
     if (!selectedDate) {
       alert("Please select a date!");
+
       return;
     }
-    
+
     if (!fromTime) {
       alert("Please select a start time!");
+
       return;
     }
-    
+
     if (!toTime) {
       alert("Please select an end time!");
+
       return;
     }
 
@@ -44,6 +47,7 @@ export default function Home() {
 
     if (!fromTimestamp || !toTimestamp) {
       alert("Invalid time format!");
+
       return;
     }
 
@@ -53,9 +57,8 @@ export default function Home() {
     params.set("fromTime", fromTimestamp.toString());
     params.set("toTime", toTimestamp.toString());
 
-    router.replace(`/booking?${params.toString()}`,{ scroll: false });
+    router.replace(`/booking?${params.toString()}`, { scroll: false });
     setLoading(false);
-
   };
 
   return (
@@ -113,7 +116,7 @@ export default function Home() {
             disabled={loading}
             onClick={handleCheck}
           >
-            {loading ?  <Spinner color="default" /> : "CHECK"}
+            {loading ? <Spinner color="default" /> : "CHECK"}
           </button>
         </div>
       </div>

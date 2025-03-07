@@ -5,7 +5,8 @@ const bookingRequestApi = {
   getBookings: (id: number) => api.get(`/owner/booking/requests/${id}`),
   confirmBooking: (id: number) => api.patch(`/owner/booking/${id}/confirm`),
   rejectBooking: (id: number) => api.patch(`/owner/booking/${id}/reject`),
-  booking: (bookingData: BookingDataType) => api.post(`/slot/takeSlot`, bookingData),
+  booking: (bookingData: BookingDataType) =>
+    api.post(`/slot/takeSlot`, bookingData),
 };
 
 export default bookingRequestApi;
