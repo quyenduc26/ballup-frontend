@@ -31,7 +31,6 @@ const PlayingSlot = () => {
     try {
       const response = await playingApi.createPlayingSlot(formData);
 
-      console.log("Success:", response.data);
       alert("Playing Slot created successfully!");
       router.push("/success-page");
     } catch (error) {

@@ -7,7 +7,7 @@ const playingApi = {
   createPlayingSlot: (formData: PlayingSlotType) =>
     api.post("/owner/slot", formData),
   getAllCenter: () => api.get("/center"),
-  getCenterInfor: (id: number) => api.get(`/center/${id}`), // Sửa lỗi thiếu dấu backtick
+  getCenterInfor: (id: number) => api.get(`/center/${id}`),
 };
 
 export default playingApi;
