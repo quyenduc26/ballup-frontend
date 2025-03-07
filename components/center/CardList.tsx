@@ -7,7 +7,7 @@ import CardField from "./CardField";
 import playingApi from "@/service/playingApi";
 import { CardFieldType } from "@/types";
 
-const ListCard = () => {
+const CardList = () => {
   const [fields, setFields] = useState<CardFieldType[]>([]);
   const searchParams = useSearchParams();
 
@@ -54,4 +54,4 @@ const ListCard = () => {
   );
 };
 
-export default ListCard;
+export default CardList;

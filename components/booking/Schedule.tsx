@@ -5,7 +5,7 @@ import { Spinner } from "@heroui/react";
 
 import Calendar from "@/components/booking/Calendar";
 
-export default function Home() {
+export default function Schedule() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams.toString());
