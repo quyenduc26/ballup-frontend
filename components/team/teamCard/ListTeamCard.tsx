@@ -15,7 +15,6 @@ const ListTeamCard: React.FC = () => {
       try {
         const response = await teamApi.getAllTeams({});
 
-        console.log("API response:", response.data);
         setTeams(response.data);
       } catch (err: any) {
         console.error("API error:", err);

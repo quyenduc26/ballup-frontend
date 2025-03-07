@@ -1,11 +1,14 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Spinner } from "@heroui/react";
 
 import Calendar from "@/components/booking/Calendar";
 
-export default function Home() {
+export default function Schedule() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [fromTime, setBookingTime] = useState("");
   const [toTime, setReturnTime] = useState("");
@@ -13,13 +16,24 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const handleCheck = () => {
-    if (!selectedDate || !fromTime || !toTime) {
-      alert("Please fill in all required fields!");
+    if (!selectedDate) {
+      alert("Please select a date!");
 
       return;
     }
 
-    // Convert từ HH:mm sang timestamp (milliseconds)
+    if (!fromTime) {
+      alert("Please select a start time!");
+
+      return;
+    }
+
+    if (!toTime) {
+      alert("Please select an end time!");
+
+      return;
+    }
+
     const convertToTimestamp = (time: string) => {
       const [hours, minutes] = time.split(":").map(Number);
 
@@ -39,10 +53,12 @@ export default function Home() {
 
     setLoading(true);
 
-    // Push dữ liệu lên URL
-    router.push(
-      `/center/search?location=${location || "Not specified"}&fromTime=${fromTimestamp}&toTime=${toTimestamp}`,
-    );
+    params.set("location", location || "Not specified");
+    params.set("fromTime", fromTimestamp.toString());
+    params.set("toTime", toTimestamp.toString());
+
+    router.replace(`/booking?${params.toString()}`, { scroll: false });
+    setLoading(false);
   };
 
   return (
@@ -94,13 +110,13 @@ export default function Home() {
           </div>
 
           <button
-            className={`p-3 w-full mt-8 rounded-xl h-14 ${
+            className={`p-3 w-full mt-8 rounded-xl h-14 text-white ${
               loading ? "bg-black" : "bg-black hover:bg-gray-800 text-white"
             }`}
             disabled={loading}
             onClick={handleCheck}
           >
-            {loading ? "Processing..." : "CHECK"}
+            {loading ? <Spinner color="default" /> : "CHECK"}
           </button>
         </div>
       </div>

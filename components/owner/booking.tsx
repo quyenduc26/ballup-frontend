@@ -24,7 +24,6 @@ export default function BookingTable() {
       try {
         const response = await bookingRequestApi.getBookings(1);
 
-        console.log("Fetched bookings:", response.data);
         setBookings(response.data);
       } catch (error) {
         console.error("Error fetching bookings:", error);
