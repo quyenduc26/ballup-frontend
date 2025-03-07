@@ -58,7 +58,7 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
               <td className="px-4 md:px-6 py-3">
                 <img
                   alt={player.name}
-                  className="w-12 h-12 rounded-full object-cover"
+                  className="w-20 h-20 object-cover"
                   src={
                     player.avatar
                       ? getImageUrl(player.avatar)

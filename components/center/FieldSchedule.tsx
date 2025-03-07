@@ -2,9 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { DatePicker, DateValue } from "@heroui/react";
 
-const FieldSchedule = () => {
+import { Slot } from "@/types";
+import { formatDateTime } from "@/utils/formatVNTime";
+
+const FieldSchedule = ({ slotList }: { slotList: Slot[] }) => {
   const router = useRouter();
+  const [selectedField, setSelectedField] = useState<Slot>(slotList[0]);
+
+  const [checkDate, setCheckDate] = useState<DateValue | null>();
 
   const fields = ["Sân 1", "Sân 2", "Sân 3", "Sân 4"];
   const timeSlots = [
@@ -56,7 +63,13 @@ const FieldSchedule = () => {
     },
   ];
 
-  const [selectedField, setSelectedField] = useState("Sân 1");
+  const handleSelectSlot = (slot: Slot) => {
+    setSelectedField(slot);
+    const currentUrl = new URL(window.location.href);
+
+    currentUrl.searchParams.set("slotId", slot.id.toString());
+    router.push(currentUrl.toString(), { scroll: false });
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen py-8">
@@ -88,25 +101,27 @@ const FieldSchedule = () => {
 
         {/* Title and Field Selection Section */}
         <div className="px-6 py-4 bg-white border-b border-gray-100 flex items-center justify-between">
-          <div className="flex flex-col items-start space-y-2">
-            <h1 className="text-2xl font-bold text-gray-800">FIELD SCHEDULE</h1>
-            <h2 className="text-lg text-gray-600 sm:ml-12 ml-5">
-              MAY 24, 2025
-            </h2>
-          </div>
-
+          <DatePicker
+            className="max-w-[284px] text-start"
+            label="Booking date"
+            value={checkDate}
+            onChange={(date) => setCheckDate(date)}
+          />
+          <p className="text-default-500 text-sm">
+            Selected date: {formatDateTime(checkDate, false)}
+          </p>
           <div className="flex flex-wrap justify-center gap-2">
-            {fields.map((field) => (
+            {slotList.map((slot, index) => (
               <button
-                key={field}
+                key={index}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  selectedField === field
+                  selectedField === slot
                     ? "bg-black text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
-                onClick={() => setSelectedField(field)}
+                onClick={() => handleSelectSlot(slot)}
               >
-                {field}
+                {slot.name}
               </button>
             ))}
           </div>
@@ -138,7 +153,7 @@ const FieldSchedule = () => {
                     <td className="p-3 border-r border-b border-gray-300 text-sm font-medium text-gray-700">
                       {time}
                     </td>
-                    {weekDays.map((day, index) => {
+                    {/* {weekDays.map((day, index) => {
                       const booking = bookings.find(
                         (b) =>
                           b.field === selectedField &&
@@ -166,7 +181,7 @@ const FieldSchedule = () => {
                           )}
                         </td>
                       );
-                    })}
+                    })} */}
                   </tr>
                 ))}
               </tbody>
