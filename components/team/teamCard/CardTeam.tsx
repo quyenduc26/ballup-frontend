@@ -69,7 +69,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
           </div>
         </div>
         <div className="flex flex-col gap-3 mt-4">
-          <Link passHref href={`/team/${team.id}`}>
+          <Link href={`/team/${team.id}`}>
             <button className="w-full py-2 px-4 border-2 border-black text-black font-semibold rounded-lg hover:bg-gray-100 transition duration-300">
               DETAIL
             </button>
