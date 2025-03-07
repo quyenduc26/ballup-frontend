@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-
 import { FieldDetailType } from "@/types/form";
 import playingApi from "@/service/playingApi";
 import { getImageUrl } from "@/utils/getImage";
