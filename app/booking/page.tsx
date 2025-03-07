@@ -1,4 +1,5 @@
 import React from "react";
+import { Suspense } from 'react'
 
 import Schedule from "@/components/booking/Schedule";
 import SearchBooking from "@/components/booking/SearchBooking";
@@ -7,6 +8,7 @@ import CardList from "@/components/center/CardList";
 
 export default function Booking() {
   return (
+    <Suspense >
     <div>
       <div className="text-4xl md:text-6xl ml-8 font-extrabold text-center md:text-left mb-5 text-transparent bg-clip-text">
         BOOKING
@@ -16,5 +18,6 @@ export default function Booking() {
       <SearchBooking />
       <CardList />
     </div>
+    </Suspense>
   );
 }

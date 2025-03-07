@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 
 import CardMatch from "@/components/match/CardMatch";
 import Banner from "@/components/Banner";
@@ -16,23 +17,27 @@ export default function Booking() {
       </div>
       <Banner />
       {/* Links */}
-      <div className="flex flex-col md:flex-row mt-10 items-center justify-center md:justify-start gap-4 md:gap-8 p-5 ml-2">
-        <button
-          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${
-            showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
-          }`}
-          onClick={() => setShowExplore(true)}
-        >
-          EXPLORE
-        </button>
-        <button
-          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${
-            !showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
-          }`}
-          onClick={() => setShowExplore(false)}
-        >
-          MY MATCH
-        </button>
+      <div className="flex flex-col md:flex-row mt-10 items-center justify-between md:justify-start gap-4 md:gap-8 p-5 ml-2">
+        <div className="flex gap-4">
+          <button
+            className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${showExplore ? "text-blue-500" : "text-black hover:text-blue-500"}`}
+            onClick={() => setShowExplore(true)}
+          >
+            EXPLORE
+          </button>
+          <button
+            className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${!showExplore ? "text-blue-500" : "text-black hover:text-blue-500"}`}
+            onClick={() => setShowExplore(false)}
+          >
+            MY MATCH
+          </button>
+        </div>
+
+        <Link passHref href="/match/createMatch">
+          <button className="ml-auto flex justify-end items-end text-lg md:text-2xl border border-gray-500 bg-black px-4 md:px-6 py-2 font-medium transition-all text-white">
+            +
+          </button>
+        </Link>
       </div>
 
       {/* Components */}
