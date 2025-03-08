@@ -50,7 +50,7 @@ const CardField = ({
       </Link>
 
       {/* Nội dung */}
-      <div className="p-4">
+      <div className="py-4">
         <h2 className="text-2xl font-bold text-left flex flex-col text-black">
           {field.name || "Không có tên"}
         </h2>
@@ -68,26 +68,28 @@ const CardField = ({
         </p>
 
         {/* Nút bấm */}
-        <div className="flex w-auto items-center gap-3 mt-4">
-          <button
-            className={`p-2 rounded-full border ${
-              favorites.includes(field.id)
-                ? "bg-red-500 text-white"
-                : "text-black hover:bg-red-500"
-            }`}
-            onClick={(event) => toggleFavorite(field.id, event)}
-          >
-            <Heart
-              fill={favorites.includes(field.id) ? "white" : "none"}
-              size={20}
-            />
-          </button>
+        <div className="flex justify-between gap-3 mt-4">
+          <div className="flex gap-3">
+            <button
+              className={`p-2 rounded-full border ${
+                favorites.includes(field.id)
+                  ? "bg-red-500 text-white"
+                  : "text-black hover:bg-red-500"
+              }`}
+              onClick={(event) => toggleFavorite(field.id, event)}
+            >
+              <Heart
+                fill={favorites.includes(field.id) ? "white" : "none"}
+                size={20}
+              />
+            </button>
 
-          <button className="p-2 rounded-full border text-black hover:bg-blue-500">
-            <Phone size={20} />
-          </button>
-          <Link className="absolute right-0 " href={url}>
-            <button className="bg-black text-white px-4 py-2 rounded-md hover:bg-orange-500 mr-20">
+            <button className="p-2 rounded-full border text-black hover:bg-blue-500">
+              <Phone size={20} />
+            </button>
+          </div>
+          <Link className="" href={url}>
+            <button className="bg-black text-white px-4 py-2 rounded-md hover:bg-orange-500 font-bold hover:scale-95 transition">
               BOOK NOW
             </button>
           </Link>
