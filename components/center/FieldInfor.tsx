@@ -1,57 +1,81 @@
 "use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@heroui/react";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
 import { FieldDetailType } from "@/types/form";
-import playingApi from "@/service/playingApi";
 import { getImageUrl } from "@/utils/getImage";
+import { ToastMessage } from "@/components/ToastMessage";
+import bookingRequestApi from "@/service/bookingRequestApi";
 
-const BookingDetail = () => {
+const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
   const router = useRouter();
-  const params = useParams();
-  const centerId = params.centerId;
-  const centerIdNumber = parseInt(
-    Array.isArray(centerId) ? centerId[0] : centerId || "0",
-  );
 
-  const [bookingInfo, setBookingInfo] = useState<FieldDetailType | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!centerId) return;
-
-    const fetchCenterInfo = async () => {
-      try {
-        if (centerIdNumber) {
-          const response = await playingApi.getCenterInfor(centerIdNumber);
-
-          setBookingInfo({
-            ...response.data,
-            bookingTime: "20:00 12/12/2012",
-            returnTime: "21:00 12/12/2012",
-            type: "5-player",
-            price: "200,000 vnd",
-            hours: 1,
-            total: "200,000 vnd",
-          });
-          console.log(response.data);
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu sân bóng:", error);
-      } finally {
-        setLoading(false);
+  const [toastData, setToastData] = useState<
+    | {
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warn";
+        duration?: number;
       }
+    | undefined
+  >();
+
+  const [loading, setLoading] = useState(false); // Thêm state loading
+
+  const submitBooking = async () => {
+    const data = localStorage.getItem("data");
+    const parsedData = data ? JSON.parse(data) : null;
+    const userId = parseInt(parsedData.id);
+
+    const queryParams = new URLSearchParams(location.search);
+    const fromTime = queryParams.get("fromTime");
+    const toTime = queryParams.get("toTime");
+    const slotId = queryParams.get("slotId");
+
+    if (slotId == null) {
+      alert("Please choose playing slot");
+
+      return;
+    }
+
+    const bookingData = {
+      userId: userId,
+      playingSlotId: slotId ? parseInt(slotId) : 0,
+      fromTime: fromTime ? parseInt(fromTime) : 0,
+      toTime: toTime ? parseInt(toTime) : 0,
     };
 
-    fetchCenterInfo();
-  }, [centerId]);
+    console.log(bookingData);
 
-  if (loading) return <p className="text-center mt-10">Đang tải...</p>;
-  if (!bookingInfo)
-    return <p className="text-center mt-10">Không tìm thấy sân bóng</p>;
+    setLoading(true); // Set loading true khi bắt đầu thực hiện đặt phòng
+
+    try {
+      await bookingRequestApi.booking(bookingData);
+
+      setToastData({
+        type: "success",
+        heading: "Booking Successful",
+        message: "Booking Successful",
+        duration: 3000,
+      });
+
+      // setTimeout(() => router.push("/booking"), 3000);
+    } catch (e) {
+      setToastData({
+        type: "error",
+        heading: "Booking Unsuccessful",
+        message: "An error occurred while booking.",
+        duration: 3000,
+      });
+    } finally {
+      setLoading(false); // Set loading false khi hoàn thành quá trình
+    }
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen py-10">
+      <ToastMessage toast={toastData} />
       <div className="max-w-6xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden">
         {/* Header Section */}
         <div className="bg-gray-100 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
@@ -85,11 +109,11 @@ const BookingDetail = () => {
               alt="Main field"
               className="rounded-xl w-full h-[650px] object-cover shadow-lg"
               src={
-                getImageUrl(bookingInfo.imageUrls?.[0]) || "/images/default.png"
+                getImageUrl(centerInfor.imageUrls?.[0]) || "/images/default.png"
               }
             />
             <div className="flex gap-4 overflow-x-auto pb-2">
-              {bookingInfo.imageUrls
+              {centerInfor.imageUrls
                 ?.slice(1)
                 .map((img, index) => (
                   <img
@@ -106,11 +130,11 @@ const BookingDetail = () => {
           <div className="flex-1 bg-gray-50 border border-gray-200 rounded-xl p-6 space-y-4 ">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold text-gray-800">
-                {bookingInfo.name}
+                {centerInfor.name}
               </h1>
-              <p className="text-gray-600 text-left">{bookingInfo.address}</p>
+              <p className="text-gray-600 text-left">{centerInfor.address}</p>
               <p className="text-gray-500 text-left">
-                {bookingInfo.description}
+                {centerInfor.description}
               </p>
             </div>
 
@@ -121,7 +145,7 @@ const BookingDetail = () => {
                 className="rounded-xl border-2 border-gray-300"
                 height="250"
                 loading="lazy"
-                src={bookingInfo.mapUrl}
+                src={centerInfor.mapUrl}
                 title="map"
                 width="100%"
               />
@@ -131,37 +155,37 @@ const BookingDetail = () => {
             <div className="bg-white rounded-lg p-4 shadow-sm">
               <div className="flex justify-between mb-2">
                 <p className="font-semibold text-gray-700">From</p>
-                <p className="text-gray-900">{bookingInfo.bookingTime}</p>
+                <p className="text-gray-900">{centerInfor.bookingTime}</p>
               </div>
               <div className="flex justify-between">
                 <p className="font-semibold text-gray-700">To</p>
-                <p className="text-gray-900">{bookingInfo.returnTime}</p>
+                <p className="text-gray-900">{centerInfor.returnTime}</p>
               </div>
             </div>
 
             {/* Pricing Details */}
             <div className="bg-white rounded-lg p-4 shadow-sm space-y-2">
               <div className="flex justify-between">
-                <p className="font-semibold text-gray-700">Type</p>
-                <p className="text-gray-900">{bookingInfo.type}</p>
-              </div>
-              <div className="flex justify-between">
                 <p className="font-semibold text-gray-700">Price</p>
-                <p className="text-gray-900">{bookingInfo.price}</p>
+                <p className="text-gray-900">{centerInfor.price}</p>
               </div>
               <div className="flex justify-between">
                 <p className="font-semibold text-gray-700">Hour(s)</p>
-                <p className="text-gray-900">{bookingInfo.hours}</p>
+                <p className="text-gray-900">{centerInfor.hours}</p>
               </div>
               <div className="flex justify-between pt-2 border-t border-gray-200 font-bold text-lg">
                 <p className="text-gray-900">Total</p>
-                <p className="text-green-600">{bookingInfo.total}</p>
+                <p className="text-green-600">{centerInfor.total}</p>
               </div>
             </div>
 
             {/* Deposit Button */}
-            <button className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors text-lg font-semibold">
-              DEPOSIT
+            <button
+              className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors text-lg font-semibold"
+              disabled={loading} // Disable button khi đang loading
+              onClick={submitBooking}
+            >
+              {loading ? <Spinner color="default" /> : "BOOK"}
             </button>
           </div>
         </div>

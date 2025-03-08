@@ -6,25 +6,35 @@ import { Search } from "lucide-react";
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [location, setLocation] = useState("");
+  const [address, setAddress] = useState("");
   const [sport, setSport] = useState("");
   const [sort, setSort] = useState("");
 
   const router = useRouter();
 
   const handleSearch = () => {
-    const query = new URLSearchParams();
+    const searchParams = new URLSearchParams(window.location.search);
 
-    if (searchTerm) query.set("name", searchTerm);
-    if (location) query.set("location", location);
-    if (sport) query.set("sport", sport);
-    if (sort) query.set("sort", sort);
+    if (searchTerm) {
+      searchParams.set("name", searchTerm);
+    } else {
+      searchParams.delete("name");
+    }
 
-    router.push(`/search?${query.toString()}`);
+    if (address) searchParams.set("address", address);
+    else searchParams.delete("address");
+
+    if (sport) searchParams.set("sport", sport);
+    else searchParams.delete("sport");
+
+    if (sort) searchParams.set("sort", sort);
+    else searchParams.delete("sort");
+
+    router.push(`?${searchParams.toString()}`, { scroll: false });
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-center md:justify-between bg-white py-6 px-4 gap-4 ml-4">
+    <div className="flex w-[1520px] self-center flex-col md:flex-row items-center justify-center md:justify-between bg-white py-6 px-4 gap-4">
       <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full md:w-1/3">
         <input
           className="w-full p-3 text-black outline-none"
@@ -44,8 +54,8 @@ const SearchBar = () => {
       <div className="flex flex-wrap md:flex-nowrap justify-center md:justify-end gap-2">
         <select
           className="p-2 md:p-3 border border-gray-300 rounded-md bg-black text-white shadow-sm cursor-pointer w-full md:w-[150px] flex-1"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
         >
           <option value="">PLACE</option>
           <option value="Hà Nội">Hà Nội</option>
@@ -63,7 +73,6 @@ const SearchBar = () => {
           <option value="">SPORT</option>
           <option value="Badminton">Badminton</option>
           <option value="Football">Football</option>
-          <option value="Pickleball">Pickleball</option>
         </select>
 
         <select

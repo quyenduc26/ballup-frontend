@@ -138,3 +138,15 @@ export type CreateMatchType = {
   type: null;
   slotId?: number | null;
 }
+
+export type queryTime = {
+  fromTime: string;
+  toTime: string;
+};
+
+export type BookingDataType = {
+  userId: number;
+  playingSlotId: number;
+  fromTime: number;
+  toTime: number;
+};

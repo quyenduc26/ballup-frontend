@@ -6,8 +6,9 @@ const playingApi = {
     api.post("/owner/center", formData),
   createPlayingSlot: (formData: PlayingSlotType) =>
     api.post("/owner/slot", formData),
-  getAllCenter: () => api.get("/center"),
-  getCenterInfor: (id: number) => api.get(`/center/${id}`), 
+  getAllCenter: (params?: Record<string, string>) =>
+    api.get("/center", { params }),
+  getCenterInfor: (id: number) => api.get(`/center/${id}`),
 };
 
 export default playingApi;
