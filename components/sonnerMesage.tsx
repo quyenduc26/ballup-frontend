@@ -17,7 +17,7 @@ const SonnerToast = ({ toast: toastData }: ToastData) => {
     if (toastData) {
       const { heading, message, type, duration } = toastData;
       const toastMessage = heading ? `${heading}: ${message}` : message;
-      
+
       // Map type to corresponding Sonner toast method
       switch (type) {
         case "success":
@@ -45,7 +45,7 @@ const SonnerToast = ({ toast: toastData }: ToastData) => {
     }
   }, [toastData]);
 
-  return <Toaster richColors position="top-center" />;;
+  return <Toaster richColors position="top-center" />;
 };
 
 // Example usage
@@ -57,7 +57,7 @@ const App = () => {
       type: "success",
       duration: 3000,
     };
-    
+
     return <SonnerToast toast={toastData} />;
   };
 

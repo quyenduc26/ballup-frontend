@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 
 import CardMatch from "@/components/match/CardMatch";
 import Banner from "@/components/Banner";
 import SearchMatch from "@/components/match/SearchMatch";
-import Link from "next/link";
 
 export default function Booking() {
   const [showExplore, setShowExplore] = useState(true);
@@ -33,13 +33,12 @@ export default function Booking() {
           </button>
         </div>
 
-        <Link href="/match/createMatch" passHref>
+        <Link passHref href="/match/createMatch">
           <button className="ml-auto flex justify-end items-end text-lg md:text-2xl border border-gray-500 bg-black px-4 md:px-6 py-2 font-medium transition-all text-white">
             +
           </button>
         </Link>
       </div>
-
 
       {/* Components */}
       <SearchMatch />

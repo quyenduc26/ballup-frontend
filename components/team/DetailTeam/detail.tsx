@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+
 import TeamHeader from "../inforTeam/intro";
+
 import TeamDetailApi from "@/service/teamDetail";
 import { DetailTeam, Player } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
@@ -18,24 +20,26 @@ export default function TeamDetail() {
   const { detailID } = useParams();
   const parsedTeamId = parseInt(detailID as string, 10);
 
-
-
   useEffect(() => {
-
     const fetchTeamDetail = async () => {
       try {
-        const response = await TeamDetailApi.getTeamDetail(parsedTeamId, userId);
+        const response = await TeamDetailApi.getTeamDetail(
+          parsedTeamId,
+          userId,
+        );
+
         if (response?.data) {
           setTeam(response.data);
-          setPlayers(Array.isArray(response.data.members) ? response.data.members : []);
+          setPlayers(
+            Array.isArray(response.data.members) ? response.data.members : [],
+          );
         } else {
           throw new Error("Dữ liệu không hợp lệ");
         }
       } catch (err: any) {
         setError(err?.response?.data?.message || "Lỗi khi tải dữ liệu");
-      }
-      finally {
-        setLoading(false); 
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -68,18 +72,30 @@ export default function TeamDetail() {
                         <img
                           alt={player.name}
                           className="w-20 h-20 object-cover"
-                          src={player.avatar ? getImageUrl(player.avatar) : "/default-avatar.png"}
+                          src={
+                            player.avatar
+                              ? getImageUrl(player.avatar)
+                              : "/default-avatar.png"
+                          }
                         />
                       </td>
-                      <td className="px-4 md:px-6 py-3 font-semibold">{player.name}</td>
-                      <td className="px-4 md:px-6 py-3">{player.height ? `${player.height} cm` : "N/A"}</td>
-                      <td className="px-4 md:px-6 py-3">{player.weight ? `${player.weight} kg` : "N/A"}</td>
+                      <td className="px-4 md:px-6 py-3 font-semibold">
+                        {player.name}
+                      </td>
+                      <td className="px-4 md:px-6 py-3">
+                        {player.height ? `${player.height} cm` : "N/A"}
+                      </td>
+                      <td className="px-4 md:px-6 py-3">
+                        {player.weight ? `${player.weight} kg` : "N/A"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <p className="text-center text-gray-500 mt-4">Không có cầu thủ nào trong đội.</p>
+              <p className="text-center text-gray-500 mt-4">
+                Không có cầu thủ nào trong đội.
+              </p>
             )}
           </div>
         </>
