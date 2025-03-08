@@ -8,6 +8,7 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: {
@@ -41,6 +42,8 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
+        <Suspense>
+          
         <Header />
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="flex flex-col">
@@ -48,6 +51,7 @@ export default function RootLayout({
           </div>
         </Providers>
         <Footer />
+        </Suspense>
       </body>
     </html>
   );
