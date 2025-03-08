@@ -1,20 +1,41 @@
-import { useState } from "react";
-
+"use client";
+import { useState, useEffect, useRef } from "react";
 import { TeamHeaderProps } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import TeamDetailApi from "@/service/teamDetail";
+import UpdateTeamDetail from "./UpdateTeamDetail";
 
-const TeamHeader: React.FC<TeamHeaderProps> = ({
-  logo,
-  name,
-  intro,
-  address,
-  teamId,
-}) => {
+const TeamHeader: React.FC<TeamHeaderProps> = ({ logo, name, intro, address, teamId: propTeamId }) => {
   const [loading, setLoading] = useState(false);
-  const [showOptions, setShowOptions] = useState(false); // State để hiển thị menu
+  const [showOptions, setShowOptions] = useState(false);
+  const [teamId, setTeamId] = useState<string | null>(propTeamId ? String(propTeamId) : null);
+  const editDialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (!propTeamId) {
+      const storedTeamId = localStorage.getItem("teamId");
+      if (storedTeamId) {
+        setTeamId(storedTeamId);
+      }
+    }
+  }, [propTeamId]);
+
+
+  // Hàm xử lý khi nhấn Edit
+  const hanUpdateForm = () => {
+    if (!teamId) {
+      alert("No team ID available. Cannot edit.");
+      return;
+    }
+    editDialogRef.current?.showModal();
+  };
 
   const handleDeleteTeam = async () => {
+    if (!teamId) {
+      alert("No team ID found. Cannot delete team.");
+      return;
+    }
+
     if (!window.confirm("Are you sure you want to delete this team?")) return;
 
     setLoading(true);
@@ -25,10 +46,9 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
 
       if (!userId) {
         alert("User not found. Please log in again.");
-
         return;
       }
-      await TeamDetailApi.deleteTeam(teamId, userId);
+      await TeamDetailApi.deleteTeam(parseInt(teamId), userId);
       alert("Team has been deleted successfully!");
       window.location.href = "/team";
     } catch (error) {
@@ -38,11 +58,6 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
       setLoading(false);
       setShowOptions(false);
     }
-  };
-
-  const handleEditTeam = () => {
-    alert("Edit team clicked!");
-    setShowOptions(false);
   };
 
   return (
@@ -92,9 +107,10 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
 
             {showOptions && (
               <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-md">
+                {/* Khi nhấn Edit sẽ gọi hanUpdateForm */}
                 <button
                   className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-                  onClick={handleEditTeam}
+                  onClick={hanUpdateForm}
                 >
                   Edit
                 </button>
@@ -109,6 +125,24 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
           </div>
         </div>
       </div>
+
+      <dialog ref={editDialogRef} className="p-6 bg-white rounded-lg shadow-lg w-200">
+        <div className="flex justify-end items-end pb-2">
+          <button
+            onClick={() => editDialogRef.current?.close()}
+            className="text-black text-large"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Nhúng form UpdateTeamDetail */}
+        {teamId ? (
+          <UpdateTeamDetail teamId={teamId} onClose={() => editDialogRef.current?.close()} />
+        ) : (
+          <p className="text-red-500">No team ID available. Cannot edit.</p>
+        )}
+      </dialog>
     </div>
   );
 };
