@@ -42,13 +42,16 @@ export type ScheduleType = {
   location?: string;
 };
 export type PlayingCenterType = {
+  id:number;
   name: string;
   address: string;
   description: string;
   images: string[];
   ownerId: number;
+  type:string;
 };
 export type PlayingSlotType = {
+  id:number;
   name: string;
   primaryPrice: number;
   nightPrice: number;
@@ -150,3 +153,10 @@ export type BookingDataType = {
   fromTime: number;
   toTime: number;
 };
+
+
+export type CenterSelection = {
+  id: number,
+  address: string
+};
+

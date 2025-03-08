@@ -9,7 +9,7 @@ import SearchMatch from "@/components/match/SearchMatch";
 import CreateMatch from "@/components/match/CreateMatch";
 import AddTeam from "@/components/match/AddTeam";
 
-export default function Booking() {
+export default function MatchPage() {
   const [showExplore, setShowExplore] = useState(true);
 
   return (
@@ -45,8 +45,8 @@ export default function Booking() {
       {/* Components */}
       <SearchMatch />
       {/* <AddTeam/>   */}
-      {/* <CardMatch /> */}
-      <CreateMatch/>
+      <CardMatch />
+      {/* <CreateMatch/> */}
       
 
       {/* Điều kiện hiển thị nội dung */}
