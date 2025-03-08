@@ -6,6 +6,7 @@ import CardMatch from "@/components/match/CardMatch";
 import Banner from "@/components/Banner";
 import SearchMatch from "@/components/match/SearchMatch";
 import CreateMatch from "@/components/match/CreateMatch";
+import AddTeam from "@/components/match/AddTeam";
 
 export default function Booking() {
   const [showExplore, setShowExplore] = useState(true);
@@ -38,8 +39,10 @@ export default function Booking() {
 
       {/* Components */}
       <SearchMatch />
-      <CardMatch />
+      {/* <AddTeam/>   */}
+      {/* <CardMatch /> */}
       <CreateMatch/>
+      
 
       {/* Điều kiện hiển thị nội dung */}
       {/* {showExplore ? <div>Danh sách đội bóng (ListTeamCard)</div> : <div>Giới thiệu đội bóng (TeamIntro)</div>} */}

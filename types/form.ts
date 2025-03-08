@@ -126,3 +126,15 @@ export type deleteTeamType = {
   userId: number;
   teamId: number;
 };
+export type CreateMatchType = {
+  userId: number;
+  name: string;
+  fromTime: number;
+  toTime: number;
+  location: string;
+  description: string;
+  cover: string;
+  memberIdList: number[];
+  type: null;
+  slotId?: number | null;
+}
