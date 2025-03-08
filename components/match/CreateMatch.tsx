@@ -12,6 +12,8 @@ export default function CreateMatch() {
   const [selectedCenter, setSelectedCenter] = useState<CenterSelection | null>(null);
   const [playingSlots, setPlayingSlots] = useState<PlayingSlotType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [slotAvailable, setSlotAvailable] = useState<boolean | null>(null);
+  const [isChecking, setIsChecking] = useState(false);
   const [formData, setFormData] = useState<CreateMatchType>({
     userId: 1, // This should be set from your auth context
     name: "",
@@ -35,6 +37,9 @@ export default function CreateMatch() {
     if (name === "type" && value) {
       fetchPlayingCenters(value);
     }
+    
+    // Reset availability status when form data changes
+    setSlotAvailable(null);
   };
 
   // Handle time input changes
@@ -44,6 +49,9 @@ export default function CreateMatch() {
     const timeInSeconds = hours * 3600 + minutes * 60;
 
     setFormData((prev) => ({ ...prev, [name]: timeInSeconds }));
+    
+    // Reset availability status when time changes
+    setSlotAvailable(null);
   };
 
   // Fixed image upload handler
@@ -114,12 +122,15 @@ export default function CreateMatch() {
   
       fetchSlots(centerId);
     }
+    
+    // Reset availability status when center changes
+    setSlotAvailable(null);
   };
   
   const fetchSlots = async (centerId: string) => {
     try {
       setLoading(true);
-      const response = await matchApi.getPlayingSlot (parseInt(centerId));
+      const response = await matchApi.getPlayingSlot(parseInt(centerId));
       setPlayingSlots(response.data);
     } catch (error) {
       console.error("Error fetching slots:", error);
@@ -128,10 +139,56 @@ export default function CreateMatch() {
     }
   };
   
+  // Check slot availability
+  const checkSlotAvailability = async () => {
+    if (!formData.slotId || formData.fromTime === 0 || formData.toTime === 0) {
+      alert("Please select a slot and specify from/to time.");
+      return;
+    }
+    
+    try {
+      setIsChecking(true);
+      const response = await matchApi.checkSlotAvailability(
+        formData.slotId, 
+        formData.fromTime, 
+        formData.toTime
+      );
+      
+      // API returns true if slot is unavailable (already booked)
+      const isUnavailable = response.data;
+      
+      if (isUnavailable) {
+        alert("This time slot is already booked. Please select another time.");
+        setSlotAvailable(false);
+      } else {
+        alert("Time slot is available! You can create your match.");
+        setSlotAvailable(true);
+      }
+    } catch (error) {
+      console.error("Error checking slot availability:", error);
+      alert("Failed to check slot availability. Please try again.");
+      setSlotAvailable(false);
+    } finally {
+      setIsChecking(false);
+    }
+  };
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // If slot availability hasn't been checked yet
+    if (slotAvailable === null) {
+      alert("Please check slot availability first.");
+      return;
+    }
+    
+    // If slot is not available
+    if (slotAvailable === false) {
+      alert("This time slot is not available. Please select another time.");
+      return;
+    }
+    
     try {
       setLoading(true);
       const response = await matchApi.createTeam(formData);
@@ -332,7 +389,6 @@ export default function CreateMatch() {
               ))}
             </select>
 
-
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
               <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -348,7 +404,10 @@ export default function CreateMatch() {
             <select
               name="slotId"
               value={formData.slotId || ""}
-              onChange={(e) => setFormData(prev => ({ ...prev, slotId: Number(e.target.value) }))}
+              onChange={(e) => {
+                setFormData(prev => ({ ...prev, slotId: Number(e.target.value) }));
+                setSlotAvailable(null); // Reset availability when slot changes
+              }}
               className="w-full h-14 border border-gray-300 p-2 text-md rounded-lg appearance-none"
               disabled={!selectedCenter || playingSlots.length === 0}
             >
@@ -402,18 +461,15 @@ export default function CreateMatch() {
           <button
             type="button"
             className="bg-black text-white px-4 py-2 h-14 text-sm font-medium"
-            onClick={() => {
-              // Check slot availability logic
-              alert("Checking slot availability...");
-              // You would call an API here to check availability
-            }}
+            onClick={checkSlotAvailability}
+            disabled={isChecking || !formData.slotId || formData.fromTime === 0 || formData.toTime === 0}
           >
-            CHECK AVAILABILITY
+            {isChecking ? "CHECKING..." : "CHECK AVAILABILITY"}
           </button>
           <button
             type="submit"
-            className="bg-black text-white px-4 py-2 h-14 text-sm font-medium"
-            disabled={loading}
+            className={`${slotAvailable ? 'bg-black' : 'bg-gray-400'} text-white px-4 py-2 h-14 text-sm font-medium`}
+            disabled={loading || !slotAvailable}
           >
             {loading ? "CREATING..." : "CREATE"}
           </button>
