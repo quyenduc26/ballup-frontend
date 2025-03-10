@@ -2,13 +2,21 @@
 import { useState, useEffect } from "react"
 import type React from "react"
 
-import { ArrowLeft, ChevronDown, Upload } from "lucide-react"
+import { ArrowLeft, ChevronDown, Upload, Users } from "lucide-react"
 import type { CreateMatchType, PlayingCenterType, CardFieldType, CenterSelection, PlayingSlotType } from "@/types"
 import matchApi from "@/service/matchApi"
 import { uploadImage } from "@/utils/uploadImage"
 import { getImageUrl } from "@/utils/getImage"
-// Remove this line:
-// import Link from "next/link";
+
+// Add the TeamOverviewResponse type
+type TeamOverviewResponse = {
+  id: number;
+  name: string;
+  logo: string;
+  cover: string;
+  sport: string;
+  totalMembers: number;
+}
 
 export default function CreateMatch() {
   const [playingCenters, setPlayingCenters] = useState<CardFieldType[]>([])
@@ -19,7 +27,7 @@ export default function CreateMatch() {
   const [isChecking, setIsChecking] = useState(false)
   const [selectedDate, setSelectedDate] = useState<string>("")
   const [formData, setFormData] = useState<CreateMatchType>({
-    userId: 1, 
+    userId: 1,
     name: "",
     fromTime: 0,
     toTime: 0,
@@ -32,6 +40,8 @@ export default function CreateMatch() {
   })
   const [coverPreview, setCoverPreview] = useState<string | undefined>(undefined)
   const [numberList, setNumberList] = useState<number[]>([])
+  const [teamOverview, setTeamOverview] = useState<TeamOverviewResponse | null>(null)
+  const [showTeamButton, setShowTeamButton] = useState(true)
 
   // Set default date to today
   useEffect(() => {
@@ -228,23 +238,47 @@ export default function CreateMatch() {
     }
   }
 
+  // Updated fetchAllUserIds function to first get team overview
   const fetchAllUserIds = async () => {
     try {
-      // Using the current user's ID from formData
-      const response = await matchApi.getAllUsers(formData.userId, "FOOTBALL")
-      if (response.data) {
-        setNumberList(response.data)
+      setLoading(true)
+
+      // First get team overview
+      const teamResponse = await matchApi.getOverview(formData.userId, formData.type || "FOOTBALL")
+      if (teamResponse.data) {
+        setTeamOverview(teamResponse.data)
+
+        // Hide the button after getting team data
+        setShowTeamButton(false)
       }
-      console.log(response.data)
+
+      // Then get all user IDs
+      const usersResponse = await matchApi.getAllUsers(formData.userId, formData.type || "FOOTBALL")
+      if (usersResponse.data) {
+        setNumberList(usersResponse.data)
+
+        // Update the form data with the member list
+        setFormData(prev => ({
+          ...prev,
+          memberIdList: usersResponse.data
+        }))
+      }
     } catch (error) {
-      console.error("Error fetching user IDs:", error)
+      console.error("Error fetching team data:", error)
+      alert("Failed to fetch team data. Please try again.")
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="max-w-6xl mx-auto bg-white min-h-screen">
+    <div className="max-w-7xl mb-10 mt-10 mx-auto border rounded-xl bg-white min-h-screen">
+      {/* Header with back button */}
       <div className="relative">
-        <button className="absolute top-4 left-4 bg-black p-2 z-10" onClick={() => window.history.back()}>
+        <button
+          className="absolute top-4 left-4 bg-black p-3 rounded-lg z-10  shadow-md"
+          onClick={() => window.history.back()}
+        >
           <ArrowLeft className="h-5 w-5 text-white" />
         </button>
         <div className="border-b border-gray-200 w-full mt-12"></div>
@@ -255,7 +289,7 @@ export default function CreateMatch() {
       </div>
 
       {/* Banner image section */}
-      <div className="relative h-52 bg-slate-50 mb-6">
+      <div className="relative h-40 sm:h-52 bg-slate-50 mb-6 mx-4 rounded-lg overflow-hidden">
         <input type="file" id="cover" name="cover" accept="image/*" onChange={handleImageUpload} className="hidden" />
 
         {coverPreview ? (
@@ -272,7 +306,7 @@ export default function CreateMatch() {
             <button
               type="button"
               onClick={handleRemoveImage}
-              className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
+              className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full shadow-md"
             >
               ✖
             </button>
@@ -280,11 +314,11 @@ export default function CreateMatch() {
         ) : (
           <label htmlFor="cover" className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer">
             <Upload className="text-gray-500 mb-2" size={24} />
-            <span className="text-gray-500">Upload Cover</span>
+            <span className="text-gray-500 text-sm sm:text-base">Upload Cover</span>
 
             {/* Background decoration elements */}
-            <div className="w-20 h-20 bg-blue-100 rounded-full absolute top-5 right-10 opacity-30"></div>
-            <div className="w-32 h-32 bg-blue-200 rounded-t-full absolute bottom-0 left-20 opacity-30"></div>
+            <div className="w-16 sm:w-20 h-16 sm:h-20 bg-blue-100 rounded-full absolute top-5 right-10 opacity-30"></div>
+            <div className="w-24 sm:w-32 h-24 sm:h-32 bg-blue-200 rounded-t-full absolute bottom-0 left-20 opacity-30"></div>
           </label>
         )}
 
@@ -295,11 +329,11 @@ export default function CreateMatch() {
       </div>
 
       {/* Form */}
-      <form className="px-4 space-y-4" onSubmit={handleSubmit}>
+      <form className="px-4 space-y-6" onSubmit={handleSubmit}>
         {/* Team names */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className="block text-left text-md font-medium uppercase mb-4">NAME</label>
+            <label className="block text-left text-sm font-medium uppercase mb-2">NAME</label>
             <div className="relative">
               <input
                 type="text"
@@ -307,13 +341,13 @@ export default function CreateMatch() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Enter team name"
-                className="w-full border h-14 border-gray-300 p-2 text-md pr-10 rounded-lg"
+                className="w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg"
                 required
               />
             </div>
           </div>
           <div>
-            <label className="block text-left text-md font-medium uppercase mb-4">LOCATION</label>
+            <label className="block text-left text-sm font-medium uppercase mb-2">LOCATION</label>
             <div className="relative">
               <input
                 type="text"
@@ -321,36 +355,36 @@ export default function CreateMatch() {
                 value={formData.location}
                 onChange={handleChange}
                 placeholder={selectedCenter?.address || "Enter address"}
-                className="w-full border h-14 border-gray-300 p-2 text-md pr-10 rounded-lg"
+                className="w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg"
                 required
               />
             </div>
           </div>
         </div>
 
-        {/* Description */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* Description and Sport */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className="block text-left text-md font-medium uppercase mb-4">DESCRIPTION</label>
+            <label className="block text-left text-sm font-medium uppercase mb-2">DESCRIPTION</label>
             <div className="relative">
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Enter description"
-                className="w-full border h-28 border-gray-300 p-2 text-md pr-10 rounded-lg resize-none"
+                className="w-full border h-24 border-gray-300 p-2 text-md pr-10 rounded-lg resize-none"
               ></textarea>
             </div>
           </div>
 
           <div>
-            <label className="block text-left text-md font-medium uppercase mb-4">SPORT</label>
+            <label className="block text-left text-sm font-medium uppercase mb-2">SPORT</label>
             <div className="relative">
               <select
                 name="type"
                 value={formData.type || ""}
                 onChange={handleChange}
-                className="w-full border h-14 border-gray-300 p-2 text-md pr-10 rounded-lg appearance-none"
+                className="w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg appearance-none"
               >
                 <option value="" disabled>
                   Select a sport
@@ -379,14 +413,14 @@ export default function CreateMatch() {
 
         {/* Date input */}
         <div>
-          <label className="block text-left text-md font-medium uppercase mb-4">DATE</label>
+          <label className="block text-left text-sm font-medium uppercase mb-2">DATE</label>
           <div className="relative">
             <input
               type="date"
               name="matchDate"
               value={selectedDate}
               onChange={handleDateChange}
-              className="w-full border h-14 border-gray-300 p-2 text-md pr-10 rounded-lg"
+              className="w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg"
               required
               min={new Date().toISOString().split("T")[0]} // Prevent selecting past dates
             />
@@ -396,25 +430,25 @@ export default function CreateMatch() {
         {/* Time */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-left text-md font-medium uppercase mb-4">FROM TIME</label>
+            <label className="block text-left text-sm font-medium uppercase mb-2">FROM TIME</label>
             <div className="relative">
               <input
                 type="time"
                 name="fromTime"
                 onChange={handleTimeChange}
-                className="w-full border h-14 border-gray-300 p-2 text-md pr-10 rounded-lg"
+                className="w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg"
                 required
               />
             </div>
           </div>
           <div>
-            <label className="block text-left text-md font-medium uppercase mb-4">TO TIME</label>
+            <label className="block text-left text-sm font-medium uppercase mb-2">TO TIME</label>
             <div className="relative">
               <input
                 type="time"
                 name="toTime"
                 onChange={handleTimeChange}
-                className="w-full border h-14 border-gray-300 p-2 text-md pr-10 rounded-lg"
+                className="w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg"
                 required
               />
             </div>
@@ -423,12 +457,12 @@ export default function CreateMatch() {
 
         {/* Playing center - now a dropdown */}
         <div>
-          <label className="block text-left text-md font-medium uppercase mb-4">PLAYING CENTER</label>
+          <label className="block text-left text-sm font-medium uppercase mb-2">PLAYING CENTER</label>
           <div className="relative">
             <select
               value={selectedCenter?.id || ""}
               onChange={handleCenterSelect}
-              className="w-full h-14 border border-gray-300 p-2 text-md rounded-lg appearance-none"
+              className="w-full h-12 border border-gray-300 p-2 text-md rounded-lg appearance-none"
               disabled={!formData.type || playingCenters.length === 0}
             >
               <option value="" disabled>
@@ -465,7 +499,7 @@ export default function CreateMatch() {
 
         {/* Playing slot - now a dropdown */}
         <div>
-          <label className="block text-left text-md font-medium uppercase mb-4">PLAYING SLOT</label>
+          <label className="block text-left text-sm font-medium uppercase mb-2">PLAYING SLOT</label>
           <div className="relative">
             <select
               name="slotId"
@@ -474,7 +508,7 @@ export default function CreateMatch() {
                 setFormData((prev) => ({ ...prev, slotId: Number(e.target.value) }))
                 setSlotAvailable(null) // Reset availability when slot changes
               }}
-              className="w-full h-14 border border-gray-300 p-2 text-md rounded-lg appearance-none"
+              className="w-full h-12 border border-gray-300 p-2 text-md rounded-lg appearance-none"
               disabled={!selectedCenter || playingSlots.length === 0}
             >
               <option value="" disabled>
@@ -508,38 +542,126 @@ export default function CreateMatch() {
           </div>
         </div>
 
-        {/* Add your team */}
+        {/* Add your team - Updated UI with Internal Back Button */}
         <div>
-          <label className="block text-left text-md font-medium uppercase mb-4">ADD YOUR TEAM</label>
-          <div className="border border-gray-300 p-6 flex flex-col items-center rounded-lg">
-            <button
-              type="button"
-              className="bg-black text-white px-4 py-2 text-sm font-medium"
-              onClick={fetchAllUserIds}
-            >
-              ADD YOUR TEAM
-            </button>
-
-            {numberList.length > 0 && (
-              <div className="mt-4 w-full">
-                <h3 className="font-medium mb-2">Team Members:</h3>
-                <div className="grid grid-cols-3 gap-2">
-                  {numberList.map((userId) => (
-                    <div key={userId} className="border border-gray-200 p-2 rounded text-center">
-                      User ID: {userId}
-                    </div>
-                  ))}
-                </div>
+          <label className="block text-left text-sm font-medium uppercase mb-2">ADD YOUR TEAM</label>
+          <div className="border border-gray-300 p-4 sm:p-6 rounded-lg">
+            {/* Show button if team overview is not loaded yet */}
+            {showTeamButton ? (
+              <div className="flex justify-center">
+                <button
+                  type="button"
+                  className="bg-black text-white px-6 py-3 text-sm font-medium rounded-md flex items-center"
+                  onClick={fetchAllUserIds}
+                  disabled={!formData.type || loading}
+                >
+                  {loading ? (
+                    "LOADING..."
+                  ) : (
+                    <>
+                      <Users className="mr-2 h-4 w-4" /> ADD YOUR TEAM
+                    </>
+                  )}
+                </button>
               </div>
+            ) : (
+              <>
+                {/* Back Button */}
+                <div className="flex justify-start mb-4">
+                  <button
+                    type="button"
+                    className="flex items-center text-sm font-medium px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-500"
+                    onClick={() => setShowTeamButton(true)} // Reset to show just the ADD YOUR TEAM button
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back
+                  </button>
+                </div>
+
+                {/* Team Overview Section */}
+                {teamOverview && (
+                  <div className="mb-6">
+                    <div className="relative h-44 bg-gray-100 rounded-t-lg overflow-hidden mb-4">
+                      {/* Team Cover */}
+                      {teamOverview.cover && (
+                        <img
+                          src={getImageUrl(teamOverview.cover)}
+                          alt="Team Cover"
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+
+                      {/* Team Logo */}
+                      <div className="absolute bottom-0 left-4 transform translate-y-1/2">
+                        <div className="w-36 h-36 bg-white rounded-full border-2 border-white overflow-hidden shadow-md">
+                          {teamOverview.logo ? (
+                            <img
+                              src={getImageUrl(teamOverview.logo)}
+                              alt="Team Logo"
+                              className="w-full h-full object-contain"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                              <Users size={24} className="text-gray-500" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Team Info */}
+                    <div className="pl-4 pt-8">
+                      <h3 className="font-bold text-lg">{teamOverview.name}</h3>
+                      <div className="flex items-center text-sm text-gray-600 mt-1">
+                        <span className="mr-4">Sport: {teamOverview.sport}</span>
+                        <span>{teamOverview.totalMembers} Nember</span>
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-b border-gray-200 my-4"></div>
+                  </div>
+                )}
+
+                {/* Team Members Section */}
+                {numberList.length > 0 && (
+                  <div>
+                    <h3 className="font-medium mb-3 text-sm uppercase">Team Members ({numberList.length})</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                      {numberList.map((userId) => (
+                        <div key={userId} className="bg-gray-50 border border-gray-200 p-3 rounded-md text-center">
+                          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <Users size={16} className="text-gray-500" />
+                          </div>
+                          <div className="text-sm font-medium">User {userId}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
 
+        {/* Availability status indicator */}
+        {slotAvailable !== null && (
+          <div
+            className={`p-3 rounded-md text-center text-sm ${slotAvailable ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+          >
+            {slotAvailable
+              ? "✓ This time slot is available!"
+              : "✗ This time slot is not available. Please select another time."}
+          </div>
+        )}
+
         {/* Action buttons */}
-        <div className="flex justify-end space-x-2 pt-4 pb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-4 pb-8">
           <button
             type="button"
-            className="border border-gray-300 px-4 py-2 h-14 text-sm font-medium"
+            className="border border-gray-300 px-4 py-2 h-12 text-sm font-medium rounded-md w-full sm:w-auto"
             onClick={() => {
               window.history.back()
             }}
@@ -548,7 +670,7 @@ export default function CreateMatch() {
           </button>
           <button
             type="button"
-            className="bg-black text-white px-4 py-2 h-14 text-sm font-medium"
+            className="bg-gray-800 text-white px-4 py-2 h-12 text-sm font-medium rounded-md w-full sm:w-auto"
             onClick={checkSlotAvailability}
             disabled={
               isChecking || !formData.slotId || formData.fromTime === 0 || formData.toTime === 0 || !selectedDate
@@ -558,7 +680,7 @@ export default function CreateMatch() {
           </button>
           <button
             type="submit"
-            className={`${slotAvailable ? "bg-black" : "bg-gray-400"} text-white px-4 py-2 h-14 text-sm font-medium`}
+            className={`${slotAvailable ? "bg-black" : "bg-gray-400"} text-white px-4 py-2 h-12 text-sm font-medium rounded-md w-full sm:w-auto`}
             disabled={loading || !slotAvailable}
           >
             {loading ? "CREATING..." : "CREATE"}
@@ -568,4 +690,3 @@ export default function CreateMatch() {
     </div>
   )
 }
-

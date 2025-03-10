@@ -168,4 +168,12 @@ export type UserType = {
   avatar?: string;
   type?: string;
 };
+export type TeamOverviewResponse = {
+  id: number;
+  name: string;
+  logo: string;
+  cover: string;
+  sport: string; 
+  totalMembers: number;
+}
 
