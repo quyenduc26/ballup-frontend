@@ -17,11 +17,12 @@ export type FieldDetailType = {
   bookingTime: string;
   returnTime: string;
   type: string;
-  price: string;
+  price: number;
   hours: number;
-  total: string;
+  total: number;
   mapUrl: string;
   slots: [];
+  amount: number;
 };
 
 export type CardFieldType = {
@@ -137,4 +138,5 @@ export type BookingDataType = {
   playingSlotId: number;
   fromTime: number;
   toTime: number;
+  amount: number;
 };
