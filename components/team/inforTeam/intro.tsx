@@ -13,7 +13,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
   teamId,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [showOptions, setShowOptions] = useState(false); 
+  const [showOptions, setShowOptions] = useState(false);
   const [toastData, setToastData] = useState<any>(null);
   const router = useRouter();
 
@@ -44,13 +44,57 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
       });
 
       setTimeout(() => {
-        router.push("/team"); // Điều hướng thay vì reload trang
+        router.push("/team"); // Điều hướng về danh sách đội
       }, 1000);
     } catch (error) {
       console.error("Error deleting team:", error);
       setToastData({
         heading: "Error",
         message: "Failed to delete team!",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+      setShowOptions(false);
+    }
+  };
+
+  const handleLeaveTeam = async () => {
+    if (!window.confirm("Are you sure you want to leave this team?")) return;
+
+    setLoading(true);
+    try {
+      const data = localStorage.getItem("data");
+      const parsedData = data ? JSON.parse(data) : null;
+      const memberId = parsedData?.id;
+      console.log("dhrfgvyd",memberId);
+
+
+      if (!memberId) {
+        setToastData({
+          heading: "Error",
+          message: "User not found. Please log in again.",
+          type: "error",
+        });
+        return;
+      }
+
+      await TeamDetailApi.leaveTeam(teamId, memberId);
+
+      setToastData({
+        heading: "Success",
+        message: "You have left the team successfully!",
+        type: "success",
+      });
+
+      setTimeout(() => {
+        router.push("/team"); 
+      }, 1000);
+    } catch (error) {
+      console.error("Error leaving team:", error);
+      setToastData({
+        heading: "Error",
+        message: "Failed to leave the team!",
         type: "error",
       });
     } finally {
@@ -125,6 +169,12 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
                   onClick={handleDeleteTeam}
                 >
                   Delete
+                </button>
+                <button
+                  className="block w-full px-4 py-2 text-left text-blue-600 hover:bg-gray-100"
+                  onClick={handleLeaveTeam}
+                >
+                  Leave
                 </button>
               </div>
             )}
