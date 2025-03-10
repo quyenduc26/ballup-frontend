@@ -94,7 +94,7 @@ export default function TeamDetail() {
               </table>
             ) : (
               <p className="text-center text-gray-500 mt-4">
-                Không có cầu thủ nào trong đội.
+                Don't have players
               </p>
             )}
           </div>

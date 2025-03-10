@@ -9,9 +9,6 @@ export default function Footer() {
         <div className="grid grid-cols-4 gap-4 text-center">
           {/* Main navigation column */}
           <div className="space-y-1">
-            <Link href="/main" className="block text-xs md:text-base lg:text-2xl">
-              Main
-            </Link>
             <Link href="/" className="block text-xs md:text-base lg:text-2xl">
               Home
             </Link>
