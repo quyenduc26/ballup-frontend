@@ -11,8 +11,10 @@ import player from "@/public/images/player.png";
 import google from "@/public/images/google.png";
 import { LoginFormType } from "@/types";
 import authApi from "@/service/authApi";
+import { useUser } from "@/context/UserContext";
 
 export default function Login() {
+  const { setUserId } = useUser();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -61,6 +63,7 @@ export default function Login() {
       const response = await authApi.login(formData);
       const data = response.data;
 
+      setUserId(data.id);
       if (data) {
         localStorage.setItem("data", JSON.stringify(data));
       }
@@ -189,7 +192,7 @@ export default function Login() {
             <div className="mt-8 text-center">
               <p className="text-sm">
                 Don&apos;t have an account?{" "}
-                <Link className="text-blue-500" href="signup">
+                <Link className="text-blue-500" href="signUp">
                   Sign Up
                 </Link>
               </p>

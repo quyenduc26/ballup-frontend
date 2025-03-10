@@ -7,6 +7,7 @@ import { FieldDetailType } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import { ToastMessage } from "@/components/ToastMessage";
 import bookingRequestApi from "@/service/bookingRequestApi";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
     | undefined
   >();
 
-  const [loading, setLoading] = useState(false); // Thêm state loading
+  const [loading, setLoading] = useState(false);
 
   const submitBooking = async () => {
     const data = localStorage.getItem("data");
@@ -44,14 +45,16 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
       playingSlotId: slotId ? parseInt(slotId) : 0,
       fromTime: fromTime ? parseInt(fromTime) : 0,
       toTime: toTime ? parseInt(toTime) : 0,
+      amount: centerInfor.total,
     };
 
     console.log(bookingData);
-
-    setLoading(true); // Set loading true khi bắt đầu thực hiện đặt phòng
+    setLoading(true);
 
     try {
-      await bookingRequestApi.booking(bookingData);
+      const booking = await bookingRequestApi.booking(bookingData);
+
+      window.location.href = `/payment/${booking.data}`;
 
       setToastData({
         type: "success",
@@ -59,8 +62,6 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
         message: "Booking Successful",
         duration: 3000,
       });
-
-      // setTimeout(() => router.push("/booking"), 3000);
     } catch (e) {
       setToastData({
         type: "error",
@@ -69,7 +70,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
         duration: 3000,
       });
     } finally {
-      setLoading(false); // Set loading false khi hoàn thành quá trình
+      setLoading(false);
     }
   };
 
@@ -167,7 +168,9 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
             <div className="bg-white rounded-lg p-4 shadow-sm space-y-2">
               <div className="flex justify-between">
                 <p className="font-semibold text-gray-700">Price</p>
-                <p className="text-gray-900">{centerInfor.price}</p>
+                <p className="text-gray-900">
+                  {formatCurrency(centerInfor.price)}
+                </p>
               </div>
               <div className="flex justify-between">
                 <p className="font-semibold text-gray-700">Hour(s)</p>
@@ -175,7 +178,9 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
               </div>
               <div className="flex justify-between pt-2 border-t border-gray-200 font-bold text-lg">
                 <p className="text-gray-900">Total</p>
-                <p className="text-green-600">{centerInfor.total}</p>
+                <p className="text-green-600">
+                  {formatCurrency(centerInfor.total)}
+                </p>
               </div>
             </div>
 
