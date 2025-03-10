@@ -14,6 +14,7 @@ export default function CreateMatch() {
   const [loading, setLoading] = useState(false);
   const [slotAvailable, setSlotAvailable] = useState<boolean | null>(null);
   const [isChecking, setIsChecking] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const [formData, setFormData] = useState<CreateMatchType>({
     userId: 1, // This should be set from your auth context
     name: "",
@@ -23,10 +24,19 @@ export default function CreateMatch() {
     description: "",
     cover: "",
     memberIdList: [],
-    type: null,
+    type:"",
     slotId: null
   });
   const [coverPreview, setCoverPreview] = useState<string | undefined>(undefined);
+
+  // Set default date to today
+  useEffect(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    setSelectedDate(`${year}-${month}-${day}`);
+  }, []);
 
   // Handle input changes for text fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -42,13 +52,28 @@ export default function CreateMatch() {
     setSlotAvailable(null);
   };
 
+  // Handle date input changes
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedDate(e.target.value);
+    setSlotAvailable(null); // Reset availability when date changes
+  };
+
   // Handle time input changes
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const [hours, minutes] = value.split(':').map(Number);
-    const timeInSeconds = hours * 3600 + minutes * 60;
-
-    setFormData((prev) => ({ ...prev, [name]: timeInSeconds }));
+    
+    if (selectedDate) {
+      // Convert date and time to seconds since epoch
+      const dateObj = new Date(`${selectedDate}T${value}:00`);
+      const timeInSeconds = Math.floor(dateObj.getTime() / 1000);
+      
+      setFormData((prev) => ({ ...prev, [name]: timeInSeconds }));
+    } else {
+      // Fallback if no date is selected (old behavior)
+      const timeInSeconds = hours * 3600 + minutes * 60;
+      setFormData((prev) => ({ ...prev, [name]: timeInSeconds }));
+    }
     
     // Reset availability status when time changes
     setSlotAvailable(null);
@@ -142,7 +167,7 @@ export default function CreateMatch() {
   // Check slot availability
   const checkSlotAvailability = async () => {
     if (!formData.slotId || formData.fromTime === 0 || formData.toTime === 0) {
-      alert("Please select a slot and specify from/to time.");
+      alert("Please select a slot, date, and specify from/to time.");
       return;
     }
     
@@ -191,7 +216,7 @@ export default function CreateMatch() {
     
     try {
       setLoading(true);
-      const response = await matchApi.createTeam(formData);
+      const response = await matchApi.createMatch(formData);
       if (response.data) {
         alert("Match created successfully!");
       }
@@ -339,6 +364,22 @@ export default function CreateMatch() {
           </div>
         </div>
 
+        {/* Date input */}
+        <div>
+          <label className="block text-left text-md font-medium uppercase mb-4">DATE</label>
+          <div className="relative">
+            <input
+              type="date"
+              name="matchDate"
+              value={selectedDate}
+              onChange={handleDateChange}
+              className="w-full border h-14 border-gray-300 p-2 text-md pr-10 rounded-lg"
+              required
+              min={new Date().toISOString().split('T')[0]} // Prevent selecting past dates
+            />
+          </div>
+        </div>
+
         {/* Time */}
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -436,7 +477,7 @@ export default function CreateMatch() {
             ADD YOUR TEAM
           </label>
           <div className="border border-gray-300 p-6 flex justify-center rounded-lg">
-            <Link href="/createMatch/addTeam">
+            <Link href="/match/addTeam">
               <button
                 type="button"
                 className="bg-black text-white px-4 py-2 text-sm font-medium"
@@ -462,7 +503,7 @@ export default function CreateMatch() {
             type="button"
             className="bg-black text-white px-4 py-2 h-14 text-sm font-medium"
             onClick={checkSlotAvailability}
-            disabled={isChecking || !formData.slotId || formData.fromTime === 0 || formData.toTime === 0}
+            disabled={isChecking || !formData.slotId || formData.fromTime === 0 || formData.toTime === 0 || !selectedDate}
           >
             {isChecking ? "CHECKING..." : "CHECK AVAILABILITY"}
           </button>
@@ -477,4 +518,4 @@ export default function CreateMatch() {
       </form>
     </div>
   );
-}
+} 

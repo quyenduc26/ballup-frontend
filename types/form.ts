@@ -113,7 +113,7 @@ export type DetailTeam = {
   name: string;
   address: string;
   intro?: string;
-  logo?: string;
+  logo?: string;  
   cover?: string;
   sport: string;
   members: Player[];
@@ -138,8 +138,9 @@ export type CreateMatchType = {
   description: string;
   cover: string;
   memberIdList: number[];
-  type: null;
+  type: string;
   slotId?: number | null;
+  // time: number;
 }
 
 export type queryTime = {
@@ -158,5 +159,13 @@ export type BookingDataType = {
 export type CenterSelection = {
   id: number,
   address: string
+};
+
+export type UserType = {
+  id: number;
+  name: string;
+  email: string;
+  avatar?: string;
+  type?: string;
 };
 

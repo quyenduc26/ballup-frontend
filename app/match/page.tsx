@@ -7,7 +7,7 @@ import CardMatch from "@/components/match/CardMatch";
 import Banner from "@/components/Banner";
 import SearchMatch from "@/components/match/SearchMatch";
 import CreateMatch from "@/components/match/CreateMatch";
-import AddTeam from "@/components/match/AddTeam";
+import AddTeam from "@/components/match/addTeam/AddTeam";
 
 export default function MatchPage() {
   const [showExplore, setShowExplore] = useState(true);
@@ -47,7 +47,7 @@ export default function MatchPage() {
       {/* <AddTeam/>   */}
       <CardMatch />
       {/* <CreateMatch/> */}
-      
+
 
       {/* Điều kiện hiển thị nội dung */}
       {/* {showExplore ? <div>Danh sách đội bóng (ListTeamCard)</div> : <div>Giới thiệu đội bóng (TeamIntro)</div>} */}
