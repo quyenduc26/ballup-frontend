@@ -140,7 +140,7 @@ export type CreateMatchType = {
   memberIdList: number[];
   type: string;
   slotId?: number | null;
-  // time: number;
+
 }
 
 export type queryTime = {
