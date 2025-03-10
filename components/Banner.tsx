@@ -23,8 +23,7 @@ const HeroSection = () => {
             INNOVIBE SQUADS
           </h2>
           <p className="text-white text-xs sm:text-sm mt-2 max-w-md">
-            Để làm cho nút này đẹp hơn và phù hợp với phong cách của Next.js,
-            bạn có thể sử dụng các lớp Tailwind CSS kết hợp với...
+            Awaken your instincts that lie deep within your body. Take care of your health
           </p>
         </div>
       </div>

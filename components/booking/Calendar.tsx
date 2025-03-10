@@ -67,13 +67,14 @@ export default function Calendar({
       </div>
 
       {/* Hiển thị ngày trong tuần */}
-      <div className="grid grid-cols-7 gap-1 sm:gap-2 text-red-500 font-semibold mt-8 mr-5">
+      <div className="grid grid-cols-7 gap-1 sm:gap-2 text-red-500 font-semibold mt-5">
         {daysOfWeek.map((day) => (
-          <div key={day} className="text-center">
+          <div key={day} className="text-center text-[11px] sm:text-sm">
             {day}
           </div>
         ))}
       </div>
+
 
       {/* Hiển thị ngày trong tháng */}
       <div className="grid grid-cols-7 gap-1 sm:gap-2 text-black mt-5">

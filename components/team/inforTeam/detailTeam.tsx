@@ -15,7 +15,7 @@ export default function TeamIntro() {
   useEffect(() => {
     const fetchTeamDetail = async () => {
       try {
-        const response = await TeamApi.getTeamDetail(20, 1);
+        const response = await TeamApi.getTeamDetail(21, 1);
 
         setTeam(response.data);
       } catch (err: any) {

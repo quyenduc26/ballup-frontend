@@ -12,7 +12,7 @@ const Team = () => {
 
   return (
     <div className="container mx-auto max-w-[1500px] p-4">
-      <h1 className="text-4xl md:text-6xl font-extrabold text-black  md:py-6 text-center md:text-left ml-4">
+      <h1 className="text-4xl md:text-6xl font-extrabold text-black  md:py-6 text-center md:text-left ml-4  mt-20">
         TEAM
       </h1>
       <HeroSection />
@@ -32,7 +32,9 @@ const Team = () => {
           MY TEAM
         </button>
       </div>
-      <SearchBar />
+      <div className="flex justify-center">
+        <SearchBar />
+      </div>
 
       {showExplore && <ListTeamCard />}
       {!showExplore && <TeamIntro />}
