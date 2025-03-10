@@ -1,3 +1,4 @@
-export type Common = {
-  text: string;
-};
+export interface UserContextType {
+  userId: number | null;
+  setUserId: (id: number | null) => void;
+}
