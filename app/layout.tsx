@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
+import { Suspense } from "react";
 
 import { Providers } from "./providers";
 
@@ -8,6 +9,8 @@ import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { BookingHistory } from "@/components/booking/bookingHistory";
+import { UserProvider } from "@/context/UserContext";
 
 export const metadata: Metadata = {
   title: {
@@ -41,13 +44,20 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <Header />
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="flex flex-col">
-            <main>{children}</main>
-          </div>
-        </Providers>
-        <Footer />
+        <UserProvider>
+          <Suspense>
+            <Header />
+            <Providers
+              themeProps={{ attribute: "class", defaultTheme: "dark" }}
+            >
+              <div className="flex flex-col">
+                <main>{children}</main>
+              </div>
+            </Providers>
+            <Footer />
+            <BookingHistory />
+          </Suspense>
+        </UserProvider>
       </body>
     </html>
   );

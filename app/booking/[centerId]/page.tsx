@@ -10,7 +10,6 @@ import { formatDate } from "@/utils/formatTime";
 import { calculatePrice } from "@/utils/calculatePrice";
 
 export default function BookingPage() {
-  // Renamed function to start with uppercase
   const params = useParams();
   const centerId = params.centerId;
 

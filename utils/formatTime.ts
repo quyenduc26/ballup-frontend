@@ -1,4 +1,4 @@
-export function formatDate(timestamp: string | null) {
+export function formatDate(timestamp: string | null | undefined) {
   if (!timestamp) return null;
 
   const date = new Date(Number(timestamp));
