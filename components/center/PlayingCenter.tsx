@@ -30,7 +30,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
     description: "",
     images: Array(MAX_IMAGES).fill(null),
     ownerId: userId,
-    type: ""
+    type: "",
   });
 
   const handleChange = (
@@ -94,7 +94,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
       description: "",
       images: Array(MAX_IMAGES).fill(null),
       ownerId: userId,
-      type: ""
+      type: "",
     });
   };
 

@@ -31,7 +31,7 @@ const CardList = ({
           )}
         </div>
       ) : (
-        <p className="text-gray-500 text-center">Không có dữ liệu sân bóng.</p>
+        <p className="text-gray-500 text-center">Don&apos;t have data fields...</p>
       )}
     </div>
   );

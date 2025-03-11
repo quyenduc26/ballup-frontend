@@ -28,8 +28,8 @@ export default function TeamIntro() {
     fetchTeamDetail();
   }, []);
 
-  if (loading) return <p className="text-center">Đang tải dữ liệu...</p>;
-  if (error) return <p className="text-center text-red-500">Lỗi: {error}</p>;
+  if (loading) return <p className="text-center">Loading data...</p>;
+  if (error) return <p className="text-center text-red-500">error: {error}</p>;
 
   return (
     <div className="w-full mx-auto mt-10 p-4">

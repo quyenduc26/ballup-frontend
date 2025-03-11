@@ -21,7 +21,7 @@ export default function MatchPage() {
 
   return (
     <div className="container mx-auto max-w-[1500px] p-4">
-      <div className="text-4xl mb-5 md:text-6xl ml-8 font-extrabold text-center md:text-left">
+      <div className="text-4xl mb-5 md:text-6xl ml-8 font-extrabold text-center md:text-left  mt-20">
         MATCH
       </div>
       <Banner />

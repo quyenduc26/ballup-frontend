@@ -70,13 +70,15 @@ export default function Booking() {
 
   return (
     <Suspense>
-      <div className="flex flex-col">
-        <div className="text-4xl md:text-6xl ml-8 font-extrabold text-center md:text-left mb-5 text-transparent bg-clip-text">
+      <div className="container mx-auto max-w-[1500px] p-4">
+        <h1 className="text-4xl md:text-6xl font-extrabold text-black  md:py-6 text-center md:text-left ml-4 mt-16">
           BOOKING
-        </div>
+        </h1>
         <Banner />
         <Schedule />
-        <SearchBar />
+        <div className="flex justify-center">
+          <SearchBar />
+        </div>
 
         {/* Hiển thị Spinner khi đang fetch */}
         {isFetching ? (
