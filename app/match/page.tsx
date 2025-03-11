@@ -3,11 +3,20 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-import CardMatch from "@/components/match/CardMatch";
+import CardMatch from "@/components/match/Card/CardMatch";
 import Banner from "@/components/Banner";
+import MyMatch from "@/components/match/Card/myMatch";
 
 export default function Booking() {
   const [showExplore, setShowExplore] = useState(true);
+
+  const handleExploreClick = () => {
+    setShowExplore(true);
+  };
+
+  const handleMyMatchClick = () => {
+    setShowExplore(false);
+  };
 
   return (
     <div className="container mx-auto max-w-[1500px] p-4">
@@ -20,13 +29,13 @@ export default function Booking() {
         <div className="flex gap-4">
           <button
             className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${showExplore ? "text-blue-500" : "text-black hover:text-blue-500"}`}
-            onClick={() => setShowExplore(true)}
+            onClick={handleExploreClick}
           >
             EXPLORE
           </button>
           <button
             className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${!showExplore ? "text-blue-500" : "text-black hover:text-blue-500"}`}
-            onClick={() => setShowExplore(false)}
+            onClick={handleMyMatchClick}
           >
             MY MATCH
           </button>
@@ -39,9 +48,8 @@ export default function Booking() {
         </Link>
       </div>
 
-      {/* Components */}
-      <CardMatch />
-
+      {/* Conditionally render components based on the showExplore state */}
+      {showExplore ? <CardMatch /> : <MyMatch />}
     </div>
   );
 }
