@@ -5,7 +5,6 @@ import Link from "next/link";
 
 import CardMatch from "@/components/match/CardMatch";
 import Banner from "@/components/Banner";
-import SearchMatch from "@/components/match/SearchMatch";
 
 export default function Booking() {
   const [showExplore, setShowExplore] = useState(true);
@@ -41,11 +40,8 @@ export default function Booking() {
       </div>
 
       {/* Components */}
-      <SearchMatch />
       <CardMatch />
 
-      {/* Điều kiện hiển thị nội dung */}
-      {/* {showExplore ? <div>Danh sách đội bóng (ListTeamCard)</div> : <div>Giới thiệu đội bóng (TeamIntro)</div>} */}
     </div>
   );
 }
