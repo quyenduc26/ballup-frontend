@@ -15,7 +15,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
   intro,
   address,
   teamId: propTeamId,
-  cover
+  cover,
 }) => {
   const [loading, setLoading] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
@@ -67,6 +67,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
           message: "User not found. Please log in again.",
           type: "error",
         });
+
         return;
       }
 

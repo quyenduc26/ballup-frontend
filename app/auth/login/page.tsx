@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Link } from "@heroui/react";
+
 import { SonnerToast } from "@/components/sonnerMesage";
 import image from "@/public/images/image 3.png";
 import player from "@/public/images/player.png";
@@ -20,11 +21,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
   const [formData, setFormData] = useState<LoginFormType>({
@@ -35,6 +36,7 @@ export default function Login() {
   const validateEmail = (email: string) => {
     if (/\s/.test(email)) return "Invalid email format";
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     return emailRegex.test(email) ? null : "Invalid email";
   };
 
@@ -42,6 +44,7 @@ export default function Login() {
     e.preventDefault();
 
     const emailError = validateEmail(formData.emailOrUsername);
+
     if (emailError) {
       setToastData({
         type: "error",
@@ -49,12 +52,14 @@ export default function Login() {
         message: emailError,
         duration: 3000,
       });
+
       return;
     }
 
     try {
       setLoading(true);
       const response = await authApi.login(formData);
+
       localStorage.setItem("data", JSON.stringify(response.data));
       const data = response.data;
 
@@ -72,6 +77,7 @@ export default function Login() {
       setTimeout(() => router.push("/"), 3000);
     } catch (error: any) {
       let message = "Login failed. Please try again.";
+
       if (error.response?.data?.message) {
         message = error.response.data.message;
       }
@@ -113,7 +119,7 @@ export default function Login() {
             src={player}
             width={450}
           />
-        </div>  
+        </div>
 
         <div className="flex items-center justify-center p-8">
           <div className="w-full max-w-md space-y-8">
@@ -126,7 +132,12 @@ export default function Login() {
                   placeholder="Enter your email"
                   type="email"
                   value={formData.emailOrUsername}
-                  onChange={(e) => setFormData({ ...formData, emailOrUsername: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      emailOrUsername: e.target.value,
+                    })
+                  }
                 />
               </div>
               <div className="space-y-2 ">
@@ -137,14 +148,20 @@ export default function Login() {
                     placeholder="Enter your password"
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
                   />
                   <button
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -154,7 +171,13 @@ export default function Login() {
                 </Button>
               </div>
               <Button className="w-full" onPress={handleLoginWithGoogle}>
-                <Image alt="Google logo" className="mr-2" height={20} src={google} width={20} />
+                <Image
+                  alt="Google logo"
+                  className="mr-2"
+                  height={20}
+                  src={google}
+                  width={20}
+                />
                 Sign in with Google
               </Button>
             </form>

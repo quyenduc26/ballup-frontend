@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import Link from "next/link";
+
 import { SonnerToast } from "@/components/sonnerMesage";
 import { TeamCardProps } from "@/types/form";
 import TeamApi from "@/service/teamCardApi";
@@ -12,25 +13,33 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const [loading, setLoading] = useState(false);
   const [joined, setJoined] = useState(false);
   const [toastData, setToastData] = useState<any>(null);
-  const router = useRouter(); 
+  const router = useRouter();
   const handleJoinTeam = async () => {
     if (!team || !team.id) return;
 
     const user_id = 1;
+
     setLoading(true);
 
     try {
       await TeamApi.joinTeam(user_id, team.id);
       setJoined(true);
-      setToastData({ heading: "Success", message: "Successfully joined the team!", type: "success" });
+      setToastData({
+        heading: "Success",
+        message: "Successfully joined the team!",
+        type: "success",
+      });
 
       setTimeout(() => {
         router.push(`/team/${team.id}`);
       });
-
     } catch (error) {
       console.error("Error joining team:", error);
-      setToastData({ heading: "Error", message: "Failed to join the team.", type: "error" });
+      setToastData({
+        heading: "Error",
+        message: "Failed to join the team.",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -43,7 +52,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   return (
     <>
       {toastData && <SonnerToast toast={toastData} />}
-      
+
       <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105">
         <div className="relative h-40">
           <img

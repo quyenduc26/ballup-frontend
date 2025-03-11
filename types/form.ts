@@ -99,7 +99,7 @@ export type TeamHeaderProps = {
   intro?: string;
   address: string;
   sport: string;
-  cover: string
+  cover: string;
 };
 
 export type Player = {
@@ -116,7 +116,7 @@ export type DetailTeam = {
   address: string;
   intro?: string;
   logo?: string;
-  cover?: string;
+  cover: string;
   sport: string;
   members: Player[];
   owner: boolean;

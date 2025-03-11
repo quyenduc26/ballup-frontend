@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { FiExternalLink } from "react-icons/fi";
+
 import ListTeamCard from "../team/teamCard/ListTeamCard";
 
 export default function TeamSection() {
@@ -16,7 +17,6 @@ export default function TeamSection() {
             TEAM
           </h2>
 
-
           <hr className="w-full border-t border-gray-500 my-12 md:my-24 mt-20" />
 
           <div className="absolute w-[200px] sm:w-[200px] right-0 sm:left-0 mt-16">
@@ -24,7 +24,6 @@ export default function TeamSection() {
               SEE MORE <FiExternalLink className="w-[30px] sm:w" />
             </button>
           </div>
-
         </div>
 
         <div className="w-full md:w-[350px] h-auto mb-10 md:mb-36 flex justify-center">

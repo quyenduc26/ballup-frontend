@@ -2,7 +2,9 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Spinner } from "@heroui/react";
+
 import { SonnerToast } from "../sonnerMesage";
+
 import Calendar from "@/components/booking/Calendar";
 
 export default function Schedule() {
@@ -19,21 +21,28 @@ export default function Schedule() {
   const handleCheck = () => {
     if (!selectedDate) {
       setToast({ message: "Please select a date!", type: "error" } as any);
+
       return;
     }
 
     if (!fromTime) {
-      setToast({ message: "Please select a start time!", type: "error" } as any);
+      setToast({
+        message: "Please select a start time!",
+        type: "error",
+      } as any);
+
       return;
     }
 
     if (!toTime) {
       setToast({ message: "Please select an end time!", type: "error" } as any);
+
       return;
     }
 
     const convertToTimestamp = (time: string) => {
       const [hours, minutes] = time.split(":").map(Number);
+
       return selectedDate
         ? new Date(selectedDate.setHours(hours, minutes, 0, 0)).getTime()
         : null;
@@ -44,6 +53,7 @@ export default function Schedule() {
 
     if (!fromTimestamp || !toTimestamp) {
       setToast({ message: "Invalid time format!", type: "error" } as any);
+
       return;
     }
 
@@ -77,6 +87,7 @@ export default function Schedule() {
     setAddress("");
 
     const clearParams = new URLSearchParams(window.location.search);
+
     clearParams.delete("fromTime");
     clearParams.delete("toTime");
     router.replace(`/booking?${clearParams.toString()}`, { scroll: false });

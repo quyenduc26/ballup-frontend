@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { FiExternalLink } from "react-icons/fi";
+
 import CardList from "../center/CardList";
 
 export default function BookingSection() {
@@ -21,7 +22,9 @@ export default function BookingSection() {
           <h2 className=" md:text-9xl text-4xl sm:text-lg font-bold bg-gradient-to-r from-yellow-500 to-orange-500 text-transparent bg-clip-text">
             BOOKING
           </h2>
-          <p className="text-xl sm:text-lg md:text-4xl font-bold text-black">YOUR COURT</p>
+          <p className="text-xl sm:text-lg md:text-4xl font-bold text-black">
+            YOUR COURT
+          </p>
           <button className="mt-6 md:mt-10 w-[160px] sm:w-[200px] mx-auto mr-1 flex items-center gap-2 text-sm sm:text-lg text-black border border-gray-300 px-6 py-4 rounded-lg hover:bg-gray-100">
             SEE MORE <FiExternalLink className="w-[30px] sm:w" />
           </button>

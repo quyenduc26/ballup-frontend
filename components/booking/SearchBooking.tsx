@@ -79,7 +79,6 @@ const SearchBooking = () => {
             <option value="DESC">Descending</option>
           </select>
         </div>
-
       </div>
     </div>
   );
