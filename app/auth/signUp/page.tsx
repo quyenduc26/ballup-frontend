@@ -117,7 +117,7 @@ export default function SignUp() {
 
         <div className="flex items-center justify-center p-8">
           <div className="w-full max-w-md space-y-8">
-            <h1 className="text-4xl font-bold">Welcome back</h1>
+            <h1 className="text-4xl font-bold mt-20">Welcome back</h1>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               {/* Username */}

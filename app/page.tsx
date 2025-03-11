@@ -17,7 +17,6 @@ export default function App() {
       <IntroPage />
       <IntroBooking />
       <IntroTeam />
-      {/* <IntroSchedule /> */}
       <IntroMatch />
     </div>
   );

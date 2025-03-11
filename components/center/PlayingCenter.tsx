@@ -20,12 +20,17 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
   setActiveTab,
 }) => {
   const router = useRouter();
+  const data = localStorage.getItem("data");
+  const parsedData = data ? JSON.parse(data) : null;
+  const userId = parseInt(parsedData.id);
+
   const [formData, setFormData] = useState<PlayingCenterType>({
     name: "",
     address: "",
     description: "",
     images: Array(MAX_IMAGES).fill(null),
-    ownerId: 1,
+    ownerId: userId,
+    type: ""
   });
 
   const handleChange = (
@@ -88,7 +93,8 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
       address: "",
       description: "",
       images: Array(MAX_IMAGES).fill(null),
-      ownerId: 1,
+      ownerId: userId,
+      type: ""
     });
   };
 

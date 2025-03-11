@@ -11,18 +11,20 @@ import player from "@/public/images/player.png";
 import google from "@/public/images/google.png";
 import { LoginFormType } from "@/types";
 import authApi from "@/service/authApi";
+import { useUser } from "@/context/UserContext";
 
 export default function Login() {
+  const { setUserId } = useUser();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toastData, setToastData] = useState<
     | {
-        heading?: string;
-        message?: string;
-        type?: "error" | "success" | "info" | "warning";
-        duration?: number;
-      }
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warning";
+      duration?: number;
+    }
     | undefined
   >();
   const [formData, setFormData] = useState<LoginFormType>({
@@ -54,7 +56,12 @@ export default function Login() {
       setLoading(true);
       const response = await authApi.login(formData);
       localStorage.setItem("data", JSON.stringify(response.data));
+      const data = response.data;
 
+      setUserId(data.id);
+      if (data) {
+        localStorage.setItem("data", JSON.stringify(data));
+      }
       setToastData({
         type: "success",
         heading: "Login Successful",
@@ -88,13 +95,25 @@ export default function Login() {
     <div>
       <SonnerToast toast={toastData} />
       <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-        <div className="relative w-full h-[500px] sm:h-[600px] md:h-full">
-          <Image fill priority alt="Soccer player illustration" className="object-cover" src={image} />
-          <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">
+        <div className="relative w-full h-[650px] sm:h-[650px] md:h-full">
+          <Image
+            fill
+            priority
+            alt="Soccer player illustration"
+            className="object-cover"
+            src={image}
+          />
+          <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">
             BALLUP
           </div>
-          <Image alt="Small Player" className="absolute top-1/3 left-3 transform -translate-y-1/2" height={350} src={player} width={450} />
-        </div>
+          <Image
+            alt="Small Player"
+            className="absolute top-1/3 left-3 transform -translate-y-1/2"
+            height={350}
+            src={player}
+            width={450}
+          />
+        </div>  
 
         <div className="flex items-center justify-center p-8">
           <div className="w-full max-w-md space-y-8">
@@ -141,8 +160,8 @@ export default function Login() {
             </form>
             <div className="mt-8 text-center">
               <p className="text-sm">
-                Don't have an account?{" "}
-                <Link className="text-blue-500" href="signup">
+                Don&apos;t have an account?{" "}
+                <Link className="text-blue-500" href="signUp">
                   Sign Up
                 </Link>
               </p>
