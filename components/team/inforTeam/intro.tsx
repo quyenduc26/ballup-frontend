@@ -104,17 +104,17 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
       const parsedData = data ? JSON.parse(data) : null;
       const memberId = parsedData?.id;
 
-
       if (!memberId) {
         setToastData({
           heading: "Error",
           message: "User not found. Please log in again.",
           type: "error",
         });
+
         return;
       }
 
-      await TeamDetailApi.leaveTeam(teamId, memberId);
+      if (teamId) await TeamDetailApi.leaveTeam(parseInt(teamId), memberId);
 
       setToastData({
         heading: "Success",
@@ -123,7 +123,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
       });
 
       setTimeout(() => {
-        router.push("/team"); 
+        router.push("/team");
       }, 1000);
     } catch (error) {
       console.error("Error leaving team:", error);
