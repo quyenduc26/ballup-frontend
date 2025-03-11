@@ -42,6 +42,7 @@ export default function TeamIntro() {
             name={team.name}
             sport={team.sport}
             teamId={team.id}
+            cover={team.cover}
           />
           <PlayerTable players={team.members || []} teamId={team.id} />
         </>
