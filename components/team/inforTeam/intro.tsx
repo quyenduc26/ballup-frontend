@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
 import UpdateTeamDetail from "./UpdateTeamDetail";
@@ -6,6 +7,7 @@ import UpdateTeamDetail from "./UpdateTeamDetail";
 import { TeamHeaderProps } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import TeamDetailApi from "@/service/teamDetail";
+import { SonnerToast } from "@/components/sonnerMesage";
 
 const TeamHeader: React.FC<TeamHeaderProps> = ({
   logo,
@@ -13,9 +15,12 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
   intro,
   address,
   teamId: propTeamId,
+  cover,
 }) => {
   const [loading, setLoading] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+  const [toastData, setToastData] = useState<any>(null);
+  const router = useRouter();
   const [teamId, setTeamId] = useState<string | null>(
     propTeamId ? String(propTeamId) : null,
   );
@@ -57,33 +62,61 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
       const userId = parsedData?.id;
 
       if (!userId) {
-        alert("User not found. Please log in again.");
+        setToastData({
+          heading: "Error",
+          message: "User not found. Please log in again.",
+          type: "error",
+        });
 
         return;
       }
+
       await TeamDetailApi.deleteTeam(parseInt(teamId), userId);
-      alert("Team has been deleted successfully!");
-      window.location.href = "/team";
+
+      setToastData({
+        heading: "Success",
+        message: "Team has been deleted successfully!",
+        type: "success",
+      });
+
+      setTimeout(() => {
+        router.push("/team"); // Điều hướng thay vì reload trang
+      }, 1000);
     } catch (error) {
       console.error("Error deleting team:", error);
-      alert("Failed to delete team!");
+      setToastData({
+        heading: "Error",
+        message: "Failed to delete team!",
+        type: "error",
+      });
     } finally {
       setLoading(false);
       setShowOptions(false);
     }
   };
 
+  const handleEditTeam = () => {
+    setToastData({
+      heading: "Info",
+      message: "Edit team clicked!",
+      type: "info",
+    });
+    setShowOptions(false);
+  };
+
   return (
     <div className="w-full border-t border-gray-200 bg-white">
+      {/* Component SonnerToast */}
+      {toastData && <SonnerToast toast={toastData} />}
+
       <div className="flex justify-center md:justify-start">
         <img
           alt="Team Logo"
           className="w-full h-64 border-2 border-white object-cover"
-          src={logo ? getImageUrl(logo) : "/images/field.png"}
+          src={cover ? getImageUrl(cover) : "/images/field.png"}
         />
       </div>
       <div className="flex flex-col md:flex-row items-center p-4">
-        {/* Logo Section */}
         <div className="pr-0 md:pr-4 flex justify-center md:block">
           <img
             alt="Team Logo"
@@ -92,14 +125,12 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
           />
         </div>
 
-        {/* Team Info Section */}
         <div className="flex-1 text-center md:text-left mt-4 md:mt-0">
           <h1 className="text-xl md:text-2xl font-bold text-black">{name}</h1>
           <p className="text-sm text-gray-600">{intro}</p>
           <p className="text-sm text-gray-600">{address}</p>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex space-x-2 mt-4 md:mt-0">
           <button className="bg-black text-white px-4 md:px-6 py-2 font-medium">
             CHAT
@@ -108,7 +139,6 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
             LIKE
           </button>
 
-          {/* Nút "..." với menu dropdown */}
           <div className="relative">
             <button
               className="border border-gray-300 px-4 py-2 font-medium"

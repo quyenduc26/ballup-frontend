@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Eye, Pencil, UserX } from "lucide-react";
 import { useState } from "react";
 
+import { SonnerToast } from "@/components/sonnerMesage";
 import { Player } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import TeamDetailApi from "@/service/teamDetail";
@@ -18,6 +19,7 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
   onKickMember,
 }) => {
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [toastData, setToastData] = useState<any>(null);
 
   const handleKickMember = async (id: number) => {
     if (!window.confirm("Are you sure you want to remove this player?")) return;
@@ -29,12 +31,22 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
       const userId = parsedData.id;
 
       await TeamDetailApi.kickMember(id, { userId, teamId });
-      alert("Player has been removed successfully!");
+
+      setToastData({
+        heading: "Success",
+        message: "Player has been removed successfully!",
+        type: "success",
+      });
+
       onKickMember?.(id);
-      window.location.reload();
     } catch (error) {
       console.error("Error removing player:", error);
-      alert("Failed to remove player!");
+
+      setToastData({
+        heading: "Error",
+        message: "Failed to remove player!",
+        type: "error",
+      });
     } finally {
       setLoadingId(null);
     }
@@ -42,6 +54,8 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
 
   return (
     <div className="overflow-x-auto mt-6">
+      {toastData && <SonnerToast toast={toastData} />}
+
       <table className="min-w-full bg-white shadow-md rounded-lg text-sm md:text-base">
         <thead className="bg-black text-white">
           <tr>

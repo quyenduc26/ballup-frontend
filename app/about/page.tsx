@@ -6,14 +6,15 @@ import ContactForm from "@/components/about/about";
 export default function Home() {
   return (
     <main className="">
-      <section className="w-full">
-        <div className="text-4xl mt-10 md:text-6xl ml-8 font-extrabold text-center md:text-left mb-5 ">
+      <section className="container mx-auto max-w-[1500px] p-4">
+        <h1 className="text-4xl md:text-6xl font-extrabold text-black md:py-6 text-center md:text-left ml-4 mt-20">
           ABOUT
-        </div>
+        </h1>
         <div className="w-full">
           <HeroSection />
         </div>
       </section>
+
       {/* OUR IDEA Section */}
       <section className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 mt-10">
         <div className="flex flex-col">
@@ -22,21 +23,20 @@ export default function Home() {
             SPORT APPLICATION
           </h2>
           <p className="text-gray-700">
-            Đây là một ứng dụng thể thao giúp bạn kết nối với những người chơi
-            thể thao khác và tìm kiếm các hoạt động thể thao trong khu vực của
-            bạn.
+            This is a sports application that helps you connect with other
+            sports players and find sports activities in your area.
           </p>
           <p className="text-gray-700 mt-4">
-            Bất kể bạn chơi thể thao nào hoặc ở mức độ nào, ứng dụng của chúng
-            tôi sẽ giúp bạn tìm đồng đội và tham gia các hoạt động thể thao mới.
+            No matter what sport you play or at what level, our application will
+            help you find teammates and join new sports activities.
           </p>
           <p className="text-gray-700 mt-4">
-            Bất kể bạn chơi thể thao nào hoặc ở mức độ nào, ứng dụng của chúng
-            tôi sẽ giúp bạn tìm đồng đội và tham gia các hoạt động thể thao mới.
+            No matter what sport you play or at what level, our application will
+            help you find teammates and join new sports activities.
           </p>
           <p className="text-gray-700 mt-4">
-            Bất kể bạn chơi thể thao nào hoặc ở mức độ nào, ứng dụng của chúng
-            tôi sẽ giúp bạn tìm đồng đội và tham gia các hoạt động thể thao mới.
+            No matter what sport you play or at what level, our application will
+            help you find teammates and join new sports activities.
           </p>
         </div>
         <div className="bg-sky-100 rounded-md overflow-hidden">
@@ -49,7 +49,7 @@ export default function Home() {
       </section>
 
       {/* OUR VALUES Section */}
-      <section className=" max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+      <section className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
         <div className="bg-sky-100 rounded-md overflow-hidden order-2 md:order-1">
           <img
             alt="Person with sports technology"
@@ -63,30 +63,30 @@ export default function Home() {
             CONNECT TIME SUIT
           </h2>
           <p className="text-gray-700">
-            Chúng tôi tin rằng thể thao có thể kết nối mọi người và tạo ra những
-            cộng đồng mạnh mẽ. Ứng dụng của chúng tôi không chỉ giúp bạn tìm đối
-            tác chơi thể thao mà còn xây dựng tình bạn và mối quan hệ mới.
+            We believe that sports can connect people and create strong
+            communities. Our application not only helps you find sports partners
+            but also builds friendships and new relationships.
           </p>
           <p className="text-gray-700 mt-4">
-            Bất kể bạn chơi thể thao nào hoặc ở mức độ nào, ứng dụng của chúng
-            tôi sẽ giúp bạn tìm đồng đội và tham gia các hoạt động thể thao mới.
+            No matter what sport you play or at what level, our application will
+            help you find teammates and join new sports activities.
           </p>
           <p className="text-gray-700 mt-4">
-            Bất kể bạn chơi thể thao nào hoặc ở mức độ nào, ứng dụng của chúng
-            tôi sẽ giúp bạn tìm đồng đội và tham gia các hoạt động thể thao mới.
+            No matter what sport you play or at what level, our application will
+            help you find teammates and join new sports activities.
           </p>
         </div>
       </section>
 
       {/* MEET OUR TEAM Section */}
-      <section className=" max-w-7xl mx-auto px-4 py-8 mb-16">
+      <section className="max-w-7xl mx-auto px-4 py-8 mb-16">
         <h2 className="text-4xl md:text-5xl font-black text-center mb-8">
           MEET OUR TEAM
         </h2>
         <p className="text-gray-700 text-center max-w-3xl mx-auto mb-12">
-          Đội ngũ chúng tôi bao gồm những người đam mê thể thao và công nghệ.
-          Chúng tôi cam kết tạo ra một ứng dụng chất lượng cao để kết nối cộng
-          đồng thể thao với nhau.
+          Our team consists of passionate sports and technology enthusiasts. We
+          are committed to creating a high-quality application to connect the
+          sports community together.
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:ml-20 ml-2 items-center justify-center">

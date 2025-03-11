@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Link } from "@heroui/react";
 
+import { SonnerToast } from "@/components/sonnerMesage";
 import image from "@/public/images/image 3.png";
 import player from "@/public/images/player.png";
 import google from "@/public/images/google.png";
@@ -22,7 +23,7 @@ export default function Login() {
     | {
         heading?: string;
         message?: string;
-        type?: "error" | "success" | "info" | "warn";
+        type?: "error" | "success" | "info" | "warning";
         duration?: number;
       }
     | undefined
@@ -31,29 +32,26 @@ export default function Login() {
     emailOrUsername: "",
     password: "",
   });
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const validateEmail = (email: string) => {
-    if (/\s/.test(email)) {
-      return "Invalid email format";
-    }
+    if (/\s/.test(email)) return "Invalid email format";
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailRegex.test(email)) {
-      return "Invalid email";
-    }
-
-    return null;
+    return emailRegex.test(email) ? null : "Invalid email";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage(null);
 
     const emailError = validateEmail(formData.emailOrUsername);
 
     if (emailError) {
-      setErrorMessage(emailError);
+      setToastData({
+        type: "error",
+        heading: "Validation Error",
+        message: emailError,
+        duration: 3000,
+      });
 
       return;
     }
@@ -61,6 +59,8 @@ export default function Login() {
     try {
       setLoading(true);
       const response = await authApi.login(formData);
+
+      localStorage.setItem("data", JSON.stringify(response.data));
       const data = response.data;
 
       setUserId(data.id);
@@ -73,23 +73,21 @@ export default function Login() {
         message: "You have successfully logged in!",
         duration: 3000,
       });
-      router.push("/");
-    } catch (error: any) {
-      const errorResponse = error.response?.data?.message;
 
-      if (errorResponse) {
-        if (errorResponse.includes("Invalid email")) {
-          setErrorMessage("Email not found");
-        } else if (errorResponse.includes("Incorrect password")) {
-          setErrorMessage("Incorrect password");
-        } else if (errorResponse.includes("Invalid credentials")) {
-          setErrorMessage("Invalid email or password");
-        } else {
-          setErrorMessage(errorResponse);
-        }
-      } else {
-        setErrorMessage("Login failed. Please try again.");
+      setTimeout(() => router.push("/"), 3000);
+    } catch (error: any) {
+      let message = "Login failed. Please try again.";
+
+      if (error.response?.data?.message) {
+        message = error.response.data.message;
       }
+
+      setToastData({
+        type: "error",
+        heading: "Login Failed",
+        message: message,
+        duration: 4000,
+      });
     } finally {
       setLoading(false);
     }
@@ -101,8 +99,9 @@ export default function Login() {
 
   return (
     <div>
+      <SonnerToast toast={toastData} />
       <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-        <div className="relative w-full h-[500px] sm:h-[600px] md:h-full">
+        <div className="relative w-full h-[650px] sm:h-[650px] md:h-full">
           <Image
             fill
             priority
@@ -110,7 +109,7 @@ export default function Login() {
             className="object-cover"
             src={image}
           />
-          <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">
+          <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">
             BALLUP
           </div>
           <Image
@@ -128,7 +127,6 @@ export default function Login() {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2 mb-12">
                 <Input
-                  required
                   label="Email"
                   labelPlacement="outside"
                   placeholder="Enter your email"
@@ -145,7 +143,6 @@ export default function Login() {
               <div className="space-y-2 ">
                 <div className="relative">
                   <Input
-                    required
                     label="Password"
                     labelPlacement="outside"
                     placeholder="Enter your password"
@@ -183,11 +180,6 @@ export default function Login() {
                 />
                 Sign in with Google
               </Button>
-              {errorMessage && (
-                <p className="text-red-500 text-sm text-center">
-                  {errorMessage}
-                </p>
-              )}
             </form>
             <div className="mt-8 text-center">
               <p className="text-sm">

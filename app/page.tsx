@@ -8,10 +8,10 @@ import Banner from "@/components/Banner";
 
 export default function App() {
   return (
-    <div className="items-center justify-center px-4">
-      <div className="text-4xl md:text-6xl ml-8 font-extrabold text-black text-center md:text-left">
+    <div className="container mx-auto max-w-[1500px] p-4">
+      <h1 className="text-4xl md:text-6xl font-extrabold text-black  md:py-6 text-center md:text-left ml-4 mt-20">
         HOME
-      </div>
+      </h1>
 
       <Banner />
       <IntroPage />

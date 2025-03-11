@@ -48,7 +48,7 @@ export default function SignUp() {
       newErrors.email = "Email must contain '@'";
     }
     if (!formData.password.match(/^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]{8,}$/)) {
-      newErrors.password = "Password must be 8 characters and numbers";
+      newErrors.password = "Password must be 8 characters and numbers!";
     }
     if (formData.password !== confirmPassword)
       newErrors.confirmPassword = "Passwords do not match!";
@@ -91,11 +91,11 @@ export default function SignUp() {
 
   return (
     <div>
-      <div className="w-[400px] h-[200px]">
+      <div>
         <SonnerToast toast={toastData} />
       </div>
       <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-        <div className="relative w-full h-[500px] sm:h-[600px] md:h-full">
+        <div className="relative w-full h-[650px] sm:h-[650px] md:h-full">
           <Image
             fill
             priority
@@ -103,7 +103,7 @@ export default function SignUp() {
             className="object-cover"
             src={image}
           />
-          <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">
+          <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 text-white font-bold text-6xl">
             BALLUP
           </div>
           <Image
@@ -117,14 +117,13 @@ export default function SignUp() {
 
         <div className="flex items-center justify-center p-8">
           <div className="w-full max-w-md space-y-8">
-            <h1 className="text-4xl font-bold">Welcome back</h1>
+            <h1 className="text-4xl font-bold mt-20">Welcome back</h1>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               {/* Username */}
               <div className="space-y-2">
-                {/* <label className="text-sm font-medium">Username</label> */}
                 <Input
-                  className={`w-full p-2 rounded-md mb-8 ${errors.username ? "border-red-500 bg-red-100" : "border-gray-300"}`}
+                  className={`w-full p-2 rounded-md  ${errors.username ? "border-red-500 bg-red-100" : "border-gray-300"}`}
                   label="Username"
                   labelPlacement="outside"
                   placeholder="Enter your username"
@@ -142,7 +141,7 @@ export default function SignUp() {
               {/* Email */}
               <div className="space-y-2">
                 <Input
-                  className={`w-full p-2 rounded-md mb-8 ${errors.email ? "border-red-500 bg-red-100" : "border-gray-300"}`}
+                  className={`w-full p-2 rounded-md  ${errors.email ? "border-red-500 bg-red-100" : "border-gray-300"}`}
                   label="Email"
                   labelPlacement="outside"
                   placeholder="Enter your email"
@@ -161,7 +160,7 @@ export default function SignUp() {
               <div className="space-y-2">
                 <div className="relative">
                   <Input
-                    className={`w-full p-2 rounded-md mb-8 ${errors.password ? "border-red-500 bg-red-100" : "border-gray-300"}`}
+                    className={`w-full p-2 rounded-md  ${errors.password ? "border-red-500 bg-red-100" : "border-gray-300"}`}
                     label="Password"
                     labelPlacement="outside"
                     placeholder="Enter your password"
@@ -192,7 +191,7 @@ export default function SignUp() {
               <div className="space-y-2">
                 <div className="relative">
                   <Input
-                    className={`w-full p-2 rounded-md mb-8 ${errors.confirmPassword ? "border-red-500 bg-red-100" : "border-gray-300"}`}
+                    className={`w-full p-2 rounded-md  ${errors.confirmPassword ? "border-red-500 bg-red-100" : "border-gray-300"}`}
                     label="Confirm Password"
                     labelPlacement="outside"
                     placeholder="Enter your password"
@@ -225,7 +224,7 @@ export default function SignUp() {
                   Role
                 </label>
                 <select
-                  className="w-full p-2 border rounded-md mb-8 text-sm"
+                  className="w-full p-2 border rounded-md  text-sm"
                   id="role"
                   value={formData.role}
                   onChange={(e) =>
