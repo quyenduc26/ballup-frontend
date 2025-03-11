@@ -1,22 +1,29 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+
 import TeamDetailApi from "@/service/teamDetail";
 import { uploadImage } from "@/utils/uploadImage";
 import { getImageUrl } from "@/utils/getImage";
 import { SonnerToast } from "@/components/sonnerMesage";
 
-export default function UpdateTeamDetail({ teamId: propTeamId, onClose: propOnClose }: { teamId?: string; onClose?: () => void }) {
+export default function UpdateTeamDetail({
+  teamId: propTeamId,
+  onClose: propOnClose,
+}: {
+  teamId?: string;
+  onClose?: () => void;
+}) {
   const router = useRouter();
   const [teamId, setTeamId] = useState(propTeamId || null);
   const [loading, setLoading] = useState(false);
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
 
@@ -44,16 +51,25 @@ export default function UpdateTeamDetail({ teamId: propTeamId, onClose: propOnCl
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
-  const handleImageUpload = async ({ e, type }: { e: React.ChangeEvent<HTMLInputElement>, type: string }) => {
+  const handleImageUpload = async ({
+    e,
+    type,
+  }: {
+    e: React.ChangeEvent<HTMLInputElement>;
+    type: string;
+  }) => {
     const file = e?.target.files?.[0];
+
     if (file) {
       const imageUrl = await uploadImage(file);
+
       if (!imageUrl) {
         alert("Failed to upload image.");
+
         return;
       }
       const imgSrc = getImageUrl(imageUrl);
+
       if (!imgSrc) return;
       if (type === "cover") {
         setCoverPreview(imgSrc);
@@ -65,11 +81,14 @@ export default function UpdateTeamDetail({ teamId: propTeamId, onClose: propOnCl
     }
   };
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!teamId) {
-      setToastData({ message: "No team ID available. Cannot update.", type: "error" });
+      setToastData({
+        message: "No team ID available. Cannot update.",
+        type: "error",
+      });
+
       return;
     }
     setLoading(true);
@@ -83,14 +102,13 @@ export default function UpdateTeamDetail({ teamId: propTeamId, onClose: propOnCl
       });
 
       setTimeout(() => {
-        setLoading(false); 
+        setLoading(false);
         if (propOnClose) {
-          propOnClose(); 
+          propOnClose();
         } else {
-          router.push("/team"); 
+          router.push("/team");
         }
-      }, 3200); 
-
+      }, 3200);
     } catch (error: any) {
       setToastData({
         type: "error",
@@ -103,7 +121,7 @@ export default function UpdateTeamDetail({ teamId: propTeamId, onClose: propOnCl
   };
 
   const handleCancel = () => {
-    router.back(); 
+    router.back();
   };
 
   return (
@@ -115,7 +133,11 @@ export default function UpdateTeamDetail({ teamId: propTeamId, onClose: propOnCl
       <div className="relative w-full h-60 bg-gray-300 flex justify-center items-center rounded-md overflow-hidden mb-6">
         {coverPreview ? (
           <>
-            <img alt="Cover Preview" className="object-cover w-full h-full" src={coverPreview} />
+            <img
+              alt="Cover Preview"
+              className="object-cover w-full h-full"
+              src={coverPreview}
+            />
             <button
               className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center"
               onClick={() => setCoverPreview("")}
@@ -142,7 +164,11 @@ export default function UpdateTeamDetail({ teamId: propTeamId, onClose: propOnCl
       <div className="relative w-40 h-40 bg-gray-200 flex items-center justify-center rounded-md mx-auto mb-4 overflow-hidden">
         {logoPreview ? (
           <>
-            <img alt="Logo Preview" className="object-cover w-full h-full" src={logoPreview} />
+            <img
+              alt="Logo Preview"
+              className="object-cover w-full h-full"
+              src={logoPreview}
+            />
             <button
               className="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md"
               onClick={() => setLogoPreview("")}
@@ -227,10 +253,16 @@ export default function UpdateTeamDetail({ teamId: propTeamId, onClose: propOnCl
         </div>
 
         <div className="flex justify-end gap-4 mt-4">
-          <button className="px-4 py-2 border rounded" type="button" onClick={handleCancel}>
+          <button
+            className="px-4 py-2 border rounded"
+            type="button"
+            onClick={handleCancel}
+          >
             CANCEL
           </button>
-          <button className="px-4 py-2 bg-black text-white rounded" disabled={loading}
+          <button
+            className="px-4 py-2 bg-black text-white rounded"
+            disabled={loading}
             type="submit"
           >
             {loading}
@@ -241,4 +273,3 @@ export default function UpdateTeamDetail({ teamId: propTeamId, onClose: propOnCl
     </div>
   );
 }
-

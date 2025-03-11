@@ -1,30 +1,41 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+
+import UpdateTeamDetail from "./UpdateTeamDetail";
+
 import { TeamHeaderProps } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import TeamDetailApi from "@/service/teamDetail";
-import UpdateTeamDetail from "./UpdateTeamDetail";
 
-const TeamHeader: React.FC<TeamHeaderProps> = ({ logo, name, intro, address, teamId: propTeamId }) => {
+const TeamHeader: React.FC<TeamHeaderProps> = ({
+  logo,
+  name,
+  intro,
+  address,
+  teamId: propTeamId,
+}) => {
   const [loading, setLoading] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
-  const [teamId, setTeamId] = useState<string | null>(propTeamId ? String(propTeamId) : null);
+  const [teamId, setTeamId] = useState<string | null>(
+    propTeamId ? String(propTeamId) : null,
+  );
   const editDialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     if (!propTeamId) {
       const storedTeamId = localStorage.getItem("teamId");
+
       if (storedTeamId) {
         setTeamId(storedTeamId);
       }
     }
   }, [propTeamId]);
 
-
   // Hàm xử lý khi nhấn Edit
   const hanUpdateForm = () => {
     if (!teamId) {
       alert("No team ID available. Cannot edit.");
+
       return;
     }
     editDialogRef.current?.showModal();
@@ -33,6 +44,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ logo, name, intro, address, tea
   const handleDeleteTeam = async () => {
     if (!teamId) {
       alert("No team ID found. Cannot delete team.");
+
       return;
     }
 
@@ -46,6 +58,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ logo, name, intro, address, tea
 
       if (!userId) {
         alert("User not found. Please log in again.");
+
         return;
       }
       await TeamDetailApi.deleteTeam(parseInt(teamId), userId);
@@ -126,11 +139,14 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ logo, name, intro, address, tea
         </div>
       </div>
 
-      <dialog ref={editDialogRef} className="p-6 bg-white rounded-lg shadow-lg w-200">
+      <dialog
+        ref={editDialogRef}
+        className="p-6 bg-white rounded-lg shadow-lg w-200"
+      >
         <div className="flex justify-end items-end pb-2">
           <button
-            onClick={() => editDialogRef.current?.close()}
             className="text-black text-large"
+            onClick={() => editDialogRef.current?.close()}
           >
             ✕
           </button>
@@ -138,7 +154,10 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ logo, name, intro, address, tea
 
         {/* Nhúng form UpdateTeamDetail */}
         {teamId ? (
-          <UpdateTeamDetail teamId={teamId} onClose={() => editDialogRef.current?.close()} />
+          <UpdateTeamDetail
+            teamId={teamId}
+            onClose={() => editDialogRef.current?.close()}
+          />
         ) : (
           <p className="text-red-500">No team ID available. Cannot edit.</p>
         )}
