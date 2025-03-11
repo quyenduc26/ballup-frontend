@@ -9,8 +9,12 @@
         api.get(`/unavailable-slot/check/${slotId}`, { 
           params: { fromTime, toTime } 
         }),
-        getAllUsers: (userId: number, sport = "FOOTBALL") => api.get(`/team-member/${userId}`, {params: { sport }}),
-        getOverview: (userId: number, sport = "FOOTBALL") => api.get(`/team-member/${userId}/team`, {params: { sport }})
+        getAllUsers: (userId: number, sport: "FOOTBALL" | "BADMINTON" = "FOOTBALL") => 
+          api.get(`/team-member/${userId}`, { params: { sport } }),
+        
+        getOverview: (userId: number, sport: "FOOTBALL" | "BADMINTON" = "FOOTBALL") => 
+          api.get(`/team-member/${userId}/team`, { params: { sport } })
+        
 
 
     };

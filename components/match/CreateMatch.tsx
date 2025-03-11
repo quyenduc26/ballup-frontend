@@ -1,22 +1,12 @@
 "use client"
 import { useState, useEffect } from "react"
 import type React from "react"
-
+import { toast, Toaster } from "sonner"
 import { ArrowLeft, ChevronDown, Upload, Users } from "lucide-react"
-import type { CreateMatchType, PlayingCenterType, CardFieldType, CenterSelection, PlayingSlotType } from "@/types"
+import type { CreateMatchType, PlayingCenterType, CardFieldType, CenterSelection, PlayingSlotType, TeamOverviewResponse } from "@/types"
 import matchApi from "@/service/matchApi"
 import { uploadImage } from "@/utils/uploadImage"
 import { getImageUrl } from "@/utils/getImage"
-
-// Add the TeamOverviewResponse type
-type TeamOverviewResponse = {
-  id: number;
-  name: string;
-  logo: string;
-  cover: string;
-  sport: string;
-  totalMembers: number;
-}
 
 export default function CreateMatch() {
   const [playingCenters, setPlayingCenters] = useState<CardFieldType[]>([])
@@ -103,10 +93,13 @@ export default function CreateMatch() {
         if (coverImg) {
           setFormData((prev) => ({ ...prev, cover: coverImg }))
           setCoverPreview(getImageUrl(coverImg))
+          toast.success("Image uploaded successfully")
         } else {
+          toast.error("Image upload failed")
           console.error("Image upload failed")
         }
       } catch (error) {
+        toast.error("Error uploading image")
         console.error("Error uploading image:", error)
       } finally {
         setLoading(false)
@@ -118,6 +111,7 @@ export default function CreateMatch() {
   const handleRemoveImage = () => {
     setFormData((prev) => ({ ...prev, cover: "" }))
     setCoverPreview(undefined)
+    toast.info("Image removed")
   }
 
   // Fetch playing centers based on sport type
@@ -138,6 +132,7 @@ export default function CreateMatch() {
         setPlayingCenters(response.data)
       }
     } catch (error) {
+      toast.error("Error loading playing center information")
       console.error("Error fetching playing centers:", error)
     } finally {
       setLoading(false)
@@ -172,6 +167,7 @@ export default function CreateMatch() {
       const response = await matchApi.getPlayingSlot(Number.parseInt(centerId))
       setPlayingSlots(response.data)
     } catch (error) {
+      toast.error("Error loading slot information")
       console.error("Error fetching slots:", error)
     } finally {
       setLoading(false)
@@ -181,7 +177,7 @@ export default function CreateMatch() {
   // Check slot availability
   const checkSlotAvailability = async () => {
     if (!formData.slotId || formData.fromTime === 0 || formData.toTime === 0) {
-      alert("Please select a slot, date, and specify from/to time.")
+      toast.warning("Please select a slot, date, and time")
       return
     }
 
@@ -193,15 +189,15 @@ export default function CreateMatch() {
       const isUnavailable = response.data
 
       if (isUnavailable) {
-        alert("This time slot is already booked. Please select another time.")
+        toast.error("This time slot is already booked. Please choose another time.")
         setSlotAvailable(false)
       } else {
-        alert("Time slot is available! You can create your match.")
+        toast.success("This time slot is available! You can create a match.")
         setSlotAvailable(true)
       }
     } catch (error) {
       console.error("Error checking slot availability:", error)
-      alert("Failed to check slot availability. Please try again.")
+      toast.error("Unable to check slot availability. Please try again.")
       setSlotAvailable(false)
     } finally {
       setIsChecking(false)
@@ -214,13 +210,13 @@ export default function CreateMatch() {
 
     // If slot availability hasn't been checked yet
     if (slotAvailable === null) {
-      alert("Please check slot availability first.")
+      toast.warning("Please check slot availability first")
       return
     }
 
     // If slot is not available
     if (slotAvailable === false) {
-      alert("This time slot is not available. Please select another time.")
+      toast.error("This time slot is not available. Please choose another time.")
       return
     }
 
@@ -228,11 +224,11 @@ export default function CreateMatch() {
       setLoading(true)
       const response = await matchApi.createMatch(formData)
       if (response.data) {
-        alert("Match created successfully!")
+        toast.success("Match created successfully!")
       }
     } catch (error) {
       console.error("Error creating match:", error)
-      alert("Failed to create match. Please try again.")
+      toast.error("Unable to create match. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -241,38 +237,47 @@ export default function CreateMatch() {
   // Updated fetchAllUserIds function to first get team overview
   const fetchAllUserIds = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
 
-      // First get team overview
-      const teamResponse = await matchApi.getOverview(formData.userId, formData.type || "FOOTBALL")
+      // Xác định sport, đảm bảo giá trị hợp lệ
+      const sport = formData.type === "BADMINTON" ? "BADMINTON" : "FOOTBALL";
+
+      // First, get team overview
+      const teamResponse = await matchApi.getOverview(formData.userId, sport);
       if (teamResponse.data) {
-        setTeamOverview(teamResponse.data)
+        setTeamOverview(teamResponse.data);
 
         // Hide the button after getting team data
-        setShowTeamButton(false)
+        setShowTeamButton(false);
       }
 
-      // Then get all user IDs
-      const usersResponse = await matchApi.getAllUsers(formData.userId, formData.type || "FOOTBALL")
+      // Then, get all user IDs
+      const usersResponse = await matchApi.getAllUsers(formData.userId, sport);
       if (usersResponse.data) {
-        setNumberList(usersResponse.data)
+        setNumberList(usersResponse.data);
 
         // Update the form data with the member list
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          memberIdList: usersResponse.data
-        }))
+          memberIdList: usersResponse.data,
+        }));
+
+        toast.success("Team information loaded successfully");
       }
     } catch (error) {
-      console.error("Error fetching team data:", error)
-      alert("Failed to fetch team data. Please try again.")
+      console.error("Error fetching team data:", error);
+      toast.error("Unable to load team information. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
 
   return (
     <div className="max-w-7xl mb-10 mt-10 mx-auto border rounded-xl bg-white min-h-screen">
+      {/* Add Toaster component */}
+      <Toaster richColors position="top-center" />
+
       {/* Header with back button */}
       <div className="relative">
         <button
@@ -616,29 +621,12 @@ export default function CreateMatch() {
                       <h3 className="font-bold text-lg">{teamOverview.name}</h3>
                       <div className="flex items-center text-sm text-gray-600 mt-1">
                         <span className="mr-4">Sport: {teamOverview.sport}</span>
-                        <span>{teamOverview.totalMembers} Nember</span>
+                        <span>{teamOverview.totalMembers} Members</span>
                       </div>
                     </div>
 
                     {/* Divider */}
                     <div className="border-b border-gray-200 my-4"></div>
-                  </div>
-                )}
-
-                {/* Team Members Section */}
-                {numberList.length > 0 && (
-                  <div>
-                    <h3 className="font-medium mb-3 text-sm uppercase">Team Members ({numberList.length})</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                      {numberList.map((userId) => (
-                        <div key={userId} className="bg-gray-50 border border-gray-200 p-3 rounded-md text-center">
-                          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-2">
-                            <Users size={16} className="text-gray-500" />
-                          </div>
-                          <div className="text-sm font-medium">User {userId}</div>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 )}
               </>
