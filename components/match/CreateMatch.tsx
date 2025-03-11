@@ -11,13 +11,15 @@ import type {
 
 import { useState, useEffect } from "react";
 import { toast, Toaster } from "sonner";
-import { ArrowLeft, ChevronDown, Upload, Users } from "lucide-react";
+import { ArrowLeft, ChevronDown, Router, Upload, Users } from "lucide-react";
 
 import matchApi from "@/service/matchApi";
 import { uploadImage } from "@/utils/uploadImage";
 import { getImageUrl } from "@/utils/getImage";
+import { useRouter } from "next/navigation";
 
 export default function CreateMatch() {
+    const router = useRouter();
   const [playingCenters, setPlayingCenters] = useState<CardFieldType[]>([]);
   const [selectedCenter, setSelectedCenter] = useState<CenterSelection | null>(
     null,
@@ -38,6 +40,7 @@ export default function CreateMatch() {
     memberIdList: [],
     type: "",
     slotId: null,
+    userTeamId: 0,
   });
   const [coverPreview, setCoverPreview] = useState<string | undefined>(
     undefined,
@@ -263,6 +266,7 @@ export default function CreateMatch() {
       if (response.data) {
         toast.success("Match created successfully!");
       }
+      router.push("/");
     } catch (error) {
       console.error("Error creating match:", error);
       toast.error("Unable to create match. Please try again.");
@@ -298,6 +302,7 @@ export default function CreateMatch() {
         // Update the form data with the member list
         setFormData((prev) => ({
           ...prev,
+          userTeamId: teamResponse.data.id,
           memberIdList: usersResponse.data,
         }));
 

@@ -140,6 +140,7 @@ export type CreateMatchType = {
   description: string;
   cover: string;
   memberIdList: number[];
+  userTeamId: number;
   type: string;
   slotId?: number | null;
 };
