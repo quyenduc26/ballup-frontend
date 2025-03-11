@@ -132,8 +132,8 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                   <h1 className="text-2xl  font-bold">{centerInfor.name}</h1>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <MapPin className="h-4 w-4 text-gray-300" />
-                  <p className="text-gray-300 text-sm">{centerInfor.address}</p>
+                  <MapPin className="ml-0.5 h-4 w-4 text-gray-300" />
+                  <p className="text-gray-300 text-sm ">{centerInfor.address}</p>
                 </div>
               </div>
 
