@@ -25,36 +25,36 @@ export default function Footer() {
 
           {/* Product column */}
           <div className="space-y-1">
-            <Link href="/package" className="block text-xs md:text-base lg:text-lg font-medium mb-1 hover:text-gray-400">
+            <Link href="/package" className="block text-xs md:text-base lg:text-lg font-medium mb-1 ">
               Product
             </Link>
-            <Link href="/package" className="block text-xs md:text-base lg:text-lg hover:text-gray-400">
+            <Link href="/package" className="block text-xs md:text-base lg:text-lg ">
               Package
             </Link>
-            <Link href="/pricing" className="block text-xs md:text-base lg:text-lg hover:text-gray-400">
+            <Link href="/pricing" className="block text-xs md:text-base lg:text-lg ">
               Pricing
             </Link>
           </div>
 
           {/* Engage column */}
           <div className="space-y-1">
-            <Link href="/policy" className="block text-xs md:text-base lg:text-lg hover:text-gray-400">
+            <Link href="/policy" className="block text-xs md:text-base lg:text-lg ">
               Engage
             </Link>
-            <Link href="/policy" className="block text-xs md:text-base lg:text-lg hover:text-gray-400">
+            <Link href="/policy" className="block text-xs md:text-base lg:text-lg ">
               Policy
             </Link>
-            <Link href="/tutorials" className="block text-xs md:text-base lg:text-lg hover:text-gray-400">
+            <Link href="/tutorials" className="block text-xs md:text-base lg:text-lg ">
               Tutorials
             </Link>
           </div>
 
           {/* Earn Money column */}
           <div className="space-y-1">
-            <Link href="/partner" className="block text-xs md:text-base lg:text-lg hover:text-gray-400">
+            <Link href="/partner" className="block text-xs md:text-base lg:text-lg ">
               Earn Money
             </Link>
-            <Link href="/partner" className="block text-xs md:text-base lg:text-lg hover:text-gray-400">
+            <Link href="/partner" className="block text-xs md:text-base lg:text-lg ">
               Become Partner
             </Link>
           </div>

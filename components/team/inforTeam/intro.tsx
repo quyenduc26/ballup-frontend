@@ -67,7 +67,6 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
       const data = localStorage.getItem("data");
       const parsedData = data ? JSON.parse(data) : null;
       const memberId = parsedData?.id;
-      console.log("dhrfgvyd",memberId);
 
 
       if (!memberId) {

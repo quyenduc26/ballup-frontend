@@ -8,7 +8,7 @@ const TeamDetailApi = {
 
   getTeamDetail: (teamId: number, userId: number) =>api.get(`/team/${teamId}/user/${userId}`),
 
-  leaveTeam: (teamId: number, memberId: number) =>api.delete(`/team/${teamId}/leave?memberId=${memberId}`),
+  leaveTeam: (teamId: number, memberId: number) =>api.delete(`/team-member/${teamId}/leave?memberId=${memberId}`),
   
 };
 
