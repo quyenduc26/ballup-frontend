@@ -15,6 +15,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
   intro,
   address,
   teamId: propTeamId,
+  cover,
 }) => {
   const [loading, setLoading] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
@@ -66,6 +67,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
           message: "User not found. Please log in again.",
           type: "error",
         });
+
         return;
       }
 
@@ -154,7 +156,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
         <img
           alt="Team Logo"
           className="w-full h-64 border-2 border-white object-cover"
-          src={logo ? getImageUrl(logo) : "/images/field.png"}
+          src={cover ? getImageUrl(cover) : "/images/field.png"}
         />
       </div>
       <div className="flex flex-col md:flex-row items-center p-4">

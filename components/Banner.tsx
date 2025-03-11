@@ -23,7 +23,8 @@ const HeroSection = () => {
             INNOVIBE SQUADS
           </h2>
           <p className="text-white text-xs sm:text-sm mt-2 max-w-md">
-            Awaken your instincts that lie deep within your body. Take care of your health
+            Awaken your instincts that lie deep within your body. Take care of
+            your health
           </p>
         </div>
       </div>

@@ -23,16 +23,20 @@ export default function Home() {
             SPORT APPLICATION
           </h2>
           <p className="text-gray-700">
-            This is a sports application that helps you connect with other sports players and find sports activities in your area.
+            This is a sports application that helps you connect with other
+            sports players and find sports activities in your area.
           </p>
           <p className="text-gray-700 mt-4">
-            No matter what sport you play or at what level, our application will help you find teammates and join new sports activities.
+            No matter what sport you play or at what level, our application will
+            help you find teammates and join new sports activities.
           </p>
           <p className="text-gray-700 mt-4">
-            No matter what sport you play or at what level, our application will help you find teammates and join new sports activities.
+            No matter what sport you play or at what level, our application will
+            help you find teammates and join new sports activities.
           </p>
           <p className="text-gray-700 mt-4">
-            No matter what sport you play or at what level, our application will help you find teammates and join new sports activities.
+            No matter what sport you play or at what level, our application will
+            help you find teammates and join new sports activities.
           </p>
         </div>
         <div className="bg-sky-100 rounded-md overflow-hidden">
@@ -59,13 +63,17 @@ export default function Home() {
             CONNECT TIME SUIT
           </h2>
           <p className="text-gray-700">
-            We believe that sports can connect people and create strong communities. Our application not only helps you find sports partners but also builds friendships and new relationships.
+            We believe that sports can connect people and create strong
+            communities. Our application not only helps you find sports partners
+            but also builds friendships and new relationships.
           </p>
           <p className="text-gray-700 mt-4">
-            No matter what sport you play or at what level, our application will help you find teammates and join new sports activities.
+            No matter what sport you play or at what level, our application will
+            help you find teammates and join new sports activities.
           </p>
           <p className="text-gray-700 mt-4">
-            No matter what sport you play or at what level, our application will help you find teammates and join new sports activities.
+            No matter what sport you play or at what level, our application will
+            help you find teammates and join new sports activities.
           </p>
         </div>
       </section>
@@ -76,7 +84,9 @@ export default function Home() {
           MEET OUR TEAM
         </h2>
         <p className="text-gray-700 text-center max-w-3xl mx-auto mb-12">
-          Our team consists of passionate sports and technology enthusiasts. We are committed to creating a high-quality application to connect the sports community together.
+          Our team consists of passionate sports and technology enthusiasts. We
+          are committed to creating a high-quality application to connect the
+          sports community together.
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:ml-20 ml-2 items-center justify-center">

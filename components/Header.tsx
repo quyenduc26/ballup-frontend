@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AlignJustify, User } from "lucide-react";
+import { AlignJustify } from "lucide-react";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -13,6 +13,7 @@ const Header = () => {
   useEffect(() => {
     // Kiểm tra localStorage để xác định người dùng đã đăng nhập hay chưa
     const userData = localStorage.getItem("data");
+
     setIsLoggedIn(!!userData); // Chuyển đổi thành boolean
   }, []);
 
@@ -93,19 +94,19 @@ const Header = () => {
             </Link>
           ) : (
             <> */}
-              <Link
-                className="border-3 border-black px-4 py-2 text-black hover:bg-gray-100"
-                href="/auth/login"
-              >
-                Login
-              </Link>
-              <Link
-                className="bg-black border-3 border-black text-white px-4 py-2 hover:bg-gray-800"
-                href="/auth/signUp"
-              >
-                Signup
-              </Link>
-            {/* </> */}
+          <Link
+            className="border-3 border-black px-4 py-2 text-black hover:bg-gray-100"
+            href="/auth/login"
+          >
+            Login
+          </Link>
+          <Link
+            className="bg-black border-3 border-black text-white px-4 py-2 hover:bg-gray-800"
+            href="/auth/signUp"
+          >
+            Signup
+          </Link>
+          {/* </> */}
           {/* )} */}
         </div>
       </div>

@@ -17,7 +17,9 @@ export default function MatchSection() {
       </div>
 
       <div className="w-full md:w-2/3 pl-0 md:pl-6 flex flex-col md:ml-20 text-center md:text-left">
-        <p className="text-xl sm:text-lg md:text-4xl font-bold text-black">CREATE</p>
+        <p className="text-xl sm:text-lg md:text-4xl font-bold text-black">
+          CREATE
+        </p>
         <h2 className=" md:text-9xl text-4xl sm:text-lg font-bold bg-gradient-to-r from-yellow-500 to-orange-500 text-transparent bg-clip-text">
           MATCH
         </h2>

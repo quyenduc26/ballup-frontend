@@ -75,7 +75,6 @@ export default function Calendar({
         ))}
       </div>
 
-
       {/* Hiển thị ngày trong tháng */}
       <div className="grid grid-cols-7 gap-1 sm:gap-2 text-black mt-5">
         {/* Hiển thị ngày trống đầu tháng */}
