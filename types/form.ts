@@ -52,7 +52,7 @@ export type PlayingCenterType = {
   type: string;
 };
 export type PlayingSlotType = {
-  id: number;
+  id?: number;
   name: string;
   primaryPrice: number;
   nightPrice: number;
