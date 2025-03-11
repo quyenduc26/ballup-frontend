@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="w-full bg-gray-100 text-black py-8 px-4">
       <div className="container mx-auto max-w-7xl">
         {/* Grid chia 4 cột trên mọi thiết bị */}
-        <div className="grid grid-cols-4 gap-4 text-center">
+        <div className="grid grid-cols-4 gap-4 text-start">
           {/* Main navigation column */}
           <div className="space-y-1">
             <Link href="/" className="block text-xs md:text-base lg:text-2xl">

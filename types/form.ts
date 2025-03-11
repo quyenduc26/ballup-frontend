@@ -99,6 +99,7 @@ export type TeamHeaderProps = {
   intro?: string;
   address: string;
   sport: string;
+  cover: string
 };
 
 export type Player = {

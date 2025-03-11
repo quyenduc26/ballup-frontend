@@ -95,7 +95,7 @@ export default function Login() {
     <div>
       <SonnerToast toast={toastData} />
       <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-        <div className="relative w-full h-[650px] sm:h-[650px] md:h-full mt-10">
+        <div className="relative w-full h-[650px] sm:h-[650px] md:h-full">
           <Image
             fill
             priority
