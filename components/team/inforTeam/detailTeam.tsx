@@ -15,7 +15,7 @@ export default function TeamIntro() {
   useEffect(() => {
     const fetchTeamDetail = async () => {
       try {
-        const response = await TeamApi.getTeamDetail(21, 1);
+        const response = await TeamApi.getTeamDetail(20, 3);
 
         setTeam(response.data);
       } catch (err: any) {
@@ -42,6 +42,7 @@ export default function TeamIntro() {
             name={team.name}
             sport={team.sport}
             teamId={team.id}
+            cover={team.cover}
           />
           <PlayerTable players={team.members || []} teamId={team.id} />
         </>
