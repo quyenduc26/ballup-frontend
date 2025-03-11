@@ -6,8 +6,9 @@ import Link from "next/link";
 import CardMatch from "@/components/match/Card/CardMatch";
 import Banner from "@/components/Banner";
 import MyMatch from "@/components/match/Card/myMatch";
+import ListMyMatch from "@/components/match/Card/ListMyMatch";
 
-export default function Booking() {
+export default function MatchPage() {
   const [showExplore, setShowExplore] = useState(true);
 
   const handleExploreClick = () => {
@@ -49,7 +50,7 @@ export default function Booking() {
       </div>
 
       {/* Conditionally render components based on the showExplore state */}
-      {showExplore ? <CardMatch /> : <MyMatch />}
+      {showExplore ? <CardMatch /> : <ListMyMatch />}
     </div>
   );
 }

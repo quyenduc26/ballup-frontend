@@ -43,13 +43,16 @@ export type ScheduleType = {
   location?: string;
 };
 export type PlayingCenterType = {
+  id?: number;
   name: string;
   address: string;
   description: string;
   images: string[];
   ownerId: number;
+  type: string;
 };
 export type PlayingSlotType = {
+  id?: number;
   name: string;
   primaryPrice: number;
   nightPrice: number;
@@ -127,6 +130,18 @@ export type deleteTeamType = {
   userId: number;
   teamId: number;
 };
+export type CreateMatchType = {
+  userId: number;
+  name: string;
+  fromTime: number;
+  toTime: number;
+  location: string;
+  description: string;
+  cover: string;
+  memberIdList: number[];
+  type: string;
+  slotId?: number | null;
+};
 
 export type queryTime = {
   fromTime: string;
@@ -139,4 +154,25 @@ export type BookingDataType = {
   fromTime: number;
   toTime: number;
   amount: number;
+};
+
+export type CenterSelection = {
+  id: number;
+  address: string;
+};
+
+export type UserType = {
+  id: number;
+  name: string;
+  email: string;
+  avatar?: string;
+  type?: string;
+};
+export type TeamOverviewResponse = {
+  id: number;
+  name: string;
+  logo: string;
+  cover: string;
+  sport: string;
+  totalMembers: number;
 };
