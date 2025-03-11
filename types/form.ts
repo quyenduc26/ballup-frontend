@@ -43,7 +43,7 @@ export type ScheduleType = {
   location?: string;
 };
 export type PlayingCenterType = {
-  id: number;
+  id?: number;
   name: string;
   address: string;
   description: string;
