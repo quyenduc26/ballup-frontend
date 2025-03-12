@@ -177,3 +177,17 @@ export type TeamOverviewResponse = {
   sport: string;
   totalMembers: number;
 };
+export type MyGameResponse = {
+  id: number;
+  name: string;
+  fromTime: string; 
+  toTime: string;
+  center: string;
+  cover: string;
+  type: string;
+  conversationId: number;
+  slotId: number;
+  isCreator: boolean;
+  teamA: TeamOverviewResponse;
+  teamB: TeamOverviewResponse;
+}
