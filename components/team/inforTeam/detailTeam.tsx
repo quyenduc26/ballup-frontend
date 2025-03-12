@@ -37,6 +37,7 @@ export default function TeamIntro() {
         <>
           <TeamHeader
             address={team.address}
+            cover={team.cover}
             intro={team.intro}
             logo={team.logo}
             name={team.name}

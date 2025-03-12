@@ -55,7 +55,8 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   return (
     <>
       {toastData && <SonnerToast toast={toastData} />}
-      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 min-h-[500px] flex flex-col">
+
+      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105">
         <div className="relative h-40">
           <img
             alt="Team Cover"
