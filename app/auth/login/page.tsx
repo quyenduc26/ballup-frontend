@@ -128,6 +128,7 @@ export default function Login() {
               <div className="space-y-2 mb-12">
                 <Input
                   label="Email"
+                  id="email"
                   labelPlacement="outside"
                   placeholder="Enter your email"
                   type="email"
@@ -144,6 +145,7 @@ export default function Login() {
                 <div className="relative">
                   <Input
                     label="Password"
+                    id="password"
                     labelPlacement="outside"
                     placeholder="Enter your password"
                     type={showPassword ? "text" : "password"}

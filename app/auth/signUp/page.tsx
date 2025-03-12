@@ -124,6 +124,7 @@ export default function SignUp() {
               <div className="space-y-2">
                 <Input
                   className={`w-full p-2 rounded-md  ${errors.username ? "border-red-500 bg-red-100" : "border-gray-300"}`}
+                  id="username"
                   label="Username"
                   labelPlacement="outside"
                   placeholder="Enter your username"
@@ -143,6 +144,7 @@ export default function SignUp() {
                 <Input
                   className={`w-full p-2 rounded-md  ${errors.email ? "border-red-500 bg-red-100" : "border-gray-300"}`}
                   label="Email"
+                  id="email"
                   labelPlacement="outside"
                   placeholder="Enter your email"
                   type="text"
@@ -162,6 +164,7 @@ export default function SignUp() {
                   <Input
                     className={`w-full p-2 rounded-md  ${errors.password ? "border-red-500 bg-red-100" : "border-gray-300"}`}
                     label="Password"
+                    id="password"
                     labelPlacement="outside"
                     placeholder="Enter your password"
                     type={showPassword ? "text" : "password"}
@@ -193,6 +196,7 @@ export default function SignUp() {
                   <Input
                     className={`w-full p-2 rounded-md  ${errors.confirmPassword ? "border-red-500 bg-red-100" : "border-gray-300"}`}
                     label="Confirm Password"
+                    id="confirmPassword"
                     labelPlacement="outside"
                     placeholder="Enter your password"
                     type={showConfirmPassword ? "text" : "password"}
