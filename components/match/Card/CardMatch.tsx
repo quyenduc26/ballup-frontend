@@ -1,40 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import matchApi from "@/service/matchApi"
-import type { GameResponse } from "@/types"
 import { getImageUrl } from "@/utils/getImage"
 import { formatTimestamp } from "@/utils/formatTimestamp"
+import type { GameResponse } from "@/types"
 
-export default function MatchCard() {
-  const [matches, setMatches] = useState<GameResponse[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+interface MatchCardProps {
+  match: GameResponse
+}
 
-  useEffect(() => {
-    const fetchMatches = async () => {
-      try {
-        setLoading(true)
-        const response = await matchApi.getAllMatch()
-        setMatches(response.data)
-        console.log(response.data)
-      } catch (err) {
-        setError("Failed to load matches")
-        console.error("Error fetching matches:", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchMatches()
-  }, [])
-
-  if (loading) return <div className="text-center py-10">Loading...</div>
-  if (error) return <div className="text-center py-10 text-red-500">{error}</div>
-  if (matches.length === 0) return <div className="text-center py-10">No matches available</div>
-
-  // Display the first match
-  const match = matches[0]
-
+export default function MatchCard({ match }: MatchCardProps) {
   return (
     <div className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-4 sm:mt-10 border mb-6 sm:mb-10 border-gray-300 px-2 sm:px-4">
       {/* Cover Image */}
@@ -98,7 +72,7 @@ export default function MatchCard() {
           </div>
 
           {/* VS */}
-          <div className="absolus flex flex-col items-center justify-center my-2 sm:my-0">
+          <div className="flex flex-col items-center justify-center my-2 sm:my-0">
             <div className="flex justify-center">
               <img alt="VS" className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32" src="/images/VS.png" />
             </div>
@@ -117,19 +91,19 @@ export default function MatchCard() {
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center">TEAM B</h2>
             <ul className="text-xs sm:text-sm text-gray-600 space-y-1 mt-2 sm:mt-3 w-full max-w-[200px] mx-auto">
               <li className="flex items-center justify-center gap-1 sm:gap-2">
-                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
                 <span>Player 1</span>
               </li>
               <li className="flex items-center justify-center gap-1 sm:gap-2">
-                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
                 <span>Player 2</span>
               </li>
               <li className="flex items-center justify-center gap-1 sm:gap-2">
-                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
                 <span>Player 3</span>
               </li>
               <li className="flex items-center justify-center gap-1 sm:gap-2">
-                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
                 <span>Player 4</span>
               </li>
             </ul>
@@ -149,4 +123,3 @@ export default function MatchCard() {
     </div>
   )
 }
-

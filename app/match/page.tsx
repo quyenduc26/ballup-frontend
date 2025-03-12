@@ -5,8 +5,8 @@ import Link from "next/link";
 
 import CardMatch from "@/components/match/Card/CardMatch";
 import Banner from "@/components/Banner";
-import MyMatch from "@/components/match/Card/myMatch";
 import ListMyMatch from "@/components/match/Card/ListMyMatch";
+import ListMatchCard from "@/components/match/Card/ListCardMatch";
 
 export default function MatchPage() {
   const [showExplore, setShowExplore] = useState(true);
@@ -50,7 +50,7 @@ export default function MatchPage() {
       </div>
 
       {/* Conditionally render components based on the showExplore state */}
-      {showExplore ? <CardMatch /> : <ListMyMatch />}
+      {showExplore ? <ListMatchCard /> : <ListMyMatch />}
     </div>
   );
 }
