@@ -12,7 +12,7 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const data = localStorage.getItem("data");
   const parsedData = data ? JSON.parse(data) : null;
-  const authRoutes = ["/auth/login", "/auth/signup"];
+  const authRoutes = ["/auth/login", "/auth/signUp"];
 
   if (data && config.url && !authRoutes.includes(config.url)) {
     config.headers.Authorization = `Bearer ${parsedData.token}`;
