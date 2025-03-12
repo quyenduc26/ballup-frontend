@@ -178,11 +178,12 @@ export type TeamOverviewResponse = {
   totalMembers: number;
 };
 
-export type Profile = {
+export type UserInfo = {
   id: number;
   first_name: string;
   last_name: string;
   username: string;
+  phoneNumber: string;
   height: string;
   weight: string;
   avatar: string;

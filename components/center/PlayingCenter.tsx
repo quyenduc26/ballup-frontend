@@ -4,7 +4,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, X, Upload } from "lucide-react";
 import { Input } from "@heroui/react";
-
+import { SonnerToast } from "@/components/sonnerMesage"; // ✅ Import SonnerToast
 import { uploadImage } from "@/utils/uploadImage";
 import { PlayingCenterType } from "@/types";
 import { getImageUrl } from "@/utils/getImage";
@@ -16,13 +16,11 @@ type PlayingCenterProps = {
   setActiveTab: (tab: string) => void;
 };
 
-export const PlayingCenter: React.FC<PlayingCenterProps> = ({
-  setActiveTab,
-}) => {
+export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) => {
   const router = useRouter();
   const data = localStorage.getItem("data");
   const parsedData = data ? JSON.parse(data) : null;
-  const userId = parseInt(parsedData.id);
+  const userId = parseInt(parsedData?.id || "0", 10);
 
   const [formData, setFormData] = useState<PlayingCenterType>({
     name: "",
@@ -33,16 +31,21 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
     type: "",
   });
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const [toastData, setToastData] = useState<
+    | {
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
+    | undefined
+  >();
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageUpload = async (
-    e: ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const file = e.target.files?.[0];
 
     if (file) {
@@ -79,10 +82,24 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
         ...formData,
         images: formData.images.filter((img) => img !== null),
       });
-      alert("Stadium created successfully!");
-      router.push("/");
+
+      setToastData({
+        type: "success",
+        heading: "Success 🎉",
+        message: "Stadium created successfully!",
+        duration: 3000,
+      });
+
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
     } catch (error) {
-      alert("Error creating stadium");
+      setToastData({
+        type: "error",
+        heading: "Error ❗",
+        message: "Error creating stadium. Please try again!",
+        duration: 3000,
+      });
       console.error("API Error:", error);
     }
   };
@@ -99,7 +116,9 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
   };
 
   return (
-    <div className="mt-10  p-4 sm:p-6 border border-gray-300 rounded-lg shadow-md w-full">
+    <div className="mt-10 p-4 sm:p-6 border border-gray-300 rounded-lg shadow-md w-full">
+      <SonnerToast toast={toastData} /> 
+
       <h2 className="text-center font-bold text-lg">CREATE PLAYING CENTER</h2>
       <button
         className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded mb-4"
@@ -113,7 +132,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
         {formData.images.map((image, index) => (
           <div
             key={index}
-            className="relative w-fullsm:w-72 sm:h-72 flex items-center justify-center border border-gray-400 rounded-lg"
+            className="relative w-full sm:w-[550px] sm:h-80 flex ml-5 items-center justify-center border border-gray-400 rounded-lg"
           >
             {image ? (
               <>
@@ -147,10 +166,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
       </div>
 
       {/* Form Fields */}
-      <form
-        className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4"
-        onSubmit={handleSubmit}
-      >
+      <form className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={handleSubmit}>
         <Input
           isRequired
           className="p-2 w-full"

@@ -47,7 +47,7 @@ export default function TeamDetail() {
   }, [detailID, userId]);
 
   if (loading) return <p className="text-center text-gray-500">Loading...</p>;
-  if (error) return <p className="text-center text-red-500">Lỗi: {error}</p>;
+  if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
   return (
     <div className="w-full mx-auto mt-10 p-4">
