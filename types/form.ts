@@ -142,6 +142,7 @@ export type CreateMatchType = {
   memberIdList: number[];
   userTeamId: number;
   type: string;
+  membersRequired: number;
   slotId?: number | null;
 };
 

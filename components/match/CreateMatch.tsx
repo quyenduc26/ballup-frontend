@@ -19,7 +19,7 @@ import { getImageUrl } from "@/utils/getImage";
 import { useRouter } from "next/navigation";
 
 export default function CreateMatch() {
-    const router = useRouter();
+  const router = useRouter();
   const [playingCenters, setPlayingCenters] = useState<CardFieldType[]>([]);
   const [selectedCenter, setSelectedCenter] = useState<CenterSelection | null>(
     null,
@@ -41,6 +41,8 @@ export default function CreateMatch() {
     type: "",
     slotId: null,
     userTeamId: 0,
+    membersRequired: 0
+
   });
   const [coverPreview, setCoverPreview] = useState<string | undefined>(
     undefined,
@@ -68,8 +70,11 @@ export default function CreateMatch() {
     >,
   ) => {
     const { name, value } = e.target;
-
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "membersRequired" && value) {
+      setFormData((prev) => ({ ...prev, [name]: parseInt(value) }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
 
     // When sport type changes, fetch related playing centers
     if (name === "type" && value) {
@@ -284,6 +289,11 @@ export default function CreateMatch() {
       const sport = formData.type === "BADMINTON" ? "BADMINTON" : "FOOTBALL";
 
       // First, get team overview
+      const usersResponse = await matchApi.getAllUsers(formData.userId, sport);
+      if ( usersResponse.data.length < formData.membersRequired ) {
+        toast.error("Team member quantity is not suitable"); 
+        return;
+      }
       const teamResponse = await matchApi.getOverview(formData.userId, sport);
 
       if (teamResponse.data) {
@@ -294,7 +304,6 @@ export default function CreateMatch() {
       }
 
       // Then, get all user IDs
-      const usersResponse = await matchApi.getAllUsers(formData.userId, sport);
 
       if (usersResponse.data) {
         setNumberList(usersResponse.data);
@@ -435,7 +444,8 @@ export default function CreateMatch() {
         </div>
 
         {/* Description and Sport */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* DESCRIPTION */}
           <div>
             <label
               className="block text-left text-sm font-medium uppercase mb-2"
@@ -455,6 +465,7 @@ export default function CreateMatch() {
             </div>
           </div>
 
+          {/* SPORT */}
           <div>
             <label
               className="block text-left text-sm font-medium uppercase mb-2"
@@ -470,9 +481,7 @@ export default function CreateMatch() {
                 value={formData.type || ""}
                 onChange={handleChange}
               >
-                <option disabled value="">
-                  Select a sport
-                </option>
+                <option disabled value="">Select a sport</option>
                 <option value="FOOTBALL">FOOTBALL</option>
                 <option value="BADMINTON">BADMINTON</option>
               </select>
@@ -493,7 +502,54 @@ export default function CreateMatch() {
               </div>
             </div>
           </div>
+
+          {/* MEMBERS REQUIRED */}
+          <div>
+            <label
+              className="block text-left text-sm font-medium uppercase mb-2"
+              htmlFor="team-members-required"
+            >
+              MEMBERS REQUIRED
+            </label>
+            <div className="relative">
+              <select
+                className="w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg appearance-none"
+                id="team-members-required"
+                name="membersRequired"
+                value={formData.membersRequired || ""}
+                onChange={handleChange}
+              >
+                <option disabled value="">Select minimum players</option>
+                {(formData.type === "FOOTBALL"
+                  ? [5, 7, 11]
+                  : formData.type === "BADMINTON"
+                    ? [2]
+                    : []
+                ).map(num => (
+                  <option key={num} value={num}>
+                    {num}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg
+                  aria-hidden="true"
+                  className="h-5 w-5 text-gray-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clipRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    fillRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
+
 
         {/* Date input */}
         <div>
