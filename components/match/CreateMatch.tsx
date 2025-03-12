@@ -11,12 +11,12 @@ import type {
 
 import { useState, useEffect } from "react";
 import { toast, Toaster } from "sonner";
-import { ArrowLeft, ChevronDown, Router, Upload, Users } from "lucide-react";
+import { ArrowLeft, ChevronDown, Upload, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import matchApi from "@/service/matchApi";
 import { uploadImage } from "@/utils/uploadImage";
 import { getImageUrl } from "@/utils/getImage";
-import { useRouter } from "next/navigation";
 
 export default function CreateMatch() {
   const router = useRouter();
@@ -41,8 +41,7 @@ export default function CreateMatch() {
     type: "",
     slotId: null,
     userTeamId: 0,
-    membersRequired: 0
-
+    membersRequired: 0,
   });
   const [coverPreview, setCoverPreview] = useState<string | undefined>(
     undefined,
@@ -70,6 +69,7 @@ export default function CreateMatch() {
     >,
   ) => {
     const { name, value } = e.target;
+
     if (name === "membersRequired" && value) {
       setFormData((prev) => ({ ...prev, [name]: parseInt(value) }));
     } else {
@@ -290,8 +290,10 @@ export default function CreateMatch() {
 
       // First, get team overview
       const usersResponse = await matchApi.getAllUsers(formData.userId, sport);
-      if ( usersResponse.data.length < formData.membersRequired ) {
-        toast.error("Team member quantity is not suitable"); 
+
+      if (usersResponse.data.length < formData.membersRequired) {
+        toast.error("Team member quantity is not suitable");
+
         return;
       }
       const teamResponse = await matchApi.getOverview(formData.userId, sport);
@@ -481,7 +483,9 @@ export default function CreateMatch() {
                 value={formData.type || ""}
                 onChange={handleChange}
               >
-                <option disabled value="">Select a sport</option>
+                <option disabled value="">
+                  Select a sport
+                </option>
                 <option value="FOOTBALL">FOOTBALL</option>
                 <option value="BADMINTON">BADMINTON</option>
               </select>
@@ -519,13 +523,15 @@ export default function CreateMatch() {
                 value={formData.membersRequired || ""}
                 onChange={handleChange}
               >
-                <option disabled value="">Select minimum players</option>
+                <option disabled value="">
+                  Select minimum players
+                </option>
                 {(formData.type === "FOOTBALL"
                   ? [5, 7, 11]
                   : formData.type === "BADMINTON"
                     ? [2]
                     : []
-                ).map(num => (
+                ).map((num) => (
                   <option key={num} value={num}>
                     {num}
                   </option>
@@ -549,7 +555,6 @@ export default function CreateMatch() {
             </div>
           </div>
         </div>
-
 
         {/* Date input */}
         <div>
