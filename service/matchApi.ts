@@ -18,6 +18,7 @@ const matchApi = {
     api.get(`/team-member/${userId}/team`, { params: { sport } }),
   
   getUserMatch: (userId: number) =>api.get(`/game/user/${userId}`),
+  getAllMatch: () =>api.get("/game"),
 };
 
 export default matchApi;

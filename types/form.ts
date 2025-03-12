@@ -193,3 +193,27 @@ export type MyGameResponse = {
   teamA: TeamOverviewResponse;
   teamB: TeamOverviewResponse;
 }
+export type GameResponse = {
+  id: number;
+  name: string;
+  fromTime: string;
+  toTime: string;
+  cover: string;
+  type: string;
+  conversationId: number;
+  slotId: number;
+  centerName?: string;
+  slotName: string;
+  teamA: GameTeamResponse;
+}
+export type GameTeamResponse = {
+  name: string;
+  intro: string;
+  logo: string;
+  members: GameTeamMemberResponse[];
+}
+export type GameTeamMemberResponse = {
+  avatar: string;
+  firstName: string;
+  lastName: string;
+}
