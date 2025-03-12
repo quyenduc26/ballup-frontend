@@ -62,7 +62,6 @@ export default function Login() {
 
       localStorage.setItem("data", JSON.stringify(response.data));
       const data = response.data;
-
       setUserId(data.id);
       if (data) {
         localStorage.setItem("data", JSON.stringify(data));
@@ -74,7 +73,7 @@ export default function Login() {
         duration: 3000,
       });
 
-      setTimeout(() => router.push("/"), 3000);
+      setTimeout(() => router.push("/auth/profile"), 3000);
     } catch (error: any) {
       let message = "Login failed. Please try again.";
 

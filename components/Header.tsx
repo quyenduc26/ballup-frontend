@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AlignJustify } from "lucide-react";
+import { User } from "@heroui/react";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -88,12 +89,12 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:flex space-x-4">
-          {/* {isLoggedIn ? (
-            <Link href="/profile" className="flex items-center space-x-2">
+          {isLoggedIn ?(
+            <Link href="/auth/profile" className="flex items-center space-x-2">
               <User className="w-8 h-8 text-black" />
             </Link>
           ) : (
-            <> */}
+            <>
           <Link
             className="border-3 border-black px-4 py-2 text-black hover:bg-gray-100"
             href="/auth/login"
@@ -106,8 +107,8 @@ const Header = () => {
           >
             Signup
           </Link>
-          {/* </> */}
-          {/* )} */}
+          </>
+          )}
         </div>
       </div>
     </header>

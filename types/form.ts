@@ -177,3 +177,15 @@ export type TeamOverviewResponse = {
   sport: string;
   totalMembers: number;
 };
+
+export type Profile = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  username: string;
+  height: string;
+  weight: string;
+  avatar: string;
+  email: string;
+  password: string;
+}
