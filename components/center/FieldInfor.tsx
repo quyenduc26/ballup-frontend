@@ -1,6 +1,8 @@
-"use client"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+"use client";
+import type { FieldDetailType } from "@/types/form";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Clock,
   MapPin,
@@ -8,47 +10,45 @@ import {
   DollarSign,
   Info,
   ArrowLeft,
-  Timer,
   CreditCard,
   Building,
   HourglassIcon,
-} from "lucide-react"
+} from "lucide-react";
 
-import type { FieldDetailType } from "@/types/form"
-import { getImageUrl } from "@/utils/getImage"
-import { ToastMessage } from "@/components/ToastMessage"
-import bookingRequestApi from "@/service/bookingRequestApi"
-import { formatCurrency } from "@/utils/formatCurrency"
+import { getImageUrl } from "@/utils/getImage";
+import { ToastMessage } from "@/components/ToastMessage";
+import bookingRequestApi from "@/service/bookingRequestApi";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
-  const router = useRouter()
+  const router = useRouter();
 
   const [toastData, setToastData] = useState<
     | {
-        heading?: string
-        message?: string
-        type?: "error" | "success" | "info" | "warn"
-        duration?: number
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warn";
+        duration?: number;
       }
     | undefined
-  >()
+  >();
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const submitBooking = async () => {
-    const data = localStorage.getItem("data")
-    const parsedData = data ? JSON.parse(data) : null
-    const userId = Number.parseInt(parsedData.id)
+    const data = localStorage.getItem("data");
+    const parsedData = data ? JSON.parse(data) : null;
+    const userId = Number.parseInt(parsedData.id);
 
-    const queryParams = new URLSearchParams(location.search)
-    const fromTime = queryParams.get("fromTime")
-    const toTime = queryParams.get("toTime")
-    const slotId = queryParams.get("slotId")
+    const queryParams = new URLSearchParams(location.search);
+    const fromTime = queryParams.get("fromTime");
+    const toTime = queryParams.get("toTime");
+    const slotId = queryParams.get("slotId");
 
     if (slotId == null) {
-      alert("Please choose playing slot")
+      alert("Please choose playing slot");
 
-      return
+      return;
     }
 
     const bookingData = {
@@ -57,33 +57,33 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
       fromTime: fromTime ? Number.parseInt(fromTime) : 0,
       toTime: toTime ? Number.parseInt(toTime) : 0,
       amount: centerInfor.total,
-    }
+    };
 
-    console.log(bookingData)
-    setLoading(true)
+    console.log(bookingData);
+    setLoading(true);
 
     try {
-      const booking = await bookingRequestApi.booking(bookingData)
+      const booking = await bookingRequestApi.booking(bookingData);
 
-      window.location.href = `/payment/${booking.data}`
+      window.location.href = `/payment/${booking.data}`;
 
       setToastData({
         type: "success",
         heading: "Booking Successful",
         message: "Booking Successful",
         duration: 3000,
-      })
+      });
     } catch (e) {
       setToastData({
         type: "error",
         heading: "Booking Unsuccessful",
         message: "An error occurred while booking.",
         duration: 3000,
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen py-10">
@@ -107,17 +107,21 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
             <img
               alt="Main field"
               className="rounded-xl w-full h-[650px] object-cover shadow-lg"
-              src={getImageUrl(centerInfor.imageUrls?.[0]) || "/images/default.png"}
+              src={
+                getImageUrl(centerInfor.imageUrls?.[0]) || "/images/default.png"
+              }
             />
             <div className="flex gap-6 overflow-x-auto pb-2">
-              {centerInfor.imageUrls?.slice(1).map((img, index) => (
-                <img
-                  key={index}
-                  alt={`Field ${index + 2}`}
-                  className="rounded-lg object-cover cursor-pointer w-48 h-32 hover:opacity-80 transition-opacity"
-                  src={getImageUrl(img) || "/placeholder.svg"}
-                />
-              ))}
+              {centerInfor.imageUrls
+                ?.slice(1)
+                .map((img, index) => (
+                  <img
+                    key={index}
+                    alt={`Field ${index + 2}`}
+                    className="rounded-lg object-cover cursor-pointer w-48 h-32 hover:opacity-80 transition-opacity"
+                    src={getImageUrl(img) || "/placeholder.svg"}
+                  />
+                ))}
             </div>
           </div>
 
@@ -133,7 +137,9 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                 </div>
                 <div className="flex items-center gap-2 mt-1">
                   <MapPin className="ml-0.5 h-4 w-4 text-gray-300" />
-                  <p className="text-gray-300 text-sm ">{centerInfor.address}</p>
+                  <p className="text-gray-300 text-sm ">
+                    {centerInfor.address}
+                  </p>
                 </div>
               </div>
 
@@ -157,16 +163,24 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                         <Clock className="h-3 w-3" />
                         <p>From</p>
                       </div>
-                      <p className="font-bold">{centerInfor.bookingTime.slice(0, 6)}</p>
-                      <p className="font-bold">{centerInfor.bookingTime.slice(7)}</p>
+                      <p className="font-bold">
+                        {centerInfor.bookingTime.slice(0, 6)}
+                      </p>
+                      <p className="font-bold">
+                        {centerInfor.bookingTime.slice(7)}
+                      </p>
                     </div>
                     <div className="bg-gray-50 p-3 rounded-lg text-start">
                       <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
                         <Clock className="h-3 w-3" />
                         <p>To</p>
                       </div>
-                      <p className="font-bold">{centerInfor.returnTime.slice(0, 6)}</p>
-                      <p className="font-bold">{centerInfor.returnTime.slice(7)}</p>
+                      <p className="font-bold">
+                        {centerInfor.returnTime.slice(0, 6)}
+                      </p>
+                      <p className="font-bold">
+                        {centerInfor.returnTime.slice(7)}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -192,13 +206,15 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                       </span>
                       <span>{centerInfor.hours} Hour(s)</span>
                     </div>
-                    <div className="h-px bg-gray-200 my-2"></div>
+                    <div className="h-px bg-gray-200 my-2" />
                     <div className="flex justify-between items-center font-bold text-lg">
                       <span className="flex items-center gap-1">
                         <DollarSign className="h-5 w-5" />
                         Total
                       </span>
-                      <span className="text-green-600">{formatCurrency(centerInfor.total)}</span>
+                      <span className="text-green-600">
+                        {formatCurrency(centerInfor.total)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -210,11 +226,9 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                   onClick={submitBooking}
                 >
                   {loading ? (
-                    <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                    <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" />
                   ) : (
-                    <>
-                      BOOKING
-                    </>
+                    <>BOOKING</>
                   )}
                 </button>
               </div>
@@ -223,8 +237,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BookingDetail
-
+export default BookingDetail;
