@@ -1,173 +1,255 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
-import { Menu, Pencil, Save } from "lucide-react";
-import { Profile } from "@/types/form";
-import { getImageUrl } from "@/utils/getImage";
+import { useRouter } from "next/navigation";
+import EditProfile from "../profile/editProfile";
+import { UserInfo } from "@/types/form";
+import { SonnerToast } from "../sonnerMesage";
+import authApi from "@/service/authApi";
+import userApi from "@/service/userApi";
+import { Pencil, LogOut } from "lucide-react";
 import { uploadImage } from "@/utils/uploadImage";
+import { getImageUrl } from "@/utils/getImage";
 
-export default function ProfilePage() {
+export default function ModernProfileLayout() {
+    const router = useRouter();
+    const [user, setUser] = useState<UserInfo | null>(null);
+    const [editedUser, setEditedUser] = useState<UserInfo | null>(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [showSidebar, setShowSidebar] = useState(false);
-    const [coverPreview, setCoverPreview] = useState("");
-    const [logoPreview, setLogoPreview] = useState("");
-    const [profile, setProfile] = useState<Profile | null>(null);
+    const [activeTab, setActiveTab] = useState("info");
+    const [toastData, setToastData] = useState<any>(null);
+
+    const getUserInfo = async () => {
+        try {
+            const storedData = localStorage.getItem("data");
+            if (!storedData) return;
+
+            const parsedData = JSON.parse(storedData);
+            const userId = parsedData.id;
+
+            const response = await userApi.getUserInfo(userId);
+            console.log("User data from API:", response.data);
+
+            // Kiểm tra avatar từ API và localStorage
+            const storedAvatar = localStorage.getItem("userAvatar");
+            const finalAvatar = storedAvatar || response.data.avatar;
+
+            setUser({ ...response.data, avatar: finalAvatar });
+            setEditedUser({ ...response.data, avatar: finalAvatar });
+
+            // Nếu API có avatar mới, lưu lại vào localStorage
+            if (response.data.avatar) {
+                localStorage.setItem("userAvatar", response.data.avatar);
+            }
+        } catch (error) {
+            console.error("Error fetching user info:", error);
+        }
+    };
+
+
 
     useEffect(() => {
-        const data = localStorage.getItem("data");
-        if (data) {
-            const parsedData: Profile = JSON.parse(data);
-            setProfile(parsedData);
-        }
+        getUserInfo();
     }, []);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (profile) {
-            setProfile((prev) => ({ ...prev!, [e.target.name]: e.target.value }));
+    const handleLogout = async () => {
+        try {
+            await authApi.logout();
+            localStorage.removeItem("data");
+            router.push("/auth/login");
+            setToastData({ type: "success", message: "Logged out successfully!" });
+        } catch (error) {
+            console.error("Logout failed:", error);
+            setToastData({ type: "error", message: "Logout failed. Please try again!" });
         }
     };
 
-    const handleImageUpload = async ({
-        e,
-        type,
-    }: {
-        e: React.ChangeEvent<HTMLInputElement>;
-        type: string;
-    }) => {
-        const file = e?.target.files?.[0];
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setEditedUser((prev) => prev ? { ...prev, [name]: value } : null);
+    };
 
-        if (file) {
-            const imageUrl = await uploadImage(file);
-
-            if (!imageUrl) {
-                alert("Failed to upload image.");
-                return;
-            }
-            const imgSrc = getImageUrl(imageUrl);
-
-            if (!imgSrc) return;
-            if (type === "cover") {
-                setCoverPreview(imgSrc);
-                setProfile((prev) => ({ ...prev!, cover: imageUrl }));
-            } else {
-                setLogoPreview(imgSrc);
-                setProfile((prev) => ({ ...prev!, logo: imageUrl }));
+    const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+    
+            // Tạo URL tạm thời để hiển thị ngay ảnh mới
+            const localImageUrl = URL.createObjectURL(file);
+            setEditedUser((prev) => prev ? { ...prev, avatar: localImageUrl } : null);
+            setUser((prev) => prev ? { ...prev, avatar: localImageUrl } : null);
+    
+            try {
+                const filename = await uploadImage(file); // Upload ảnh lên server
+                if (filename) {
+                    const newAvatarUrl = getImageUrl(filename.toString());
+    
+                    // 🌟 **Cập nhật state**
+                    setEditedUser((prev) => prev ? { ...prev, avatar: newAvatarUrl } : null);
+                    setUser((prev) => prev ? { ...prev, avatar: newAvatarUrl } : null);
+    
+                    // 🌟 **Lưu avatar vào localStorage**
+                    localStorage.setItem("userAvatar", newAvatarUrl || "");
+                    window.dispatchEvent(new Event("storage"));
+    
+                    // 🌟 **Gọi API cập nhật vào database**
+                    const userId = localStorage.getItem("data") ? JSON.parse(localStorage.getItem("data")!).id : null;
+                    if (userId) {
+                        await userApi.UpdateInfo(userId, { avatar: newAvatarUrl });
+                        console.log("Avatar saved to database:", newAvatarUrl);
+                    } else {
+                        console.error("User ID not found in localStorage");
+                    }
+    
+                    setToastData({ type: "success", message: "Avatar updated successfully!" });
+                } else {
+                    setToastData({ type: "error", message: "Upload failed!" });
+                }
+            } catch (error) {
+                console.error("Upload error:", error);
+                setToastData({ type: "error", message: "Upload error!" });
             }
         }
     };
+    
 
-    if (!profile) {
-        return <p>Loading...</p>;
-    }
+    const handleUpdateSuccess = (updatedUser: UserInfo) => {
+        setUser(updatedUser);
+        setEditedUser(updatedUser);
+        setIsEditing(false);
+    };
+
+    if (!user) return <p>Loading...</p>;
 
     return (
-        <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
-            {/* Sidebar Toggle Button (Mobile) */}
-            <button
-                className="md:hidden p-3 fixed top-16 left-3 z-50 "
-                onClick={() => setShowSidebar(!showSidebar)}
-            >
-                <Menu size={20} />
-            </button>
+        <div className="min-h-screen bg-white-100 py-12 px-4 sm:px-6 lg:px-8 mt-10">
+            {toastData && <SonnerToast toast={toastData} />}
+            <div className="max-w-3xl mx-auto shadow-lg overflow-hidden rounded-lg">
+                {/* Header */}
+                <div className="bg-white overflow-hidden mb-6">
+                    <div className="h-32 bg-gradient-to-r from-purple-500 to-pink-500 relative">
+                        <button
+                            onClick={handleLogout}
+                            className="absolute top-4 right-4 px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-lg transition-colors flex items-center"
+                        >
+                            <LogOut className="h-5 w-5 mr-1" />
+                            Logout
+                        </button>
+                    </div>
+                    <div className="px-6 pb-6">
+                        <div className="flex flex-col sm:flex-row items-center">
+                            <div className="-mt-16 relative">
+                                <div className="h-32 w-32 rounded-full overflow-hidden border-4 border-white bg-white relative">
+                                    <img
+                                        src={editedUser?.avatar ? `${editedUser.avatar}?t=${new Date().getTime()}` : ""}
+                                        alt="Avatar"
+                                        className="object-cover w-full h-full"
+                                    />
 
-            {/* Sidebar */}
-            <div
-                className={`fixed md:relative top-0 left-0 w-64 h-full bg-white border-r border-gray-200 transform transition-transform ${showSidebar ? "translate-x-0" : "-translate-x-full"
-                    } md:translate-x-0`}
-            >
-                <div className="p-6 text-lg font-semibold text-gray-800">My Profile</div>
-                <nav className="mt-10 text-sm">
-                    <ul>
-                        <li className="px-6 py-3 bg-blue-50 text-blue-500 font-medium">My Profile</li>
-                        <li className="px-6 py-3 text-gray-500 hover:bg-gray-100">Security</li>
-                        <li className="px-6 py-3 text-gray-500 hover:bg-gray-100">Teams</li>
-                        <li className="px-6 py-3 text-gray-500 hover:bg-gray-100">Team Member</li>
-                        <li className="px-6 py-3 hover:bg-gray-100 text-red-500">Log Out</li>
-                    </ul>
-                </nav>
-            </div>
 
-            {/* Main Content */}
-            <div className="flex-1 p-6 md:p-8">
-                <h1 className="text-lg md:text-2xl font-bold text-gray-800 mb-6 mt-14 text-center md:text-left">
-                    My Profile
-                </h1>
+                                    <label className="absolute bottom-2 right-0 bg-white p-2 rounded-full shadow-md cursor-pointer">
+                                        <Pencil className="h-5 w-5 text-gray-700" />
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={handleImageChange}
+                                        />
+                                    </label>
+                                </div>
+                            </div>
 
-                <div className="bg-white border border-gray-200 rounded-md p-4 md:p-6 mb-6">
-                    {/* Header */}
-                    <div className="flex flex-col md:flex-row justify-between items-center md:items-start mb-6">
-                        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
-                            <img
-                                src={profile.avatar || "/images/soccer.png"}
-                                alt="Profile picture"
-                                className="rounded-full object-cover w-24 h-24 md:w-40 md:h-40"
-                            />
-                            <span className="text-base md:text-lg font-semibold text-gray-800">
-                                {profile.username || "N/A"}
-                            </span>
-                        </div>
-                        <div className="flex gap-2 mt-4 md:mt-0">
-                            {isEditing && (
+                            <div className="mt-6 sm:mt-0 sm:ml-6 text-center sm:text-left">
+                                <h1 className="text-2xl font-bold text-gray-900">
+                                    {editedUser?.firstName} {editedUser?.lastName}
+                                </h1>
+                                <p className="text-gray-500">@{editedUser?.username}</p>
+                            </div>
+                            {!isEditing && (
                                 <button
-                                    className="text-gray-500 border border-gray-300 rounded-md px-3 py-1 text-sm"
-                                    onClick={() => setIsEditing(false)}
+                                    onClick={() => setIsEditing(true)}
+                                    className="ml-auto mt-4 sm:mt-0 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                                 >
-                                    Cancel
+                                    Edit Profile
                                 </button>
                             )}
-                            <button
-                                className="flex items-center gap-1 text-gray-500 border border-gray-300 rounded-md px-3 py-1 text-sm"
-                                onClick={() => setIsEditing(!isEditing)}
-                            >
-                                {isEditing ? <Save size={16} /> : <Pencil size={16} />}
-                                <span>{isEditing ? "Save" : "Edit"}</span>
-                            </button>
                         </div>
                     </div>
+                </div>
 
-                    {/* Form Information */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        {[
-                            { label: "Username", name: "username" },
-                            { label: "Email address", name: "email" },
-                            { label: "Password", name: "password" },
-                            { label: "Phone number", name: "phone" },
-                            { label: "Height (cm)", name: "height" },
-                            { label: "Weight (kg)", name: "weight" },
-                        ].map(({ label, name }) => (
-                            <div key={name} className="w-full">
-                                <h4 className="text-xs md:text-sm text-gray-500 mb-1">{label}</h4>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        name={name}
-                                        value={profile[name as keyof Profile] || ""}
-                                        onChange={handleChange}
-                                        className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm"
-                                    />
-                                ) : (
-                                    <p className="text-gray-700 text-xs md:text-sm">{profile[name as keyof Profile] || "N/A"}</p>
-                                )}
-                            </div>
-                        ))}
+                {/* Tabs */}
+                {!isEditing && (
+                    <div className="bg-white">
+                        <div className="flex border-b">
+                            {["info", "stats", "contact"].map((tab) => (
+                                <button
+                                    key={tab}
+                                    className={`px-6 py-3 text-sm font-medium ${activeTab === tab
+                                        ? "border-b-2 border-purple-500 text-purple-600"
+                                        : "text-gray-500 hover:text-gray-700"
+                                        }`}
+                                    onClick={() => setActiveTab(tab)}
+                                >
+                                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                </button>
+                            ))}
+                        </div>
                     </div>
+                )}
 
-
-                    {/* Image Upload */}
-                    {isEditing && (
-                        <div className="mt-6">
-                            <label className="block text-xs md:text-sm text-gray-500 mb-1">Upload Avatar</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => handleImageUpload({ e, type: "avatar" })}
-                                className="block w-full border border-gray-300 rounded-md px-2 py-1 text-xs"
-                            />
-                            {logoPreview && (
-                                <img src={logoPreview} width={80} height={80} alt="Avatar preview" className="mt-2" />
+                {/* Nội dung */}
+                <div className="p-6">
+                    {isEditing ? (
+                        <EditProfile
+                            setEditedUser={setEditedUser}
+                            editedUser={editedUser!}
+                            handleInputChange={handleInputChange}
+                            handleCancel={() => setIsEditing(false)}
+                        // onUpdateSuccess={handleUpdateSuccess}
+                        />
+                    ) : (
+                        <>
+                            {activeTab === "info" && (
+                                <div className="space-y-6">
+                                    <h2 className="text-xl font-semibold text-gray-900">Personal Information</h2>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                        {["firstName", "lastName", "username"].map((key) => (
+                                            <div key={key} className="bg-gray-50 p-4 rounded-lg">
+                                                <p className="text-sm font-medium text-gray-500">
+                                                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                                                </p>
+                                                <p className="mt-1 text-lg text-gray-900">{editedUser?.[key as keyof UserInfo]}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             )}
-                        </div>
+                            {activeTab === "stats" && (
+                                <div className="space-y-6">
+                                    <h2 className="text-xl font-semibold text-gray-900">Physical Stats</h2>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                        {["weight", "height"].map((key) => (
+                                            <div key={key} className="bg-gray-50 p-4 rounded-lg">
+                                                <p className="text-sm font-medium text-gray-500">{key.charAt(0).toUpperCase() + key.slice(1)}</p>
+                                                <p className="mt-1 text-lg text-gray-900">{editedUser?.[key as keyof UserInfo] || "Not set"}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            {activeTab === "contact" && (
+                                <div className="space-y-6">
+                                    <h2 className="text-xl font-semibold text-gray-900">Contact Information</h2>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                        {["email", "number"].map((key) => (
+                                            <div key={key} className="bg-gray-50 p-4 rounded-lg">
+                                                <p className="text-sm font-medium text-gray-500">{key.charAt(0).toUpperCase() + key.slice(1)}</p>
+                                                <p className="mt-1 text-lg text-gray-900">{editedUser?.[key as keyof UserInfo] ?? "Not set"}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>
