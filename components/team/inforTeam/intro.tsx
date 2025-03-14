@@ -21,6 +21,8 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
   const [showOptions, setShowOptions] = useState(false);
   const [toastData, setToastData] = useState<any>(null);
   const router = useRouter();
+  const [refresh, setRefresh] = useState(false);
+
   const [teamId, setTeamId] = useState<string | null>(
     propTeamId ? String(propTeamId) : null,
   );
@@ -235,6 +237,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
         {teamId ? (
           <UpdateTeamDetail
             teamId={teamId}
+            onUpdateSuccess={() => setRefresh((prev) => !prev)}
             onClose={() => editDialogRef.current?.close()}
           />
         ) : (

@@ -9,13 +9,14 @@ const ListTeamCard: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await teamApi.getAllTeams({});
-
+        const response = await teamApi.getAllTeams({ timestamp: Date.now() });
         setTeams(response.data);
+        console.log("Fetched teams:", response.data);
       } catch (err: any) {
         console.error("API error:", err);
         setError(err.response?.data?.message || "Failed to fetch teams");
@@ -25,7 +26,9 @@ const ListTeamCard: React.FC = () => {
     };
 
     fetchTeams();
-  }, []);
+  }, [refresh]); // Thêm refresh vào dependencies
+
+
   if (loading)
     return <p className="text-center text-gray-500 mt-6">Loading teams...</p>;
 
@@ -35,8 +38,8 @@ const ListTeamCard: React.FC = () => {
     <div className="mx-auto p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 ">
         {teams.length > 0 ? (
-          teams.map((team, index) => (
-            <TeamCard key={team.id || index} team={team} />
+          teams.map((team) => (
+            <TeamCard key={`team-${team.id}`} team={team} />
           ))
         ) : (
           <p className="text-center col-span-3 text-gray-500">

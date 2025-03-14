@@ -40,7 +40,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
       console.error("Error joining team:", error);
       setToastData({
         heading: "Error",
-        message: "Failed to join the team.",
+        message: "Failed to join the team",
         type: "error",
       });
     } finally {

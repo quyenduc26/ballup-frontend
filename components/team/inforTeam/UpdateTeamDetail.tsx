@@ -10,20 +10,22 @@ import { SonnerToast } from "@/components/sonnerMesage";
 export default function UpdateTeamDetail({
   teamId: propTeamId,
   onClose: propOnClose,
+  onUpdateSuccess,
 }: {
   teamId?: string;
   onClose?: () => void;
+  onUpdateSuccess?: () => void;
 }) {
   const router = useRouter();
   const [teamId, setTeamId] = useState(propTeamId || null);
   const [loading, setLoading] = useState(false);
   const [toastData, setToastData] = useState<
     | {
-        heading?: string;
-        message?: string;
-        type?: "error" | "success" | "info" | "warning";
-        duration?: number;
-      }
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warning";
+      duration?: number;
+    }
     | undefined
   >();
 
@@ -88,18 +90,26 @@ export default function UpdateTeamDetail({
         message: "No team ID available. Cannot update.",
         type: "error",
       });
-
       return;
     }
     setLoading(true);
+
+    console.log("Submitting data:", formData); // Check dữ liệu gửi đi
+
     try {
-      await TeamDetailApi.updateTeam(parseInt(teamId), formData);
+      const response = await TeamDetailApi.updateTeam(parseInt(teamId), formData);
+      console.log("Update response:", response); // Check response từ API
+
       setToastData({
         type: "success",
         heading: "Team updated successfully",
         message: "",
         duration: 3000,
       });
+      
+      if (onUpdateSuccess) {
+        onUpdateSuccess();
+      }
 
       setTimeout(() => {
         setLoading(false);
@@ -110,6 +120,7 @@ export default function UpdateTeamDetail({
         }
       }, 3200);
     } catch (error: any) {
+      console.log("API Error:", error.response?.data); // Log lỗi nếu có
       setToastData({
         type: "error",
         heading: "Team update failed",
@@ -119,6 +130,7 @@ export default function UpdateTeamDetail({
       setLoading(false);
     }
   };
+
 
   const handleCancel = () => {
     router.back();
