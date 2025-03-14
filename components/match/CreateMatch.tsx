@@ -17,20 +17,23 @@ import { useRouter } from "next/navigation";
 import matchApi from "@/service/matchApi";
 import { uploadImage } from "@/utils/uploadImage";
 import { getImageUrl } from "@/utils/getImage";
+import { convertToTimestamp } from "@/utils/convertToTimestamp";
 
 export default function CreateMatch() {
+  const data = localStorage.getItem("data");
+  const parsedData = data ? JSON.parse(data) : null;
+  const userId = Number.parseInt(parsedData.id);
+
   const router = useRouter();
   const [playingCenters, setPlayingCenters] = useState<CardFieldType[]>([]);
-  const [selectedCenter, setSelectedCenter] = useState<CenterSelection | null>(
-    null,
-  );
+  const [selectedCenter, setSelectedCenter] = useState<CenterSelection | null>(null);
   const [playingSlots, setPlayingSlots] = useState<PlayingSlotType[]>([]);
   const [loading, setLoading] = useState(false);
   const [slotAvailable, setSlotAvailable] = useState<boolean | null>(null);
   const [isChecking, setIsChecking] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [formData, setFormData] = useState<CreateMatchType>({
-    userId: 1,
+    userId: userId,
     name: "",
     fromTime: 0,
     toTime: 0,
@@ -99,7 +102,8 @@ export default function CreateMatch() {
     if (selectedDate) {
       // Convert date and time to seconds since epoch
       const dateObj = new Date(`${selectedDate}T${value}:00`);
-      const timeInSeconds = Math.floor(dateObj.getTime() / 1000);
+      const timeInSeconds = Math.floor(dateObj.getTime());
+      console.log(timeInSeconds)
 
       setFormData((prev) => ({ ...prev, [name]: timeInSeconds }));
     } else {
@@ -266,6 +270,7 @@ export default function CreateMatch() {
 
     try {
       setLoading(true);
+      console.log(formData)
       const response = await matchApi.createMatch(formData);
 
       if (response.data) {
@@ -291,11 +296,11 @@ export default function CreateMatch() {
       // First, get team overview
       const usersResponse = await matchApi.getAllUsers(formData.userId, sport);
 
-      if (usersResponse.data.length < formData.membersRequired) {
-        toast.error("Team member quantity is not suitable");
+      // if (usersResponse.data.length < formData.membersRequired) {
+      //   toast.error("Your team member quantity is not suitable");
 
-        return;
-      }
+      //   return;
+      // }
       const teamResponse = await matchApi.getOverview(formData.userId, sport);
 
       if (teamResponse.data) {
