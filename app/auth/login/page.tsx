@@ -62,6 +62,7 @@ export default function Login() {
 
       localStorage.setItem("data", JSON.stringify(response.data));
       const data = response.data;
+
       setUserId(data.id);
       if (data) {
         localStorage.setItem("data", JSON.stringify(data));

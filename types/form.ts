@@ -190,4 +190,4 @@ export type Profile = {
   avatar: string;
   email: string;
   password: string;
-}
+};

@@ -89,25 +89,25 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:flex space-x-4">
-          {isLoggedIn ?(
-            <Link href="/auth/profile" className="flex items-center space-x-2">
+          {isLoggedIn ? (
+            <Link className="flex items-center space-x-2" href="/auth/profile">
               <User className="w-8 h-8 text-black" />
             </Link>
           ) : (
             <>
-          <Link
-            className="border-3 border-black px-4 py-2 text-black hover:bg-gray-100"
-            href="/auth/login"
-          >
-            Login
-          </Link>
-          <Link
-            className="bg-black border-3 border-black text-white px-4 py-2 hover:bg-gray-800"
-            href="/auth/signUp"
-          >
-            Signup
-          </Link>
-          </>
+              <Link
+                className="border-3 border-black px-4 py-2 text-black hover:bg-gray-100"
+                href="/auth/login"
+              >
+                Login
+              </Link>
+              <Link
+                className="bg-black border-3 border-black text-white px-4 py-2 hover:bg-gray-800"
+                href="/auth/signUp"
+              >
+                Signup
+              </Link>
+            </>
           )}
         </div>
       </div>
