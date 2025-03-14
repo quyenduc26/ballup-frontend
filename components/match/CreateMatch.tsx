@@ -17,7 +17,6 @@ import { useRouter } from "next/navigation";
 import matchApi from "@/service/matchApi";
 import { uploadImage } from "@/utils/uploadImage";
 import { getImageUrl } from "@/utils/getImage";
-import { convertToTimestamp } from "@/utils/convertToTimestamp";
 
 export default function CreateMatch() {
   const data = localStorage.getItem("data");
@@ -26,7 +25,9 @@ export default function CreateMatch() {
 
   const router = useRouter();
   const [playingCenters, setPlayingCenters] = useState<CardFieldType[]>([]);
-  const [selectedCenter, setSelectedCenter] = useState<CenterSelection | null>(null);
+  const [selectedCenter, setSelectedCenter] = useState<CenterSelection | null>(
+    null,
+  );
   const [playingSlots, setPlayingSlots] = useState<PlayingSlotType[]>([]);
   const [loading, setLoading] = useState(false);
   const [slotAvailable, setSlotAvailable] = useState<boolean | null>(null);
@@ -103,7 +104,8 @@ export default function CreateMatch() {
       // Convert date and time to seconds since epoch
       const dateObj = new Date(`${selectedDate}T${value}:00`);
       const timeInSeconds = Math.floor(dateObj.getTime());
-      console.log(timeInSeconds)
+
+      console.log(timeInSeconds);
 
       setFormData((prev) => ({ ...prev, [name]: timeInSeconds }));
     } else {
@@ -270,7 +272,7 @@ export default function CreateMatch() {
 
     try {
       setLoading(true);
-      console.log(formData)
+      console.log(formData);
       const response = await matchApi.createMatch(formData);
 
       if (response.data) {

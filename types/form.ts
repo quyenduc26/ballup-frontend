@@ -179,3 +179,18 @@ export type TeamOverviewResponse = {
   sport: string;
   totalMembers: number;
 };
+
+export type UserInfo = {
+  id: string;
+  avatar?: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  phone?: string;
+  email?: string;
+  height?: number;
+  weight?: number;
+  oldPassword?: string;
+  newPassword?: string;
+  confirmPassword?: string;
+};

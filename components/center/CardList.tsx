@@ -31,9 +31,7 @@ const CardList = ({
           )}
         </div>
       ) : (
-        <p className="text-gray-500 text-center">
-          Don&apos;t have data fields...
-        </p>
+        <p className="text-gray-500 text-center">No suitable field found</p>
       )}
     </div>
   );

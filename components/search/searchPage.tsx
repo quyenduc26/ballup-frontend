@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,38 +52,47 @@ const SearchBar = () => {
       </div>
 
       <div className="flex flex-wrap md:flex-nowrap justify-center md:justify-end gap-2">
-        <select
-          className="p-2 md:p-3 border border-gray-300 rounded-md bg-black text-white shadow-sm cursor-pointer w-full md:w-[150px] flex-1"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-        >
-          <option value="">PLACE</option>
-          <option value="Hà Nội">Hà Nội</option>
-          <option value="TP.HCM">TP.HCM</option>
-          <option value="Đà Nẵng">Đà Nẵng</option>
-          <option value="Hải Phòng">Hải Phòng</option>
-          <option value="Nha Trang">Nha Trang</option>
-        </select>
+        <div className="relative w-full md:w-[150px] flex-1">
+          <select
+            className="p-2 md:p-3 border border-gray-300 rounded-md bg-black text-white shadow-sm cursor-pointer w-full appearance-none pr-8"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          >
+            <option value="">PLACE</option>
+            <option value="Hà Nội">Hà Nội</option>
+            <option value="TP.HCM">TP.HCM</option>
+            <option value="Đà Nẵng">Đà Nẵng</option>
+            <option value="Hải Phòng">Hải Phòng</option>
+            <option value="Nha Trang">Nha Trang</option>
+          </select>
+          <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white w-4 h-4 pointer-events-none" />
+        </div>
 
-        <select
-          className="p-2 md:p-3 border border-gray-300 rounded-md bg-black text-white shadow-sm cursor-pointer w-full md:w-[150px] flex-1"
-          value={sport}
-          onChange={(e) => setSport(e.target.value)}
-        >
-          <option value="">SPORT</option>
-          <option value="Badminton">Badminton</option>
-          <option value="Football">Football</option>
-        </select>
+        <div className="relative w-full md:w-[150px] flex-1">
+          <select
+            className="p-2 md:p-3 border border-gray-300 rounded-md bg-black text-white shadow-sm cursor-pointer w-full appearance-none pr-8"
+            value={sport}
+            onChange={(e) => setSport(e.target.value)}
+          >
+            <option value="">SPORT</option>
+            <option value="Badminton">Badminton</option>
+            <option value="Football">Football</option>
+          </select>
+          <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white w-4 h-4 pointer-events-none" />
+        </div>
 
-        <select
-          className="p-2 md:p-3 border border-gray-300 rounded-md bg-black text-white shadow-sm cursor-pointer w-full md:w-[150px] flex-1"
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-        >
-          <option value="">SORT</option>
-          <option value="ASC">Ascending</option>
-          <option value="DESC">Descending</option>
-        </select>
+        <div className="relative w-full md:w-[150px] flex-1">
+          <select
+            className="p-2 md:p-3 border border-gray-300 rounded-md bg-black text-white shadow-sm cursor-pointer w-full appearance-none pr-8"
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+          >
+            <option value="">SORT</option>
+            <option value="ASC">Ascending</option>
+            <option value="DESC">Descending</option>
+          </select>
+          <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white w-4 h-4 pointer-events-none" />
+        </div>
       </div>
     </div>
   );

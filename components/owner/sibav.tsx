@@ -51,7 +51,7 @@ export default function SibavSidebar() {
 
       {/* Sidebar */}
       <div
-        className={`fixed md:static w-64 md:w-1/5 bg-gray-100 min-h-screen pl-5 pt-16 md:pt-10 transition-transform duration-300 ease-in-out ${
+        className={`fixed md:static w-64 md:w-1/5 border-r border-gray-200 bg-white min-h-screen pl-5 pt-16 md:pt-10 transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         } z-40`}
       >
@@ -64,8 +64,8 @@ export default function SibavSidebar() {
           ].map(({ key, label }) => (
             <li key={key} className="list-none">
               <button
-                className={`w-full text-left font-bold uppercase p-2 text-sm md:text-base transition-colors hover:bg-gray-200 ${
-                  activeTab === key ? "text-black bg-gray-300" : "text-gray-500"
+                className={`w-full text-left font-bold uppercase p-2 text-sm md:text-base transition-colors hover:bg-blue-50 ${
+                  activeTab === key ? "text-blue bg-blue-50" : "text-gray-500"
                 }`}
                 onClick={() => handleTabClick(key)}
               >

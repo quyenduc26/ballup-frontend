@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { SonnerToast } from "@/components/sonnerMesage";
@@ -9,14 +9,18 @@ import { TeamCardProps } from "@/types/form";
 import TeamApi from "@/service/teamCardApi";
 import { getImageUrl } from "@/utils/getImage";
 
+const truncateText = (text: string, maxLength: number) => {
+  return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+};
+
 const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const [loading, setLoading] = useState(false);
   const [joined, setJoined] = useState(false);
   const [toastData, setToastData] = useState<any>(null);
   const router = useRouter();
+
   const handleJoinTeam = async () => {
     if (!team || !team.id) return;
-
     const user_id = 1;
 
     setLoading(true);
@@ -31,7 +35,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
       });
 
       setTimeout(() => {
-        router.push(`/team/${team.id}`);
+        router.replace(`/team/${team.id}`);
       });
     } catch (error) {
       console.error("Error joining team:", error);
@@ -69,13 +73,15 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
             src={team.logo ? getImageUrl(team.logo) : "/images/arsenal.png"}
           />
         </div>
-        <div className="p-5">
+        <div className="p-5 flex flex-col flex-grow">
           <h2 className="text-xl font-bold text-black mb-2">{team.name}</h2>
-          <p className="text-gray-600 text-base mb-4">{team.intro}</p>
+          <p className="text-gray-600 text-base mb-4 flex-grow">{team.intro}</p>
           <div className="grid grid-cols-3 gap-3 text-gray-700 mb-4">
             <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50">
               <span className="text-base mb-1">📍</span>
-              <span className="font-medium">{team.address}</span>
+              <span className="font-medium truncate w-full text-center">
+                {truncateText(team.address, 20)}
+              </span>
             </div>
             <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50">
               <span className="text-base mb-1">🏆</span>
@@ -86,14 +92,16 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
               <span className="font-medium">{team.totalMembers}</span>
             </div>
           </div>
-          <div className="flex flex-col gap-3 mt-4">
+          <div className="flex flex-col gap-3 mt-auto">
             <Link href={`/team/${team.id}`}>
               <button className="w-full py-2 px-4 border-2 border-black text-black font-semibold rounded-lg hover:bg-gray-100 transition duration-300">
                 DETAIL
               </button>
             </Link>
             <button
-              className={`w-full py-2 px-4 rounded-lg font-semibold transition duration-300 ${joined ? "bg-gray-500" : "bg-black text-white hover:bg-gray-800"}`}
+              className={`w-full py-2 px-4 rounded-lg font-semibold transition duration-300 ${
+                joined ? "bg-gray-500" : "bg-black text-white hover:bg-gray-800"
+              }`}
               disabled={loading || joined}
               onClick={handleJoinTeam}
             >
