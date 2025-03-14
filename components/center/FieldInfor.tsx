@@ -1,9 +1,20 @@
 "use client";
+import type { FieldDetailType } from "@/types/form";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Spinner } from "@heroui/react";
+import {
+  Clock,
+  MapPin,
+  Calendar,
+  DollarSign,
+  Info,
+  ArrowLeft,
+  CreditCard,
+  Building,
+  HourglassIcon,
+} from "lucide-react";
 
-import { FieldDetailType } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import { ToastMessage } from "@/components/ToastMessage";
 import bookingRequestApi from "@/service/bookingRequestApi";
@@ -27,7 +38,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
   const submitBooking = async () => {
     const data = localStorage.getItem("data");
     const parsedData = data ? JSON.parse(data) : null;
-    const userId = parseInt(parsedData.id);
+    const userId = Number.parseInt(parsedData.id);
 
     const queryParams = new URLSearchParams(location.search);
     const fromTime = queryParams.get("fromTime");
@@ -42,9 +53,9 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
 
     const bookingData = {
       userId: userId,
-      playingSlotId: slotId ? parseInt(slotId) : 0,
-      fromTime: fromTime ? parseInt(fromTime) : 0,
-      toTime: toTime ? parseInt(toTime) : 0,
+      playingSlotId: slotId ? Number.parseInt(slotId) : 0,
+      fromTime: fromTime ? Number.parseInt(fromTime) : 0,
+      toTime: toTime ? Number.parseInt(toTime) : 0,
       amount: centerInfor.total,
     };
 
@@ -81,23 +92,10 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
         {/* Header Section */}
         <div className="bg-gray-100 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <button
-            className="flex items-center text-black hover:text-black text-xl font-bold  transition-colors"
+            className="flex items-center text-black hover:text-black text-xl font-bold transition-colors"
             onClick={() => router.back()}
           >
-            <svg
-              className="h-6 w-6 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M15 19l-7-7 7-7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            </svg>
+            <ArrowLeft className="h-6 w-6 mr-2" />
             Back
           </button>
         </div>
@@ -113,7 +111,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                 getImageUrl(centerInfor.imageUrls?.[0]) || "/images/default.png"
               }
             />
-            <div className="flex gap-4 overflow-x-auto pb-2">
+            <div className="flex gap-6 overflow-x-auto pb-2">
               {centerInfor.imageUrls
                 ?.slice(1)
                 .map((img, index) => (
@@ -121,77 +119,120 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                     key={index}
                     alt={`Field ${index + 2}`}
                     className="rounded-lg object-cover cursor-pointer w-48 h-32 hover:opacity-80 transition-opacity"
-                    src={getImageUrl(img)}
+                    src={getImageUrl(img) || "/placeholder.svg"}
                   />
                 ))}
             </div>
           </div>
 
           {/* Right Side - Booking Details */}
-          <div className="flex-1 bg-gray-50 border border-gray-200 rounded-xl p-6 space-y-4 ">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold text-gray-800">
-                {centerInfor.name}
-              </h1>
-              <p className="text-gray-600 text-left">{centerInfor.address}</p>
-              <p className="text-gray-500 text-left">
-                {centerInfor.description}
-              </p>
-            </div>
+          <div className="flex-1 justify-center max-w-md">
+            {/* Booking Card */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+              {/* Header with venue name */}
+              <div className="bg-black text-white p-4">
+                <div className="flex items-center gap-2">
+                  <Building className="h-5 w-5" />
+                  <h1 className="text-2xl  font-bold">{centerInfor.name}</h1>
+                </div>
+                <div className="flex items-center gap-2 mt-1">
+                  <MapPin className="ml-0.5 h-4 w-4 text-gray-300" />
+                  <p className="text-gray-300 text-sm ">
+                    {centerInfor.address}
+                  </p>
+                </div>
+              </div>
 
-            {/* Google Map */}
-            <div className="mt-4">
-              <iframe
-                allowFullScreen
-                className="rounded-xl border-2 border-gray-300"
-                height="250"
-                loading="lazy"
-                src={centerInfor.mapUrl}
-                title="map"
-                width="100%"
-              />
-            </div>
+              {/* Booking information */}
+              <div className="p-5 space-y-4">
+                {/* Description */}
+                <div className="bg-gray-50 p-3 rounded-lg text-sm text-gray-600 flex gap-2">
+                  <Info className="h-5 w-5 text-gray-500 flex-shrink-0 mt-0.5" />
+                  <div>{centerInfor.description}</div>
+                </div>
 
-            {/* Booking Time Details */}
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="flex justify-between mb-2">
-                <p className="font-semibold text-gray-700">From</p>
-                <p className="text-gray-900">{centerInfor.bookingTime}</p>
-              </div>
-              <div className="flex justify-between">
-                <p className="font-semibold text-gray-700">To</p>
-                <p className="text-gray-900">{centerInfor.returnTime}</p>
+                {/* Booking Time */}
+                <div className="border-b pb-4">
+                  <h3 className="text-black text-sm uppercase font-semibold mb-2 flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    BOOKING TIME
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-gray-50 p-3 rounded-lg text-start">
+                      <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
+                        <Clock className="h-3 w-3" />
+                        <p>From</p>
+                      </div>
+                      <p className="font-bold">
+                        {centerInfor.bookingTime.slice(0, 6)}
+                      </p>
+                      <p className="font-bold">
+                        {centerInfor.bookingTime.slice(7)}
+                      </p>
+                    </div>
+                    <div className="bg-gray-50 p-3 rounded-lg text-start">
+                      <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
+                        <Clock className="h-3 w-3" />
+                        <p>To</p>
+                      </div>
+                      <p className="font-bold">
+                        {centerInfor.returnTime.slice(0, 6)}
+                      </p>
+                      <p className="font-bold">
+                        {centerInfor.returnTime.slice(7)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pricing */}
+                <div>
+                  <h3 className="text-black text-sm uppercase font-semibold mb-2 flex items-center gap-2">
+                    <DollarSign className="h-4 w-4" />
+                    PRICING DETAILS
+                  </h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 flex items-center gap-1">
+                        <CreditCard className="h-4 w-4 text-gray-500" />
+                        Price per hour :
+                      </span>
+                      <span>{formatCurrency(centerInfor.price)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 flex items-center gap-1">
+                        <HourglassIcon className="h-4 w-4 text-gray-500" />
+                        Duration:
+                      </span>
+                      <span>{centerInfor.hours} Hour(s)</span>
+                    </div>
+                    <div className="h-px bg-gray-200 my-2" />
+                    <div className="flex justify-between items-center font-bold text-lg">
+                      <span className="flex items-center gap-1">
+                        <DollarSign className="h-5 w-5" />
+                        Total
+                      </span>
+                      <span className="text-green-600">
+                        {formatCurrency(centerInfor.total)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Book Button */}
+                <button
+                  className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors text-lg font-semibold mt-4 flex items-center justify-center gap-2"
+                  disabled={loading}
+                  onClick={submitBooking}
+                >
+                  {loading ? (
+                    <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" />
+                  ) : (
+                    <>BOOKING</>
+                  )}
+                </button>
               </div>
             </div>
-
-            {/* Pricing Details */}
-            <div className="bg-white rounded-lg p-4 shadow-sm space-y-2">
-              <div className="flex justify-between">
-                <p className="font-semibold text-gray-700">Price</p>
-                <p className="text-gray-900">
-                  {formatCurrency(centerInfor.price)}
-                </p>
-              </div>
-              <div className="flex justify-between">
-                <p className="font-semibold text-gray-700">Hour(s)</p>
-                <p className="text-gray-900">{centerInfor.hours}</p>
-              </div>
-              <div className="flex justify-between pt-2 border-t border-gray-200 font-bold text-lg">
-                <p className="text-gray-900">Total</p>
-                <p className="text-green-600">
-                  {formatCurrency(centerInfor.total)}
-                </p>
-              </div>
-            </div>
-
-            {/* Deposit Button */}
-            <button
-              className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors text-lg font-semibold"
-              disabled={loading} // Disable button khi đang loading
-              onClick={submitBooking}
-            >
-              {loading ? <Spinner color="default" /> : "BOOK"}
-            </button>
           </div>
         </div>
       </div>
