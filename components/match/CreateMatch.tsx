@@ -271,7 +271,7 @@ export default function CreateMatch() {
       if (response.data) {
         toast.success("Match created successfully!");
       }
-      router.push("/");
+      router.push("/match?view=explore");
     } catch (error) {
       console.error("Error creating match:", error);
       toast.error("Unable to create match. Please try again.");
@@ -291,11 +291,11 @@ export default function CreateMatch() {
       // First, get team overview
       const usersResponse = await matchApi.getAllUsers(formData.userId, sport);
 
-      if (usersResponse.data.length < formData.membersRequired) {
-        toast.error("Team member quantity is not suitable");
+      // if (usersResponse.data.length < formData.membersRequired) {
+      //   toast.error("Team member quantity is not suitable");
 
-        return;
-      }
+      //   return;
+      // }
       const teamResponse = await matchApi.getOverview(formData.userId, sport);
 
       if (teamResponse.data) {
@@ -733,7 +733,7 @@ export default function CreateMatch() {
             id="add-team-section"
           >
             {/* Show button if team overview is not loaded yet */}
-            {showTeamButton ? (
+            {showTeamButton ? ( 
               <div className="flex justify-center">
                 <button
                   className="bg-black text-white px-6 py-3 text-sm font-medium rounded-md flex items-center"

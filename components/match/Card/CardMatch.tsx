@@ -10,25 +10,25 @@ interface MatchCardProps {
 
 export default function MatchCard({ match }: MatchCardProps) {
   return (
-    <div className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-4 sm:mt-10 border mb-6 sm:mb-10 border-gray-300 px-2 sm:px-4">
+    <div className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300 h-full transition transform hover:scale-105">
       {/* Cover Image */}
       <div className="relative">
         <img
           alt="Match Cover"
-          className="w-full h-36 sm:h-48 md:h-72 object-cover border-b border-gray-300"
+          className="w-full h-28 sm:h-36 object-cover border-b border-gray-300"
           src={getImageUrl(match.cover) || "/placeholder.svg"}
         />
-        <div className="absolute top-2 left-2 bg-black text-white px-2 py-1 text-xs sm:text-sm font-bold rounded">
+        <div className="absolute top-2 left-2 bg-black text-white px-2 py-1 text-xs font-bold rounded">
           {match.type}
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="p-3 sm:p-4 md:p-6 pt-16 sm:pt-20 md:pt-32 relative">
+      <div className="p-3 sm:p-4 pt-12 sm:pt-16 relative">
         {/* Team Logos (overlapping with cover) */}
-        <div className="absolute left-0 right-0 -top-14 sm:-top-20 md:-top-28 flex justify-between px-4 sm:px-8 md:px-16 lg:px-24">
+        <div className="absolute left-0 right-0 sm:-top-12 flex justify-between px-4 sm:px-8">
           {/* Team A Logo */}
-          <div className="w-28 h-28 sm:w-40 sm:h-40 md:w-72 md:h-72 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white">
+          <div className="w-20 h-20 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white">
             <img
               alt={match.teamA?.name || "Team A"}
               className="w-full h-full object-cover"
@@ -37,7 +37,7 @@ export default function MatchCard({ match }: MatchCardProps) {
           </div>
 
           {/* Team B Logo */}
-          <div className="w-28 h-28 sm:w-40 sm:h-40 md:w-72 md:h-72 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white">
+          <div className="w-20 h-20 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white">
             <img
               alt="Team B"
               className="w-full h-full object-cover"
@@ -47,76 +47,66 @@ export default function MatchCard({ match }: MatchCardProps) {
         </div>
 
         {/* Teams and VS Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 items-start mt-3 sm:mt-20">
+        <div className="grid grid-cols-3 gap-2 items-start ">
           {/* Team A */}
-          <div className="flex flex-col items-center">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center">{match.teamA?.name || "TEAM A"}</h2>
-            <ul className="text-xs sm:text-sm text-gray-600 space-y-1 mt-2 sm:mt-3 w-full max-w-[200px] mx-auto">
+          <div className="flex flex-col items-center mt-20">
+            <h2 className="text-sm sm:text-lg font-bold text-center">{match.teamA?.name || "TEAM A"}</h2>
+            <ul className="text-xs text-gray-600 space-y-1 mt-1 w-full max-w-[100px] mx-auto">
               {match.teamA?.members && match.teamA.members.length > 0 ? (
-                match.teamA.members.map((member, index) => (
-                  <li key={index} className="flex items-center justify-center gap-1 sm:gap-2">
+                match.teamA.members.slice(0, 3).map((member, index) => (
+                  <li key={index} className="flex items-center justify-center gap-1">
                     <img
                       src={getImageUrl(member.avatar) || "/default-avatar.png"}
                       alt={`${member.firstName} ${member.lastName}`}
-                      className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full"
+                      className="w-5 h-5 rounded-full"
                     />
-                    <span className="truncate">
-                      {member.lastName} {member.firstName}
+                    <span className="truncate text-xs">
+                      {member.lastName}{member.firstName }
                     </span>
                   </li>
                 ))
               ) : (
-                <li className="text-center">No team members</li>
+                <li className="text-center text-xs">No team</li>
               )}
             </ul>
           </div>
 
           {/* VS */}
-          <div className="flex flex-col items-center justify-center my-2 sm:my-0">
+          <div className="flex flex-col items-center justify-center">
             <div className="flex justify-center">
-              <img alt="VS" className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32" src="/images/VS.png" />
+              <img alt="VS" className="w-12 h-12 sm:w-16 sm:h-16" src="/images/VS.png" />
             </div>
-            <div className="text-center mt-1 sm:mt-2">
-              <p className="text-sm sm:text-base md:text-lg font-bold">
-                {formatTimestamp(match.fromTime)} - {formatTimestamp(match.toTime)}
+            <div className="text-center mt-1">
+              <p className="text-xs font-bold">
+                {formatTimestamp(match.fromTime)}
               </p>
-              <p className="text-base sm:text-xl md:text-3xl mt-2 sm:mt-2 text-gray-700">
+              <p className="text-xs sm:text-xl mt-4 text-gray-700 truncate max-w-[100px]">
                 {match.centerName || match.slotName}
               </p>
             </div>
           </div>
 
           {/* Team B */}
-          <div className="flex flex-col items-center">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center">TEAM B</h2>
-            <ul className="text-xs sm:text-sm text-gray-600 space-y-1 mt-2 sm:mt-3 w-full max-w-[200px] mx-auto">
-              <li className="flex items-center justify-center gap-1 sm:gap-2">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
-                <span>Player 1</span>
-              </li>
-              <li className="flex items-center justify-center gap-1 sm:gap-2">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
-                <span>Player 2</span>
-              </li>
-              <li className="flex items-center justify-center gap-1 sm:gap-2">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
-                <span>Player 3</span>
-              </li>
-              <li className="flex items-center justify-center gap-1 sm:gap-2">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
-                <span>Player 4</span>
-              </li>
+          <div className="flex flex-col items-center mt-20">
+            <h2 className="text-sm sm:text-base font-bold text-center">TEAM B</h2>
+            <ul className="text-xs text-gray-600 space-y-1 mt-1 w-full max-w-[100px] mx-auto">
+              {[1, 2, 3].map((player) => (
+                <li key={player} className="flex items-center justify-center gap-1">
+                  <div className="w-5 h-5 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
+                  <span className="text-xs">Player {player}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-8 sm:mt-16 md:mt-20">
-          <button className="border-2 border-black py-2 sm:py-3 text-sm sm:text-base font-bold text-black rounded hover:bg-gray-100 transition-colors">
-            JOIN AS TEAM
+        <div className="grid grid-cols-2 gap-2 mt-10">
+          <button className="border-2 border-black py-3 text-sm font-bold text-black rounded hover:bg-gray-100 transition-colors">
+            JOIN TEAM
           </button>
-          <button className="bg-black text-white py-2 sm:py-3 text-sm sm:text-base font-bold rounded hover:bg-gray-800 transition-colors">
-            JOIN AS SINGLE
+          <button className="bg-black text-white py-3 text-sm font-bold rounded hover:bg-gray-800 transition-colors">
+            JOIN SINGLE
           </button>
         </div>
       </div>
