@@ -1,6 +1,10 @@
 import React from "react";
-
-import CreateMatch from "@/components/match/CreateMatch";
+import dynamic from 'next/dynamic'
+ 
+const CreateMatch = dynamic(
+  () => import('@/components/match/CreateMatch'),
+  { ssr: false }
+)
 
 export default function Match() {
   return (
