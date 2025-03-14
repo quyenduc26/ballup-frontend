@@ -126,8 +126,8 @@ export default function Login() {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2 mb-12">
                 <Input
-                  label="Email"
                   id="email"
+                  label="Email"
                   labelPlacement="outside"
                   placeholder="Enter your email"
                   type="email"
@@ -143,8 +143,8 @@ export default function Login() {
               <div className="space-y-2 ">
                 <div className="relative">
                   <Input
-                    label="Password"
                     id="password"
+                    label="Password"
                     labelPlacement="outside"
                     placeholder="Enter your password"
                     type={showPassword ? "text" : "password"}

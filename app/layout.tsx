@@ -54,7 +54,7 @@ export default function RootLayout({
                 <main>{children}</main>
               </div>
             </Providers>
-            <Footer />
+            {/* <Footer /> */}
             <BookingHistory />
           </Suspense>
         </UserProvider>
