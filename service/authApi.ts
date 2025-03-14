@@ -7,8 +7,8 @@ const authApi = {
   login: (formData: LoginFormType) => api.post("/auth/login", formData),
 
   loginWithGoogle: () => api.get("/auth/google"),
-  
-  logout : () => api.post("/auth/logout"),
+
+  logout: () => api.post("/auth/logout"),
 };
 
 export default authApi;
