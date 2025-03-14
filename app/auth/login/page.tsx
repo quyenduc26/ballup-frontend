@@ -60,21 +60,30 @@ export default function Login() {
       setLoading(true);
       const response = await authApi.login(formData);
 
-      localStorage.setItem("data", JSON.stringify(response.data));
-      const data = response.data;
+      if (response.data) {
+        const { id, role } = response.data; // Lấy role từ API
 
-      setUserId(data.id);
-      if (data) {
-        localStorage.setItem("data", JSON.stringify(data));
+        localStorage.setItem("data", JSON.stringify(response.data)); // Lưu toàn bộ thông tin user
+        setUserId(id);
+
+        setToastData({
+          type: "success",
+          heading: "Login Successful",
+          message: "You have successfully logged in!",
+          duration: 3000,
+        });
+
+        // Điều hướng dựa trên role
+        if (role === "user") {
+          router.push("/");
+        } else if (role === "owner") {
+          router.push("/owner");
+        } else if (role === "admin") {
+          router.push("/admin");
+        } else {
+          router.push("/"); // Nếu không có role thì về trang chủ mặc định
+        }
       }
-      setToastData({
-        type: "success",
-        heading: "Login Successful",
-        message: "You have successfully logged in!",
-        duration: 3000,
-      });
-
-      setTimeout(() => router.push("/"), 3000);
     } catch (error: any) {
       let message = "Login failed. Please try again.";
 

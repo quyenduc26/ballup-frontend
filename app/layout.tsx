@@ -8,7 +8,6 @@ import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { BookingHistory } from "@/components/booking/bookingHistory";
 import { UserProvider } from "@/context/UserContext";
 
@@ -54,7 +53,7 @@ export default function RootLayout({
                 <main>{children}</main>
               </div>
             </Providers>
-            <Footer />
+            {/* <Footer /> */}
             <BookingHistory />
           </Suspense>
         </UserProvider>

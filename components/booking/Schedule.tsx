@@ -40,7 +40,7 @@ export default function Schedule() {
       return;
     }
 
-    const convertToTimestamp = (time: string) => {
+    const convertToTimestamp = (selectedDate: Date, time: string) => {
       const [hours, minutes] = time.split(":").map(Number);
 
       return selectedDate
@@ -48,8 +48,8 @@ export default function Schedule() {
         : null;
     };
 
-    const fromTimestamp = convertToTimestamp(fromTime);
-    const toTimestamp = convertToTimestamp(toTime);
+    const fromTimestamp = convertToTimestamp(selectedDate, fromTime);
+    const toTimestamp = convertToTimestamp(selectedDate, toTime);
 
     if (!fromTimestamp || !toTimestamp) {
       setToast({ message: "Invalid time format!", type: "error" } as any);

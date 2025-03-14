@@ -19,6 +19,10 @@ import { uploadImage } from "@/utils/uploadImage";
 import { getImageUrl } from "@/utils/getImage";
 
 export default function CreateMatch() {
+  const data = localStorage.getItem("data");
+  const parsedData = data ? JSON.parse(data) : null;
+  const userId = Number.parseInt(parsedData.id);
+
   const router = useRouter();
   const [playingCenters, setPlayingCenters] = useState<CardFieldType[]>([]);
   const [selectedCenter, setSelectedCenter] = useState<CenterSelection | null>(
@@ -30,7 +34,7 @@ export default function CreateMatch() {
   const [isChecking, setIsChecking] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [formData, setFormData] = useState<CreateMatchType>({
-    userId: 1,
+    userId: userId,
     name: "",
     fromTime: 0,
     toTime: 0,
@@ -99,7 +103,9 @@ export default function CreateMatch() {
     if (selectedDate) {
       // Convert date and time to seconds since epoch
       const dateObj = new Date(`${selectedDate}T${value}:00`);
-      const timeInSeconds = Math.floor(dateObj.getTime() / 1000);
+      const timeInSeconds = Math.floor(dateObj.getTime());
+
+      console.log(timeInSeconds);
 
       setFormData((prev) => ({ ...prev, [name]: timeInSeconds }));
     } else {
@@ -266,6 +272,7 @@ export default function CreateMatch() {
 
     try {
       setLoading(true);
+      console.log(formData);
       const response = await matchApi.createMatch(formData);
 
       if (response.data) {

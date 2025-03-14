@@ -56,9 +56,9 @@ export default function BookingPage() {
     fetchCenterInfo();
   }, [centerId]);
 
-  if (loading) return <p className="text-center mt-10">Đang tải...</p>;
+  if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (!bookingInfo)
-    return <p className="text-center mt-10">Không tìm thấy sân bóng</p>;
+    return <p className="text-center mt-10">Don&apos;t have data fields</p>;
 
   return (
     <div>

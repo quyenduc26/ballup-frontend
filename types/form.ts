@@ -180,6 +180,8 @@ export type TeamOverviewResponse = {
   totalMembers: number;
 };
 export type MyGameResponse = {
+  membersRequired: number;
+  description: string;
   id: number;
   name: string;
   fromTime: string; 
@@ -217,3 +219,32 @@ export type GameTeamMemberResponse = {
   firstName: string;
   lastName: string;
 }
+
+export type UserInfo = {
+  id: string;
+  avatar?: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  phone?: string;
+  email?: string;
+  height?: number;
+  weight?: number;
+  oldPassword?: string;
+  newPassword?: string;
+  confirmPassword?: string;
+};
+export type UpdateGameTimeAndSlotRequest = {
+  gameId: number;
+  fromTime?: number | null;
+  toTime?: number | null;
+  newSlotId?: number | null;
+}
+export type UpdateGameInfoRequest = {
+  gameId: number;
+  name: string;
+  cover: string;
+  description: string;
+  membersRequired: number;
+}
+

@@ -19,6 +19,9 @@ const matchApi = {
   
   getUserMatch: (userId: number) =>api.get(`/game/user/${userId}`),
   getAllMatch: () =>api.get("/game"),
+  updateMatchInfo: ( formData: object) =>api.patch("game/update/info", formData),
+  updateMatchTime: ( formData: object) =>api.patch("game/update/time-slot", formData),
+
 };
 
 export default matchApi;
