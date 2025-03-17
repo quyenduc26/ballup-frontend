@@ -1,3 +1,5 @@
+import { Slot } from "@/types";
+
 export type RegisterFormType = {
   username: string;
   email: string;
@@ -57,7 +59,9 @@ export type PlayingSlotType = {
   primaryPrice: number;
   nightPrice: number;
   playingCenterId: number;
+  playingSlot?: Slot;
 };
+
 export type CreateTeamData = {
   name: string;
   address: string;
@@ -136,7 +140,7 @@ export type CreateMatchType = {
   name: string;
   fromTime: number;
   toTime: number;
-  location: string;
+  address: string;
   description: string;
   cover: string;
   memberIdList: number[];

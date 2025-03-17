@@ -1,5 +1,5 @@
 export type BookingField = {
-  id: string;
+  id: number;
   slotId: string;
   creator: string;
   fromTime: string;
@@ -29,7 +29,7 @@ export type SubPayment = {
 };
 
 export type PaymentRequest = {
-  id: string;
+  id: number;
   playingSlot: string;
   creator: string;
   amount: number;
