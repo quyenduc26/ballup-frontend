@@ -21,6 +21,9 @@ const matchApi = {
   getAllMatch: () =>api.get("/game"),
   updateMatchInfo: ( formData: object) =>api.patch("game/update/info", formData),
   updateMatchTime: ( formData: object) =>api.patch("game/update/time-slot", formData),
+  joinGame: (gameId: number, userId: number) =>api.post(`/game/${gameId}/join`, null, { params: { userId } }),
+  joinGameAsTeam: (gameId: number, userId: number) =>api.post(`/game/${gameId}/join-team`, null, { params: { userId } }),
+  cancelGame: (gameId: number, userId: number) =>api.delete(`/game/${gameId}/cancel-game`, { params: { userId } }),
 
 };
 

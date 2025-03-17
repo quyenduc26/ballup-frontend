@@ -3,12 +3,132 @@
 import { getImageUrl } from "@/utils/getImage"
 import { formatTimestamp } from "@/utils/formatTimestamp"
 import type { GameResponse } from "@/types"
+import matchApi from "@/service/matchApi"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation";
+import UnknowImage from "@/public/images/image1.png"
 
 interface MatchCardProps {
   match: GameResponse
+  onUpdate?: () => void
 }
 
-export default function MatchCard({ match }: MatchCardProps) {
+export default function MatchCard({ match, onUpdate }: MatchCardProps) {
+  const [teamBLogo, setTeamBLogo] = useState<string>("/image/preview.png")
+  const [teamBPlayers, setTeamBPlayers] = useState<any[]>([])
+  const [loading, setLoading] = useState(false)
+  const [hasJoined, setHasJoined] = useState(false)
+  const [joinMessage, setJoinMessage] = useState("")
+  const router = useRouter();
+  const data = localStorage.getItem("data");
+  const parsedData = data ? JSON.parse(data) : null;
+  const userId = parsedData.id;
+
+  useEffect(() => {
+    if (match.teamB?.logo) {
+      setTeamBLogo(match.teamB.logo)
+    } else {
+      // Sử dụng ảnh mặc định khi chưa tham gia
+      setTeamBLogo("/image/preview.png")
+    }
+
+    if (match.teamB?.members && match.teamB.members.length > 0) {
+      setTeamBPlayers(match.teamB.members)
+      
+      // Check if current user is already in the team
+      const isUserInTeam = match.teamB.members.some(member => member.id === userId);
+      if (isUserInTeam) {
+        setHasJoined(true);
+        setJoinMessage("You have already joined this match");
+      }
+    }
+  }, [match, userId])
+
+  const handleJoinSingle = async () => {
+    if (hasJoined) {
+      alert("You have already joined this match!");
+      return;
+    }
+    
+    try {
+      setLoading(true)
+      const response = await matchApi.joinGame(match.id, userId)
+
+      if (response.status === 200) {
+        // Cập nhật logo team B
+        if (response.data?.teamB?.logo) {
+          setTeamBLogo(response.data.teamB.logo)
+        } else {
+          // Sử dụng logo mặc định khi tham gia thành công
+          setTeamBLogo("/image/image1.png")
+        }
+
+        // Tạo thông tin người dùng hiện tại
+        const userData = {
+          id: userId,
+          lastName: parsedData.lastName || "Current",
+          firstName: parsedData.firstName || "User",
+          avatar: parsedData.avatar || "/image/image1.png"
+        }
+
+        // Cập nhật danh sách thành viên team B
+        if (response.data?.teamB?.members && response.data.teamB.members.length > 0) {
+          setTeamBPlayers(response.data.teamB.members)
+        } else {
+          // Nếu không có thành viên từ API, thêm người dùng hiện tại
+          setTeamBPlayers([userData])
+        }
+
+        setHasJoined(true)
+        setJoinMessage("You've joined as a single player")
+        alert("Successfully joined the game!")
+        onUpdate?.()
+      }
+    } catch (error) {
+      console.error("Error joining game:", error)
+      alert("Failed to join game")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleJoinTeam = async () => {
+    if (hasJoined) {
+      alert("You have already joined this match!");
+      return;
+    }
+    
+    try {
+      setLoading(true)
+      const response = await matchApi.joinGameAsTeam(match.id, userId)
+
+      if (response.status === 200) {
+        const updatedMatch = response.data
+
+        if (updatedMatch?.teamB?.logo) {
+          setTeamBLogo(updatedMatch.teamB.logo)
+        } else {
+          setTeamBLogo("/team-logo.png")
+        }
+
+        if (updatedMatch?.teamB?.members) {
+          setTeamBPlayers(updatedMatch.teamB.members)
+        }
+
+        setHasJoined(true)
+        setJoinMessage("You've joined as a team")
+        alert("Successfully joined as team!")
+        onUpdate?.()
+        router.push("/match?view=myMatch");
+      }
+    } catch (error) {
+      console.error("Error joining team:", error)
+      alert("Failed to join as team")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300 h-full transition transform hover:scale-105">
       {/* Cover Image */}
@@ -25,9 +145,7 @@ export default function MatchCard({ match }: MatchCardProps) {
 
       {/* Main Content */}
       <div className="p-3 sm:p-4 pt-12 sm:pt-16 relative">
-        {/* Team Logos (overlapping with cover) */}
         <div className="absolute left-0 right-0 sm:-top-12 flex justify-between px-4 sm:px-8">
-          {/* Team A Logo */}
           <div className="w-20 h-20 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white">
             <img
               alt={match.teamA?.name || "Team A"}
@@ -35,20 +153,22 @@ export default function MatchCard({ match }: MatchCardProps) {
               src={getImageUrl(match.teamA?.logo) || "/placeholder.svg"}
             />
           </div>
-
-          {/* Team B Logo */}
           <div className="w-20 h-20 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white">
             <img
               alt="Team B"
               className="w-full h-full object-cover"
-              src="/mancity.png" // Update when you have opponent team data
+              src={
+                match.teamB?.logo
+                  ? getImageUrl(match.teamB.logo)
+                  : match.teamB?.members && match.teamB.members.length > 0
+                    ? getImageUrl("default-team-logo.png")
+                    : getImageUrl("unknow-team-logo.png")
+              }
             />
           </div>
         </div>
 
-        {/* Teams and VS Section */}
-        <div className="grid grid-cols-3 gap-2 items-start ">
-          {/* Team A */}
+        <div className="grid grid-cols-3 gap-2 items-start">
           <div className="flex flex-col items-center mt-20">
             <h2 className="text-sm sm:text-lg font-bold text-center">{match.teamA?.name || "TEAM A"}</h2>
             <ul className="text-xs text-gray-600 space-y-1 mt-1 w-full max-w-[100px] mx-auto">
@@ -61,7 +181,7 @@ export default function MatchCard({ match }: MatchCardProps) {
                       className="w-5 h-5 rounded-full"
                     />
                     <span className="truncate text-xs">
-                      {member.lastName}{member.firstName }
+                      {member.lastName} {member.firstName}
                     </span>
                   </li>
                 ))
@@ -71,7 +191,6 @@ export default function MatchCard({ match }: MatchCardProps) {
             </ul>
           </div>
 
-          {/* VS */}
           <div className="flex flex-col items-center justify-center">
             <div className="flex justify-center">
               <img alt="VS" className="w-12 h-12 sm:w-16 sm:h-16" src="/images/VS.png" />
@@ -80,34 +199,58 @@ export default function MatchCard({ match }: MatchCardProps) {
               <p className="text-xs font-bold">
                 {formatTimestamp(match.fromTime)}
               </p>
-              <p className="text-xs sm:text-xl mt-4 text-gray-700 truncate max-w-[100px]">
+              <p className="text-xs sm:text-lg mt-4 text-gray-700 truncate max-w-full">
                 {match.centerName || match.slotName}
               </p>
             </div>
           </div>
 
-          {/* Team B */}
           <div className="flex flex-col items-center mt-20">
             <h2 className="text-sm sm:text-base font-bold text-center">TEAM B</h2>
             <ul className="text-xs text-gray-600 space-y-1 mt-1 w-full max-w-[100px] mx-auto">
-              {[1, 2, 3].map((player) => (
-                <li key={player} className="flex items-center justify-center gap-1">
-                  <div className="w-5 h-5 rounded-full bg-gray-300 flex items-center justify-center text-xs">👤</div>
-                  <span className="text-xs">Player {player}</span>
-                </li>
-              ))}
+              {teamBPlayers.length > 0 ? (
+                teamBPlayers.slice(0, 3).map((player, index) => (
+                  <li key={index} className="flex items-center justify-center gap-1">
+                    <img
+                      src={getImageUrl(player.avatar) || "/default-avatar.png"}
+                      alt={`${player.firstName} ${player.lastName}`}
+                      className="w-5 h-5 rounded-full"
+                    />
+                    <span className="truncate text-xs">
+                      {player.lastName} {player.firstName}
+                    </span>
+                  </li>
+                ))
+              ) : (
+                <li className="text-center text-xs">No players yet</li>
+              )}
             </ul>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-2 mt-10">
-          <button className="border-2 border-black py-3 text-sm font-bold text-black rounded hover:bg-gray-100 transition-colors">
-            JOIN TEAM
-          </button>
-          <button className="bg-black text-white py-3 text-sm font-bold rounded hover:bg-gray-800 transition-colors">
-            JOIN SINGLE
-          </button>
+        <div className="mt-10">
+          {hasJoined ? (
+            <div className="bg-green-100 border border-green-500 text-green-700 p-3 rounded text-center">
+              {joinMessage}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={handleJoinTeam}
+                disabled={loading || hasJoined}
+                className="border-2 border-black py-3 text-sm font-bold text-black rounded hover:bg-gray-100 transition-colors disabled:opacity-50"
+              >
+                {loading ? "Joining..." : "JOIN MATCH"}
+              </button>
+              <button
+                onClick={handleJoinSingle}
+                disabled={loading || hasJoined}
+                className="bg-black text-white py-3 text-sm font-bold rounded hover:bg-gray-800 transition-colors disabled:opacity-50"
+              >
+                {loading ? "Joining..." : "JOIN SINGLE"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

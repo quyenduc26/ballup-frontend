@@ -1,9 +1,10 @@
 "use client"
 import { useState } from "react"
-import type { MyGameResponse } from "@/types" // Make sure this import path is correct
+import type { MyGameResponse } from "@/types"
 import { getImageUrl } from "@/utils/getImage"
 import { formatTimestamp } from "@/utils/formatTimestamp"
 import MatchEditModal from "./FormEditMatch/MatchEditModal"
+import matchApi from "@/service/matchApi" // Add this import
 
 interface CardMyMatchProps {
   match: MyGameResponse
@@ -12,18 +13,42 @@ interface CardMyMatchProps {
 
 export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isCancelling, setIsCancelling] = useState(false) // Add loading state for cancel
 
   const handleEditClick = () => {
     setIsEditModalOpen(true)
   }
 
-  const handleCloseModal = () => {    
+  const handleCloseModal = () => {
     setIsEditModalOpen(false)
   }
 
   const handleUpdateSuccess = () => {
     if (onUpdate) {
       onUpdate() // Trigger refetch of data in parent component
+    }
+  }
+
+  // Add this function to handle cancel
+  const handleCancelMatch = async () => {
+    if (window.confirm("Are you sure you want to cancel this match?")) {
+      try {
+        setIsCancelling(true)
+        const data = localStorage.getItem("data");
+        const parsedData = data ? JSON.parse(data) : null;
+        const userId = parsedData.id;
+        await matchApi.cancelGame(match.id, userId)
+
+        // Call onUpdate to refresh the matches list
+        if (onUpdate) {
+          onUpdate()
+        }
+      } catch (error) {
+        console.error("Error cancelling match:", error)
+        alert("Failed to cancel match. Please try again.")
+      } finally {
+        setIsCancelling(false)
+      }
     }
   }
 
@@ -109,8 +134,12 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
             >
               MESSAGE
             </button>
-            <button className="border border-red-400 text-black w-1/3 py-2 sm:py-3 sm:text-sm text-xs font-medium rounded hover:bg-red-500 hover:text-white">
-              CANCEL
+            <button
+              className="border border-red-400 text-black w-1/3 py-2 sm:py-3 sm:text-sm text-xs font-medium rounded hover:bg-red-500 hover:text-white"
+              onClick={handleCancelMatch}
+              disabled={isCancelling}
+            >
+              {isCancelling ? "CANCELLING..." : "CANCEL"}
             </button>
           </div>
         </div>
@@ -126,4 +155,3 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
     </>
   )
 }
-

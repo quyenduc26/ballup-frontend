@@ -38,7 +38,7 @@ export default function CreateMatch() {
     name: "",
     fromTime: 0,
     toTime: 0,
-    location: "",
+    address: "",
     description: "",
     cover: "",
     memberIdList: [],
@@ -67,7 +67,7 @@ export default function CreateMatch() {
   }, []);
 
   // Handle input changes for text fields
-  const handleChange = (
+  const   handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
@@ -189,7 +189,7 @@ export default function CreateMatch() {
       });
       setFormData((prev) => ({
         ...prev,
-        location: center.address,
+        address: center.address,
       }));
 
       fetchSlots(centerId);
@@ -433,19 +433,19 @@ export default function CreateMatch() {
           <div>
             <label
               className="block text-left text-sm font-medium uppercase mb-2"
-              htmlFor="team-location"
+              htmlFor="team-address"
             >
-              LOCATION
+              ADDRESS
             </label>
             <div className="relative">
               <input
                 required
                 className="w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg"
-                id="team-location"
-                name="location"
+                id="team-address"
+                name="address"
                 placeholder={selectedCenter?.address || "Enter address"}
                 type="text"
-                value={formData.location}
+                value={formData.address}
                 onChange={handleChange}
               />
             </div>

@@ -58,17 +58,18 @@ export type PlayingSlotType = {
   nightPrice: number;
   playingCenterId: number;
 };
-export type CreateTeamData = {
-  name: string;
-  address: string;
-  intro: string;
-  logo: string;
-  cover: string;
-  sport?: string;
-  userId: number;
-};
+  export type CreateTeamData = {
+    name: string;
+    address: string;
+    intro: string;
+    logo: string;
+    cover: string;
+    sport?: string;
+    userId: number;
+  };
 
 export type Team = {
+  members: any;
   id: number;
   name: string;
   logo: string;
@@ -136,7 +137,7 @@ export type CreateMatchType = {
   name: string;
   fromTime: number;
   toTime: number;
-  location: string;
+  address: string;
   description: string;
   cover: string;
   memberIdList: number[];
@@ -180,6 +181,7 @@ export type TeamOverviewResponse = {
   totalMembers: number;
 };
 export type MyGameResponse = {
+  createdBy: number;
   membersRequired: number;
   description: string;
   id: number;
@@ -196,6 +198,7 @@ export type MyGameResponse = {
   teamB: TeamOverviewResponse;
 }
 export type GameResponse = {
+  sport: string;
   id: number;
   name: string;
   fromTime: string;
@@ -207,6 +210,7 @@ export type GameResponse = {
   centerName?: string;
   slotName: string;
   teamA: GameTeamResponse;
+  teamB?: GameTeamResponse;
 }
 export type GameTeamResponse = {
   name: string;
@@ -215,6 +219,7 @@ export type GameTeamResponse = {
   members: GameTeamMemberResponse[];
 }
 export type GameTeamMemberResponse = {
+  id: any;
   avatar: string;
   firstName: string;
   lastName: string;

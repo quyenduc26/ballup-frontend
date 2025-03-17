@@ -14,13 +14,13 @@ export default function MatchPage() {
   const searchParams = useSearchParams();
   
   // Get view from URL or default to "explore"
-  const viewParam = searchParams.get("");
+  const viewParam = searchParams.get("view"); // Sửa lỗi ở đây
   const [view, setView] = useState(viewParam || "explore");
 
   // Update URL when view changes
-  const updateView = (newView: React.SetStateAction<string>) => {
+  const updateView = (newView: string) => {
     setView(newView);
-    router.push(`/match?=${newView}`);
+    router.push(`/match?view=${newView}`); // Sửa lỗi ở đây
   };
 
   // Sync view with URL on initial load and when URL changes
@@ -28,7 +28,7 @@ export default function MatchPage() {
     if (viewParam && viewParam !== view) {
       setView(viewParam);
     }
-  }, [viewParam]);
+  }, [viewParam, view]); // Thêm dependency để tránh lỗi 
 
   return (
     <div className="container mx-auto max-w-[1500px] p-4">

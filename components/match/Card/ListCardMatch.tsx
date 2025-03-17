@@ -10,20 +10,21 @@ export default function ListMatchCard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchMatches = async () => {
-      try {
-        setLoading(true)
-        const response = await matchApi.getAllMatch()
-        setMatches(response.data)
-        console.log("Matches loaded:", response.data)
-      } catch (err) {
-        setError("Failed to load matches")
-        console.error("Error fetching matches:", err)
-      } finally {
-        setLoading(false)
-      }
+  const fetchMatches = async () => {
+    try {
+      setLoading(true)
+      const response = await matchApi.getAllMatch()
+      setMatches(response.data)
+      console.log("Matches loaded:", response.data)
+    } catch (err) {
+      setError("Failed to load matches")
+      console.error("Error fetching matches:", err)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     fetchMatches()
   }, [])
 
@@ -39,13 +40,14 @@ export default function ListMatchCard() {
 
   return (
     <div className="container mx-auto px-2 sm:px-4 mt-5">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-10 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-10">
         {matches.map((match, index) => (
           <div key={match.id || index} className="w-full">
-            <MatchCard match={match} />
+            <MatchCard match={match} onUpdate={fetchMatches} />
           </div>
         ))}
       </div>
     </div>
   )
 }
+
