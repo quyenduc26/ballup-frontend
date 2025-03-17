@@ -25,12 +25,6 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
   const userId = parsedData.id;
 
   useEffect(() => {
-    if (match.teamB?.logo) {
-      setTeamBLogo(match.teamB.logo)
-    } else {
-      // Sử dụng ảnh mặc định khi chưa tham gia
-      setTeamBLogo("/image/preview.png")
-    }
 
     if (match.teamB?.members && match.teamB.members.length > 0) {
       setTeamBPlayers(match.teamB.members)
@@ -55,14 +49,7 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
       const response = await matchApi.joinGame(match.id, userId)
 
       if (response.status === 200) {
-        // Cập nhật logo team B
-        if (response.data?.teamB?.logo) {
-          setTeamBLogo(response.data.teamB.logo)
-        } else {
-          // Sử dụng logo mặc định khi tham gia thành công
-          setTeamBLogo("/image/image1.png")
-        }
-
+    
         // Tạo thông tin người dùng hiện tại
         const userData = {
           id: userId,
@@ -105,11 +92,6 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
       if (response.status === 200) {
         const updatedMatch = response.data
 
-        if (updatedMatch?.teamB?.logo) {
-          setTeamBLogo(updatedMatch.teamB.logo)
-        } else {
-          setTeamBLogo("/team-logo.png")
-        }
 
         if (updatedMatch?.teamB?.members) {
           setTeamBPlayers(updatedMatch.teamB.members)

@@ -87,7 +87,13 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
               <img
                 alt={match.teamB?.name || "Team B"}
                 className="w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 rounded-full object-cover"
-                src={getImageUrl(match.teamB?.logo) || "/placeholder.svg?height=100&width=100"}
+                src={
+                  match.teamB?.logo
+                    ? getImageUrl(match.teamB.logo)
+                    : match.teamB?.members && match.teamB.members.length > 0
+                      ? getImageUrl("default-team-logo.png")
+                      : getImageUrl("unknow-team-logo.png")
+                }
               />
             </div>
           </div>

@@ -194,8 +194,8 @@ export type MyGameResponse = {
   conversationId: number;
   slotId: number;
   isCreator: boolean;
-  teamA: TeamOverviewResponse;
-  teamB: TeamOverviewResponse;
+  teamA: GameTeamResponse;
+  teamB: GameTeamResponse;
 }
 export type GameResponse = {
   sport: string;
