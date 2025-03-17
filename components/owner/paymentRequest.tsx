@@ -68,11 +68,11 @@ export default function PaymentTable() {
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-4 px-2 max-w-6xl mx-auto">
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Management Payment Request</h1>
 
       <Card className="shadow-lg border border-gray-200 rounded-xl overflow-hidden">
-        <div className="p-6">
+        <div className="p-2">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Spinner color="primary" size="lg" />

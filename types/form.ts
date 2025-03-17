@@ -140,7 +140,7 @@ export type CreateMatchType = {
   name: string;
   fromTime: number;
   toTime: number;
-  location: string;
+  address: string;
   description: string;
   cover: string;
   memberIdList: number[];
