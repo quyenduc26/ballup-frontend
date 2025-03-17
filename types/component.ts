@@ -18,7 +18,6 @@ export type CenterInfo = {
   slots: Slot[];
 };
 
-
 export interface Field {
   id: string;
   name: string;
@@ -27,4 +26,3 @@ export interface Field {
   imageUrls: string[];
   slots: Slot[];
 }
-

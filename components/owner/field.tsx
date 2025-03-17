@@ -1,26 +1,16 @@
 "use client";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ChevronDown, ChevronUp, Edit, Plus } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { Card, CardBody, CardHeader } from "@heroui/react";
+import { Button } from "@heroui/react";
 
 import image from "@/public/images/image 3.png";
 // import { Field } from "@/types/owner";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  useDisclosure,
-  Input,
-} from "@heroui/react";
 
 import ownerApi from "@/service/ownerApi";
 import PlayingSlot from "@/components/center/PlayingSlot";
-import { Field, PlayingSlotType } from "@/types";
-
+import { Field } from "@/types";
 
 type FieldListProps = {
   setActiveTab: (tab: string) => void;
@@ -63,7 +53,10 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
     <div className="w-full p-1 sm:p-2 md:p-4 lg:p-6">
       <div className="flex justify-between mb-6">
         <h1 className="text-xl font-bold mb-4">Management Booking Request</h1>
-        <Button className="bg-black rounded-none text-white" onPress={() => setActiveTab("CreateCenter")}>
+        <Button
+          className="bg-black rounded-none text-white"
+          onPress={() => setActiveTab("CreateCenter")}
+        >
           Create center
         </Button>
       </div>
@@ -87,7 +80,9 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
               >
                 {/* Field Name */}
                 <div className="pl-2 md:pl-4">
-                  <h1 className="text-sm md:text-base font-medium">{field.name}</h1>
+                  <h1 className="text-sm md:text-base font-medium">
+                    {field.name}
+                  </h1>
                 </div>
 
                 {/* Image */}
@@ -104,7 +99,9 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
 
                 {/* Location */}
                 <div className="flex items-center justify-center">
-                  <p className="text-xs md:text-sm text-gray-600">{field.address}</p>
+                  <p className="text-xs md:text-sm text-gray-600">
+                    {field.address}
+                  </p>
                 </div>
 
                 {/* Expand/Collapse Button */}
@@ -122,7 +119,11 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                         <ChevronDown className="h-4 w-4 md:h-5 md:w-5" />
                       )}
                     </Button>
-                    <PlayingSlot field={field} refresh={() => setIsRefresh(true)} action="CREATE" />
+                    <PlayingSlot
+                      action="CREATE"
+                      field={field}
+                      refresh={() => setIsRefresh(true)}
+                    />
                   </div>
                 )}
               </div>
@@ -137,15 +138,21 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                     <div className="sticky top-0 z-10 bg-stone-200">
                       <div className="grid grid-cols-4 items-center gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4">
                         <div className="text-left md:pl-4">
-                          <h2 className="text-xs sm:text-sm font-medium">Name</h2>
+                          <h2 className="text-xs sm:text-sm font-medium">
+                            Name
+                          </h2>
                         </div>
 
                         <div className="text-center">
-                          <span className="text-[10px] sm:text-xs md:text-sm font-medium">Primary price</span>
+                          <span className="text-[10px] sm:text-xs md:text-sm font-medium">
+                            Primary price
+                          </span>
                         </div>
 
                         <div className="text-center">
-                          <span className="text-[10px] sm:text-xs md:text-sm font-medium">Night price</span>
+                          <span className="text-[10px] sm:text-xs md:text-sm font-medium">
+                            Night price
+                          </span>
                         </div>
 
                         <div className="text-right md:pr-4">
@@ -161,12 +168,14 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                         className="grid grid-cols-4 items-center gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4 bg-stone-100 rounded-md shadow-sm"
                       >
                         <div className="text-left md:pl-4">
-                          <h2 className="text-xs sm:text-sm font-medium">{slot.name}</h2>
+                          <h2 className="text-xs sm:text-sm font-medium">
+                            {slot.name}
+                          </h2>
                         </div>
 
                         <div className="text-center">
                           <span className="text-[10px] sm:text-xs md:text-sm">
-                            {slot.primaryPrice} 
+                            {slot.primaryPrice}
                           </span>
                         </div>
 
@@ -177,7 +186,12 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                         </div>
 
                         <div className="text-right md:pr-4">
-                          <PlayingSlot field={field} refresh={() => setIsRefresh(true)} action="UPDATE" slot={slot}/>
+                          <PlayingSlot
+                            action="UPDATE"
+                            field={field}
+                            refresh={() => setIsRefresh(true)}
+                            slot={slot}
+                          />
                         </div>
                       </div>
                     ))}
@@ -190,7 +204,6 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
       </div>
 
       {/* Create Slot Modal */}
-     
     </div>
   );
 };

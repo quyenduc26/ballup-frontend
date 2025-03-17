@@ -26,11 +26,10 @@ export type BookingDetailResponse = {
   toTime: string;
 };
 
-
 export type BlockedSlot = {
   id: number;
   fromTime: string;
   toTime: string;
   createBy: string;
   creatorName: string;
-}
+};

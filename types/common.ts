@@ -9,11 +9,10 @@ export interface UserContextType {
   setUserId: (id: number | null) => void;
 }
 
-
 export type ConvertedBlockedSlot = {
   username: string;
   fromTime: string;
   toTime: string;
   duration: number;
-  createdBy: string
-}
+  createdBy: string;
+};

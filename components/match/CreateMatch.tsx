@@ -576,7 +576,7 @@ export default function CreateMatch() {
               required
               className="w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg"
               id="match-date"
-              min={new Date().toISOString().split("T")[0]} 
+              min={new Date().toISOString().split("T")[0]}
               name="matchDate"
               type="date"
               value={selectedDate}

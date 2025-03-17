@@ -25,11 +25,11 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
 
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warn";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warn";
+        duration?: number;
+      }
     | undefined
   >();
 
@@ -164,12 +164,14 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                         <p>From</p>
                       </div>
                       <p className="font-bold">
-                        {centerInfor.bookingTime && centerInfor.bookingTime.length >= 7
+                        {centerInfor.bookingTime &&
+                        centerInfor.bookingTime.length >= 7
                           ? centerInfor.bookingTime.slice(0, 6)
                           : centerInfor.bookingTime || "N/A"}
                       </p>
                       <p className="font-bold">
-                        {centerInfor.bookingTime && centerInfor.bookingTime.length >= 7
+                        {centerInfor.bookingTime &&
+                        centerInfor.bookingTime.length >= 7
                           ? centerInfor.bookingTime.slice(7)
                           : ""}
                       </p>
@@ -180,12 +182,14 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                         <p>To</p>
                       </div>
                       <p className="font-bold">
-                        {centerInfor.returnTime && centerInfor.returnTime.length >= 7
+                        {centerInfor.returnTime &&
+                        centerInfor.returnTime.length >= 7
                           ? centerInfor.returnTime.slice(0, 6)
                           : centerInfor.returnTime || "N/A"}
                       </p>
                       <p className="font-bold">
-                        {centerInfor.returnTime && centerInfor.returnTime.length >= 7
+                        {centerInfor.returnTime &&
+                        centerInfor.returnTime.length >= 7
                           ? centerInfor.returnTime.slice(7)
                           : ""}
                       </p>
