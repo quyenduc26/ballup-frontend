@@ -4,18 +4,26 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AlignJustify } from "lucide-react";
-import { User } from "@heroui/react";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [avatar, setAvatar] = useState<string | null>(null); // 👉 State lưu avatar
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
     // Kiểm tra localStorage để xác định người dùng đã đăng nhập hay chưa
     const userData = localStorage.getItem("data");
 
     setIsLoggedIn(!!userData); // Chuyển đổi thành boolean
+
+    // Lấy avatar từ localStorage
+    const storedAvatar = localStorage.getItem("userAvatar");
+
+    if (storedAvatar) {
+      setAvatar(storedAvatar);
+    }
   }, []);
 
   return (
@@ -89,25 +97,42 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:flex space-x-4">
-          {isLoggedIn ?(
-            <Link href="/auth/profile" className="flex items-center space-x-2">
-              <User className="w-8 h-8 text-black" />
+          {isLoggedIn ? (
+            <Link
+              className="flex items-center space-x-2"
+              href={
+                role === "admin"
+                  ? "/admin"
+                  : role === "owner"
+                    ? "/owner"
+                    : "/auth/profile"
+              }
+            >
+              {avatar ? (
+                <img
+                  alt="User Avatar"
+                  className="w-14 h-12 rounded-full object-cover mr-12"
+                  src={avatar}
+                />
+              ) : (
+                <div className="w-10 h-10 bg-gray-300 rounded-full" />
+              )}
             </Link>
           ) : (
             <>
-          <Link
-            className="border-3 border-black px-4 py-2 text-black hover:bg-gray-100"
-            href="/auth/login"
-          >
-            Login
-          </Link>
-          <Link
-            className="bg-black border-3 border-black text-white px-4 py-2 hover:bg-gray-800"
-            href="/auth/signUp"
-          >
-            Signup
-          </Link>
-          </>
+              <Link
+                className="border-3 border-black px-4 py-2 text-black hover:bg-gray-100"
+                href="/auth/login"
+              >
+                Login
+              </Link>
+              <Link
+                className="bg-black border-3 border-black text-white px-4 py-2 hover:bg-gray-800"
+                href="/auth/signUp"
+              >
+                Signup
+              </Link>
+            </>
           )}
         </div>
       </div>

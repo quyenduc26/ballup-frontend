@@ -181,14 +181,16 @@ export type TeamOverviewResponse = {
 };
 
 export type UserInfo = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  username: string;
-  phoneNumber: string;
-  height: string;
-  weight: string;
-  avatar: string;
-  email: string;
-  password: string;
-}
+  id: string;
+  avatar?: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  phone?: string;
+  email?: string;
+  height?: number;
+  weight?: number;
+  oldPassword?: string;
+  newPassword?: string;
+  confirmPassword?: string;
+};

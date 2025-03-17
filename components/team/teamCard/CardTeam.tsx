@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { SonnerToast } from "@/components/sonnerMesage";
@@ -22,6 +22,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const handleJoinTeam = async () => {
     if (!team || !team.id) return;
     const user_id = 1;
+
     setLoading(true);
 
     try {

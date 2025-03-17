@@ -40,7 +40,7 @@ export default function Schedule() {
       return;
     }
 
-    const convertToTimestamp = ( selectedDate: Date, time: string) => {
+    const convertToTimestamp = (selectedDate: Date, time: string) => {
       const [hours, minutes] = time.split(":").map(Number);
 
       return selectedDate

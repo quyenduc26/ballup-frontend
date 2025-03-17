@@ -383,8 +383,8 @@ export function BookingHistory() {
                   </h3>
                   <p className="text-gray-500 max-w-sm mx-auto">
                     {activeTab === "pending"
-                      ? "You don't have any pending bookings at the moment."
-                      : "You don't have any completed bookings yet."}
+                      ? "You don&apos;t have any pending bookings at the moment."
+                      : "You don&apos;t have any completed bookings yet."}
                   </p>
                 </div>
               ) : (

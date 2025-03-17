@@ -58,7 +58,7 @@ export default function BookingPage() {
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (!bookingInfo)
-    return <p className="text-center mt-10">Don't have data fields</p>;
+    return <p className="text-center mt-10">Don&apos;t have data fields</p>;
 
   return (
     <div>
