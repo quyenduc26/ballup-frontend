@@ -49,10 +49,6 @@ export default function UpdateTeamDetail({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const handleImageUpload = async ({
     e,
     type,
@@ -94,11 +90,11 @@ export default function UpdateTeamDetail({
     }
     setLoading(true);
 
-    console.log("Submitting data:", formData); // Check dữ liệu gửi đi
+    console.log("Submitting data:", formData); // Debug dữ liệu gửi đi
 
     try {
       const response = await TeamDetailApi.updateTeam(parseInt(teamId), formData);
-      console.log("Update response:", response); // Check response từ API
+      console.log("Update response:", response); // Debug response từ API
 
       setToastData({
         type: "success",
@@ -106,9 +102,9 @@ export default function UpdateTeamDetail({
         message: "",
         duration: 3000,
       });
-      
+
       if (onUpdateSuccess) {
-        onUpdateSuccess();
+        onUpdateSuccess(); // 🔹 Gọi để cập nhật danh sách team
       }
 
       setTimeout(() => {
@@ -130,6 +126,7 @@ export default function UpdateTeamDetail({
       setLoading(false);
     }
   };
+
 
 
   const handleCancel = () => {
@@ -247,22 +244,6 @@ export default function UpdateTeamDetail({
           />
         </div>
 
-        <div>
-          <label className="text-sm font-semibold" htmlFor="sport">
-            SPORT
-          </label>
-          <select
-            className="w-full p-2 border rounded h-10"
-            id="sport"
-            name="sport"
-            value={formData.sport}
-            onChange={handleChangeSelect}
-          >
-            <option value="">Type Of Sport</option>
-            <option value="FOOTBALL">Football</option>
-            <option value="BADMINTON">Badminton</option>
-          </select>
-        </div>
 
         <div className="flex justify-end gap-4 mt-4">
           <button

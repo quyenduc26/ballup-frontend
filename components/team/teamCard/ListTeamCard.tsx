@@ -9,14 +9,14 @@ const ListTeamCard: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(false); // Thêm state refresh
 
   useEffect(() => {
     const fetchTeams = async () => {
       try {
         const response = await teamApi.getAllTeams({ timestamp: Date.now() });
         setTeams(response.data);
-        console.log("Fetched teams:", response.data);
+        console.log("Fetched teams after update:", response.data); // Debug dữ liệu mới
       } catch (err: any) {
         console.error("API error:", err);
         setError(err.response?.data?.message || "Failed to fetch teams");
@@ -26,7 +26,7 @@ const ListTeamCard: React.FC = () => {
     };
 
     fetchTeams();
-  }, [refresh]); // Thêm refresh vào dependencies
+  }, [refresh]); 
 
 
   if (loading)

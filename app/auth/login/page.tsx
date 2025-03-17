@@ -21,11 +21,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [toastData, setToastData] = useState<
     | {
-        heading?: string;
-        message?: string;
-        type?: "error" | "success" | "info" | "warning";
-        duration?: number;
-      }
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warning";
+      duration?: number;
+    }
     | undefined
   >();
   const [formData, setFormData] = useState<LoginFormType>({
@@ -44,7 +44,6 @@ export default function Login() {
     e.preventDefault();
 
     const emailError = validateEmail(formData.emailOrUsername);
-
     if (emailError) {
       setToastData({
         type: "error",
@@ -52,7 +51,6 @@ export default function Login() {
         message: emailError,
         duration: 3000,
       });
-
       return;
     }
 
@@ -61,9 +59,9 @@ export default function Login() {
       const response = await authApi.login(formData);
 
       if (response.data) {
-        const { id, role } = response.data; // Lấy role từ API
+        const { id, role } = response.data;
 
-        localStorage.setItem("data", JSON.stringify(response.data)); // Lưu toàn bộ thông tin user
+        localStorage.setItem("data", JSON.stringify(response.data));
         setUserId(id);
 
         setToastData({
@@ -73,20 +71,22 @@ export default function Login() {
           duration: 3000,
         });
 
-        // Điều hướng dựa trên role
-        if (role === "user") {
-          router.push("/");
-        } else if (role === "owner") {
-          router.push("/owner");
+        // Chuyển hướng dựa trên role
+        let redirectPath = "/";
+        if (role === "OWNER") {
+          redirectPath = "/owner";
         } else if (role === "admin") {
-          router.push("/admin");
-        } else {
-          router.push("/"); // Nếu không có role thì về trang chủ mặc định
+          redirectPath = "/admin";
         }
+
+        router.push(redirectPath); // 👉 Chuyển hướng trước
+
+        setTimeout(() => {
+          window.location.reload(); // 👉 Reload sau khi chuyển trang
+        }, 600); // Đợi 0.4s để `router.push` hoạt động trước
       }
     } catch (error: any) {
       let message = "Login failed. Please try again.";
-
       if (error.response?.data?.message) {
         message = error.response.data.message;
       }

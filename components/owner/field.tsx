@@ -82,7 +82,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
     <div className="flex w-full">
       <div className="w-full p-1 sm:p-2 md:p-4 lg:p-6">
         <div className="flex justify-between mb-6">
-          <h1 className="text-xl font-bold mb-4">Management Booking Request</h1>
+          <h1 className="text-xl font-bold mb-4">Management Fields</h1>
           <Button
             className="bg-black rounded-none text-white"
             onPress={() => setActiveTab("CreateCenter")}
@@ -161,24 +161,20 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                       {/* Cố định header */}
                       <div className="sticky top-0 z-10 bg-stone-200">
                         <div className="flex items-center justify-between gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4">
-                          <div className="w-1/6 min-w-[150px] text-left md:pl-4">
-                            {" "}
-                            {/* Chỉnh sửa ở đây */}
-                            <h2 className="text-xs sm:text-sm font-medium">
-                              Name
-                            </h2>
-                          </div>
-
                           <div className="w-2/6 min-w-[150px] text-left">
-                            {" "}
-                            {/* Chỉnh sửa ở đây */}
                             <span className="text-[10px] flex sm:text-xs md:text-sm justify-center md:justify-start">
-                              <b>Price:</b>
+                              <b>Name</b>
                             </span>
                           </div>
 
-                          <div className="w-1/6 min-w-[100px] flex justify-center md:justify-start md:pr-4">
-                            <span className="text-xs font-medium">Actions</span>
+                          <div className="w-2/6 min-w-[150px] text-left">
+                            <span className="text-[10px] flex sm:text-xs md:text-sm justify-center md:justify-start">
+                              <b>Price</b>
+                            </span>
+                          </div>
+
+                          <div className="w-1/6 min-w-[100px] md:text-sm flex justify-center md:justify-start md:pr-4">
+                            <b>Actions</b>
                           </div>
                         </div>
                       </div>
@@ -198,13 +194,15 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                           </div>
 
                           <div className="w-2/6 min-w-[150px] text-left">
-                            {" "}
-                            {/* Chỉnh sửa ở đây */}
                             <span className="text-[10px] flex sm:text-xs md:text-sm justify-center md:justify-start">
-                              <b>Price:</b>{" "}
-                              {slot.primaryPrice + "-" + slot.nightPrice}
+                              <b>Price:</b>{"  "}
+                              {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(slot.primaryPrice)}
+                              {" - "}
+                              {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(slot.nightPrice)}
                             </span>
                           </div>
+
+
 
                           <div className="w-1/6 min-w-[100px] flex justify-center md:justify-start md:pr-4">
                             <Button
