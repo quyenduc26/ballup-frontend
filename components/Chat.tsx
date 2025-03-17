@@ -13,10 +13,10 @@ export default function Chat() {
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
-    const socket = new SockJS("http://localhost:8080/ws");
+    const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_URL}/ws`);
     const client = new Client({
       webSocketFactory: () => socket,
-      reconnectDelay: 5000, // Thử kết nối lại sau 5s nếu mất kết nối
+      reconnectDelay: 5000,
       onConnect: () => {
         console.log("✅ Connected to WebSocket");
         client.subscribe("/topic/notification", (msg) => {

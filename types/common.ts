@@ -16,3 +16,4 @@ export type ConvertedBlockedSlot = {
   duration: number;
   createdBy: string;
 };
+
