@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -18,11 +18,11 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const [joined, setJoined] = useState(false);
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
   const router = useRouter();
@@ -45,7 +45,6 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
       setTimeout(() => {
         router.replace(`/team/${team.id}`);
       }, 1500);
-
     } catch (error) {
       console.error("Error joining team:", error);
       setToastData({
@@ -57,7 +56,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
       setLoading(false);
     }
   };
-  
+
   if (!team) {
     return <p className="text-red-500">Invalid team data</p>;
   }

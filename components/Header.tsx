@@ -15,6 +15,7 @@ const Header = () => {
   useEffect(() => {
     const updateAuthState = () => {
       const userData = localStorage.getItem("data");
+
       setIsLoggedIn(!!userData);
       setAvatar(localStorage.getItem("userAvatar"));
     };
@@ -27,7 +28,6 @@ const Header = () => {
       window.removeEventListener("storage", updateAuthState); // Cleanup khi unmount
     };
   }, []);
-
 
   return (
     <header className="w-full border-b bg-white fixed top-0 left-0 z-50">
@@ -48,44 +48,50 @@ const Header = () => {
 
         {/* Navigation Links */}
         <nav
-          className={`absolute top-16 left-0 w-full bg-white shadow-md md:static md:flex md:items-center md:space-x-20 md:shadow-none ${menuOpen ? "block" : "hidden"
-            }`}
+          className={`absolute top-16 left-0 w-full bg-white shadow-md md:static md:flex md:items-center md:space-x-20 md:shadow-none ${
+            menuOpen ? "block" : "hidden"
+          }`}
         >
           <Link
-            className={`block sm:ml-40 px-6 py-1 hover:font-bold md:inline-block ${pathname === "/" ? "font-bold" : "text-black"
-              }`}
+            className={`block sm:ml-40 px-6 py-1 hover:font-bold md:inline-block ${
+              pathname === "/" ? "font-bold" : "text-black"
+            }`}
             href="/"
             onClick={() => setMenuOpen(true)}
           >
             HOME
           </Link>
           <Link
-            className={`block px-6 py-1 hover:font-bold md:inline-block ${pathname === "/booking" ? "font-bold" : "text-black"
-              }`}
+            className={`block px-6 py-1 hover:font-bold md:inline-block ${
+              pathname === "/booking" ? "font-bold" : "text-black"
+            }`}
             href="/booking"
             onClick={() => setMenuOpen(false)}
           >
             BOOKING
           </Link>
           <Link
-            className={`block px-6 py-1 hover:font-bold md:inline-block ${pathname === "/team" ? "font-bold" : "text-black"
-              }`}
+            className={`block px-6 py-1 hover:font-bold md:inline-block ${
+              pathname === "/team" ? "font-bold" : "text-black"
+            }`}
             href="/team"
             onClick={() => setMenuOpen(false)}
           >
             TEAM
           </Link>
           <Link
-            className={`block px-6 py-1 hover:font-bold md:inline-block ${pathname === "/match" ? "font-bold" : "text-black"
-              }`}
+            className={`block px-6 py-1 hover:font-bold md:inline-block ${
+              pathname === "/match" ? "font-bold" : "text-black"
+            }`}
             href="/match"
             onClick={() => setMenuOpen(false)}
           >
             MATCH
           </Link>
           <Link
-            className={`block px-6 py-1 hover:font-bold md:inline-block ${pathname === "/about" ? "font-bold" : "text-black"
-              }`}
+            className={`block px-6 py-1 hover:font-bold md:inline-block ${
+              pathname === "/about" ? "font-bold" : "text-black"
+            }`}
             href="/about"
             onClick={() => setMenuOpen(false)}
           >

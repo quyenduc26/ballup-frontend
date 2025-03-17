@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { SonnerToast } from "../sonnerMesage";
-import feedbackApi from "@/service/contactFormApi";
-import { ToastType } from "@/types/common";
+import React, { useState } from "react";
 
-const [toastData, setToastData] = useState<
+import { SonnerToast } from "../sonnerMesage";
+
+import feedbackApi from "@/service/contactFormApi";
+
+const ContactForm = () => {
+  const [toastData, setToastData] = useState<
     | {
         heading?: string;
         message?: string;
@@ -14,18 +16,17 @@ const [toastData, setToastData] = useState<
       }
     | undefined
   >();
-const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     content: "",
   });
 
-
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -149,4 +150,5 @@ const ContactForm = () => {
     </div>
   );
 };
+
 export default ContactForm;

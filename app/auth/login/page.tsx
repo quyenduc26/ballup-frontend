@@ -21,11 +21,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
   const [formData, setFormData] = useState<LoginFormType>({
@@ -44,6 +44,7 @@ export default function Login() {
     e.preventDefault();
 
     const emailError = validateEmail(formData.emailOrUsername);
+
     if (emailError) {
       setToastData({
         type: "error",
@@ -51,6 +52,7 @@ export default function Login() {
         message: emailError,
         duration: 3000,
       });
+
       return;
     }
 
@@ -73,6 +75,7 @@ export default function Login() {
 
         // Chuyển hướng dựa trên role
         let redirectPath = "/";
+
         if (role === "OWNER") {
           redirectPath = "/owner";
         } else if (role === "admin") {
@@ -87,6 +90,7 @@ export default function Login() {
       }
     } catch (error: any) {
       let message = "Login failed. Please try again.";
+
       if (error.response?.data?.message) {
         message = error.response.data.message;
       }

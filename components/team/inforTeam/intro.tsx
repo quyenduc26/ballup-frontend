@@ -237,8 +237,8 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
         {teamId ? (
           <UpdateTeamDetail
             teamId={teamId}
-            onUpdateSuccess={() => setRefresh((prev) => !prev)}
             onClose={() => editDialogRef.current?.close()}
+            onUpdateSuccess={() => setRefresh((prev) => !prev)}
           />
         ) : (
           <p className="text-red-500">No team ID available. Cannot edit.</p>

@@ -15,6 +15,7 @@ const ListTeamCard: React.FC = () => {
     const fetchTeams = async () => {
       try {
         const response = await teamApi.getAllTeams({ timestamp: Date.now() });
+
         setTeams(response.data);
         console.log("Fetched teams after update:", response.data); // Debug dữ liệu mới
       } catch (err: any) {
@@ -26,8 +27,7 @@ const ListTeamCard: React.FC = () => {
     };
 
     fetchTeams();
-  }, [refresh]); 
-
+  }, [refresh]);
 
   if (loading)
     return <p className="text-center text-gray-500 mt-6">Loading teams...</p>;
@@ -38,9 +38,7 @@ const ListTeamCard: React.FC = () => {
     <div className="mx-auto p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 ">
         {teams.length > 0 ? (
-          teams.map((team) => (
-            <TeamCard key={`team-${team.id}`} team={team} />
-          ))
+          teams.map((team) => <TeamCard key={`team-${team.id}`} team={team} />)
         ) : (
           <p className="text-center col-span-3 text-gray-500">
             No teams found.

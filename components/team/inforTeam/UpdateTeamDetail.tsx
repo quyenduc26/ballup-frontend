@@ -21,11 +21,11 @@ export default function UpdateTeamDetail({
   const [loading, setLoading] = useState(false);
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
 
@@ -86,6 +86,7 @@ export default function UpdateTeamDetail({
         message: "No team ID available. Cannot update.",
         type: "error",
       });
+
       return;
     }
     setLoading(true);
@@ -93,7 +94,11 @@ export default function UpdateTeamDetail({
     console.log("Submitting data:", formData); // Debug dữ liệu gửi đi
 
     try {
-      const response = await TeamDetailApi.updateTeam(parseInt(teamId), formData);
+      const response = await TeamDetailApi.updateTeam(
+        parseInt(teamId),
+        formData,
+      );
+
       console.log("Update response:", response); // Debug response từ API
 
       setToastData({
@@ -126,8 +131,6 @@ export default function UpdateTeamDetail({
       setLoading(false);
     }
   };
-
-
 
   const handleCancel = () => {
     router.back();
@@ -243,7 +246,6 @@ export default function UpdateTeamDetail({
             onChange={handleChangeTextArea}
           />
         </div>
-
 
         <div className="flex justify-end gap-4 mt-4">
           <button

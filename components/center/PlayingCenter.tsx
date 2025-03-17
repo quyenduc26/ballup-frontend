@@ -4,6 +4,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, X, Upload } from "lucide-react";
 import { Input } from "@heroui/react";
+
 import { SonnerToast } from "@/components/sonnerMesage";
 import { uploadImage } from "@/utils/uploadImage";
 import { PlayingCenterType } from "@/types";
@@ -16,7 +17,9 @@ type PlayingCenterProps = {
   setActiveTab: (tab: string) => void;
 };
 
-export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) => {
+export const PlayingCenter: React.FC<PlayingCenterProps> = ({
+  setActiveTab,
+}) => {
   const router = useRouter();
   const data = localStorage.getItem("data");
   const parsedData = data ? JSON.parse(data) : null;
@@ -31,29 +34,37 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
     centerType: "", // Added to match backend expectation
   });
 
-  const [toastData, setToastData] = useState<{
-    heading?: string;
-    message?: string;
-    type?: "error" | "success" | "info" | "warning";
-    duration?: number;
-  } | undefined>(undefined);
+  const [toastData, setToastData] = useState<
+    | {
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
+    | undefined
+  >(undefined);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
 
     // Special handling for "type" to also set "centerType"
     if (name === "type") {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         [name]: value,
-        centerType: value // Set both fields
+        centerType: value, // Set both fields
       }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleImageUpload = async (
+    e: ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) => {
     const file = e.target.files?.[0];
 
     if (file) {
@@ -64,7 +75,9 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
 
         setFormData((prev) => {
           const updatedImages = [...prev.images];
+
           if (imageUrl) updatedImages[index] = imageUrl;
+
           return { ...prev, images: updatedImages };
         });
       }
@@ -74,7 +87,9 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
   const handleImageDelete = (index: number) => {
     setFormData((prev) => {
       const updatedImages = [...prev.images];
+
       updatedImages[index] = ""; // Sử dụng chuỗi rỗng thay vì null
+
       return { ...prev, images: updatedImages };
     });
   };
@@ -83,13 +98,18 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
     e.preventDefault();
 
     // Validate required fields
-    if (!formData.name.trim() || !formData.address.trim() || !formData.description.trim()) {
+    if (
+      !formData.name.trim() ||
+      !formData.address.trim() ||
+      !formData.description.trim()
+    ) {
       setToastData({
         type: "error",
         heading: "Validation Error",
         message: "Vui lòng điền đầy đủ các trường bắt buộc!",
         duration: 3000,
       });
+
       return;
     }
 
@@ -101,6 +121,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
         message: "Vui lòng chọn loại sân (Type)!",
         duration: 3000,
       });
+
       return;
     }
 
@@ -118,6 +139,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
       console.log("📤 Payload Sent to API:", JSON.stringify(payload, null, 2));
 
       const response = await playingApi.createCreatePlayingCenter(payload);
+
       console.log("✅ API Response:", response);
 
       setToastData({
@@ -136,7 +158,8 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
       setToastData({
         type: "error",
         heading: "Error ❗",
-        message: "Error creating stadium. Please check all fields and try again!",
+        message:
+          "Error creating stadium. Please check all fields and try again!",
         duration: 3000,
       });
     }
@@ -206,7 +229,10 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
       </div>
 
       {/* Form Fields */}
-      <form className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={handleSubmit}>
+      <form
+        className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4"
+        onSubmit={handleSubmit}
+      >
         <Input
           isRequired
           className="p-2 w-full"
@@ -253,13 +279,14 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
           </label>
           <div className="relative">
             <select
-              className={`w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg appearance-none ${!formData.centerType ? "border-red-500" : ""
-                }`}
+              required
+              className={`w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg appearance-none ${
+                !formData.centerType ? "border-red-500" : ""
+              }`}
               id="type"
               name="type" // Keep name as "type" for UI consistency
               value={formData.centerType}
               onChange={handleChange}
-              required
             >
               <option value="">Select a sport</option>
               <option value="FOOTBALL">FOOTBALL</option>
@@ -282,7 +309,9 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
             </div>
           </div>
           {!formData.centerType && (
-            <p className="text-xs text-red-500 mt-1">Sport selection is required</p>
+            <p className="text-xs text-red-500 mt-1">
+              Sport selection is required
+            </p>
           )}
         </div>
 

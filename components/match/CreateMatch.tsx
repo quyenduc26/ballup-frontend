@@ -163,6 +163,7 @@ export default function CreateMatch() {
         images: [],
         ownerId: 0,
         type: "",
+        centerType: "",
       };
       const response = await matchApi.getPlayingCenter(playingCenterParams);
 
@@ -278,7 +279,7 @@ export default function CreateMatch() {
       if (response.data) {
         toast.success("Match created successfully!");
       }
-      router.push("/");
+      router.push("/match?view=explore");
     } catch (error) {
       console.error("Error creating match:", error);
       toast.error("Unable to create match. Please try again.");
@@ -299,7 +300,7 @@ export default function CreateMatch() {
       const usersResponse = await matchApi.getAllUsers(formData.userId, sport);
 
       // if (usersResponse.data.length < formData.membersRequired) {
-      //   toast.error("Your team member quantity is not suitable");
+      //   toast.error("Team member quantity is not suitable");
 
       //   return;
       // }
@@ -433,16 +434,16 @@ export default function CreateMatch() {
           <div>
             <label
               className="block text-left text-sm font-medium uppercase mb-2"
-              htmlFor="team-location"
+              htmlFor="team-address"
             >
-              LOCATION
+              ADDRESS
             </label>
             <div className="relative">
               <input
                 required
                 className="w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg"
-                id="team-location"
-                name="location"
+                id="team-address"
+                name="address"
                 placeholder={selectedCenter?.address || "Enter address"}
                 type="text"
                 value={formData.address}

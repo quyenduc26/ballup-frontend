@@ -23,15 +23,17 @@ const Team = () => {
       <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 md:gap-8 p-5 ml-2">
         {/* EXPLORE & MY TEAM vẫn hiển thị ngay cả khi CreateTeam mở */}
         <button
-          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
-            }`}
+          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${
+            showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
+          }`}
           onClick={() => setShowExplore(true)}
         >
           EXPLORE
         </button>
         <button
-          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${!showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
-            }`}
+          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${
+            !showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
+          }`}
           onClick={() => setShowExplore(false)}
         >
           MY TEAM
@@ -51,7 +53,13 @@ const Team = () => {
       </div>
 
       {/* Nếu showCreateTeam = true, chỉ hiển thị CreateTeam và ẩn ListTeamCard */}
-      {showCreateTeam ? <CreateTeam /> : showExplore ? <ListTeamCard /> : <TeamIntro />}
+      {showCreateTeam ? (
+        <CreateTeam />
+      ) : showExplore ? (
+        <ListTeamCard />
+      ) : (
+        <TeamIntro />
+      )}
     </div>
   );
 };

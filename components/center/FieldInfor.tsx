@@ -15,8 +15,9 @@ import {
   HourglassIcon,
 } from "lucide-react";
 
-import { getImageUrl } from "@/utils/getImage";
 import { SonnerToast } from "../sonnerMesage";
+
+import { getImageUrl } from "@/utils/getImage";
 import bookingRequestApi from "@/service/bookingRequestApi";
 import { formatCurrency } from "@/utils/formatCurrency";
 
@@ -25,11 +26,11 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
 
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
 
