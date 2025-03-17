@@ -1,67 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { DatePicker, DateValue } from "@heroui/react";
+import { DatePicker, DateValue, Spinner } from "@heroui/react";
 
-import { Slot } from "@/types";
+import { BlockedSlot, ConvertedBlockedSlot, Slot } from "@/types";
 import { formatDateTime } from "@/utils/formatVNTime";
+import playingApi from "@/service/playingApi";
+
+import { getLocalTimeZone, today } from "@internationalized/date";
+import { formatTimestamp } from "@/utils/formatTimestamp";
 
 const FieldSchedule = ({ slotList }: { slotList: Slot[] }) => {
   const router = useRouter();
+  let defaultDate = today(getLocalTimeZone());
   const [selectedField, setSelectedField] = useState<Slot>(slotList[0]);
+  const [checkDate, setCheckDate] = useState<DateValue | null>(defaultDate);
+  const [blockedSlots, setBlockedSlots] = useState<BlockedSlot[] | null>();
+  const [convertedBlockedSlots, setConvertedBlockedSlots] = useState<ConvertedBlockedSlot[] | null>();
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [checkDate, setCheckDate] = useState<DateValue | null>();
+  const timeSlots = Array.from({ length: 25 }, (_, i) => {
+    return `${String(i % 24).padStart(2, "0")}:00`;
+  });
 
-  const fields = ["Sân 1", "Sân 2", "Sân 3", "Sân 4"];
-  const timeSlots = [
-    "8:00 AM",
-    "9:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "12:00 PM",
-    "1:00 PM",
-  ];
-  const weekDays = [
-    { day: "MON", date: 2 },
-    { day: "TUE", date: 3 },
-    { day: "WED", date: 4 },
-    { day: "THU", date: 5 },
-    { day: "FRI", date: 6 },
-    { day: "SAT", date: 7 },
-    { day: "SUN", date: 8 },
-  ];
-
-  const bookings = [
-    {
-      field: "Sân 1",
-      day: 2,
-      time: "8:00 AM",
-      name: "D. Quyen",
-      color: "bg-blue-500",
-    },
-    {
-      field: "Sân 2",
-      day: 3,
-      time: "9:00 AM",
-      name: "D. Quyen",
-      color: "bg-green-500",
-    },
-    {
-      field: "Sân 3",
-      day: 5,
-      time: "10:00 AM",
-      name: "D. Quyen",
-      color: "bg-orange-500",
-    },
-    {
-      field: "Sân 4",
-      day: 6,
-      time: "11:00 AM",
-      name: "D. Quyen",
-      color: "bg-pink-500",
-    },
-  ];
 
   const handleSelectSlot = (slot: Slot) => {
     setSelectedField(slot);
@@ -71,31 +33,48 @@ const FieldSchedule = ({ slotList }: { slotList: Slot[] }) => {
     router.push(currentUrl.toString(), { scroll: false });
   };
 
+
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchBlockedSlots = async () => {
+      if (!checkDate) return;
+      const date = new Date(checkDate.year, checkDate.month - 1, checkDate.day);
+      const startOfDay = new Date(date.setHours(0, 0, 0, 0)).getTime();
+      const endOfDay = new Date(date.setHours(23, 59, 59, 999)).getTime();
+      try {
+        console.log(selectedField.id, startOfDay, endOfDay)
+        const response = await playingApi.getBlockedSlot(selectedField.id, startOfDay, endOfDay);
+        setBlockedSlots(response.data);
+
+        const convertedBookings = response.data.map((booking: BlockedSlot) => {
+          const fromTime = new Date(booking.fromTime).getTime();
+          const toTime = new Date(booking.toTime).getTime();
+          const duration = (toTime - fromTime) / 60000;
+
+          return {
+            username: booking.creatorName,
+            fromTime: formatTimestamp(booking.fromTime)?.slice(0, 5),
+            toTime: formatTimestamp(booking.toTime)?.slice(0, 5),
+            duration,
+            createdBy: booking.createBy
+          };
+        });
+        console.log(convertedBookings)
+        setConvertedBlockedSlots(convertedBookings);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching blocked slots", error);
+      }
+    };
+    fetchBlockedSlots();
+  }, [selectedField, checkDate]);
+
   return (
     <div className="bg-gray-50 min-h-screen py-8">
       <div className="max-w-6xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden">
         {/* Header Section */}
-        <div className="bg-gray-100 px-6 py-5 border-b border-gray-200 flex items-center justify-between">
-          <button
-            className="flex items-center text-black font-bold text-xl hover:text-black transition-colors"
-            onClick={() => router.back()}
-          >
-            <svg
-              className="h-6 w-6 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M15 19l-7-7 7-7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            </svg>
-            Back
-          </button>
+        <div className="bg-gray-100 text-xl font-bold px-6 py-5 border-b border-gray-200 flex items-center justify-between">
+          Slot available checking
           <div className="flex-grow" />
         </div>
 
@@ -105,20 +84,18 @@ const FieldSchedule = ({ slotList }: { slotList: Slot[] }) => {
             className="max-w-[284px] text-start"
             label="Booking date"
             value={checkDate}
+            minValue={defaultDate}
             onChange={(date) => setCheckDate(date)}
           />
-          <p className="text-default-500 text-sm">
-            Selected date: {formatDateTime(checkDate, false)}
-          </p>
+
           <div className="flex flex-wrap justify-center gap-2">
             {slotList.map((slot, index) => (
               <button
                 key={index}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  selectedField === slot
-                    ? "bg-black text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${selectedField === slot
+                  ? "bg-black text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
                 onClick={() => handleSelectSlot(slot)}
               >
                 {slot.name}
@@ -129,65 +106,55 @@ const FieldSchedule = ({ slotList }: { slotList: Slot[] }) => {
 
         {/* Schedule Table */}
         <div className="p-6">
-          <div className="border rounded-lg shadow-sm overflow-x-auto">
-            <table className="w-full border-collapse min-w-[600px]">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="p-3 text-left border-r border-b border-gray-300 text-xs font-semibold text-gray-600">
-                    Time
-                  </th>
-                  {weekDays.map((day, index) => (
-                    <th
-                      key={day.day}
-                      className={`p-3 text-center border-b border-gray-300 text-xs font-semibold text-gray-600 
-                        ${index < weekDays.length - 1 ? "border-r" : ""}`}
-                    >
-                      {day.day} <br /> {day.date}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {timeSlots.map((time) => (
-                  <tr key={time} className="hover:bg-gray-50 transition-colors">
-                    <td className="p-3 border-r border-b border-gray-300 text-sm font-medium text-gray-700">
+      <div className="border rounded-lg shadow-sm overflow-x-auto max-h-[500px] overflow-y-auto">
+        {isLoading ? ( // ✅ Hiển thị khi đang tải
+          <div className="p-4 text-center text-gray-600">
+            <Spinner color="default" />
+          </div>
+        ) : (
+          <table className="w-full border-collapse min-w-[200px] relative">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="p-3 text-left border-b border-gray-300 text-xs font-semibold text-gray-600">
+                  Time
+                </th>
+                <th className="p-3 border-b border-gray-300 text-xs font-semibold text-gray-600 w-full">
+                  {formatDateTime(checkDate, false)
+                    ? `${formatDateTime(checkDate, false)?.slice(6)} - ${selectedField?.name}`
+                    : formatDateTime(checkDate, false)}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="relative">
+              {timeSlots.map((time, index) => {
+                const booking = convertedBlockedSlots?.find(
+                  (b) => time >= b.fromTime && time < b.toTime
+                );
+                return (
+                  <tr key={index} className="transition-colors relative">
+                    <td className="p-3 border-b border-gray-300 text-sm font-medium text-gray-700">
                       {time}
                     </td>
-                    {/* {weekDays.map((day, index) => {
-                      const booking = bookings.find(
-                        (b) =>
-                          b.field === selectedField &&
-                          b.time === time &&
-                          b.day === day.date,
-                      );
-
-                      return (
-                        <td
-                          key={day.day}
-                          className={`p-3 border-b border-gray-300 text-center 
-                            ${index < weekDays.length - 1 ? "border-r" : ""}`}
+                    <td className="relative p-3 border-b border-gray-300 text-sm text-gray-700 h-16">
+                      {booking && time === booking.fromTime && (
+                        <div
+                          className={`hover:scale-95 transition absolute p-3 left-0 top-0 w-full ${
+                            booking.createdBy === "BY_OWNER" ? "bg-gray-500" : "bg-blue-500"
+                          } text-white text-xs rounded-md`}
+                          style={{ height: `${(booking.duration / 60) * 64}px` }}
                         >
-                          {booking ? (
-                            <div
-                              className={`rounded-md p-2 ${booking.color} text-white`}
-                            >
-                              <p className="font-semibold text-xs">
-                                {booking.name}
-                              </p>
-                              <p className="text-[10px] opacity-80">1 HOUR</p>
-                            </div>
-                          ) : (
-                            <div className="text-gray-400 text-xs">-</div>
-                          )}
-                        </td>
-                      );
-                    })} */}
+                          {booking.createdBy === "BY_OWNER" ? "CLOSED" : booking.username}
+                        </div>
+                      )}
+                    </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
       </div>
     </div>
   );

@@ -4,8 +4,8 @@ import { getLocalTimeZone } from "@internationalized/date";
 export const formatDateTime = (
   value: DateValue | null | undefined,
   ignoreTime: boolean = false,
-): string => {
-  if (!value) return "--";
+) => {
+  if (!value) return;
 
   const date = value.toDate(getLocalTimeZone());
 

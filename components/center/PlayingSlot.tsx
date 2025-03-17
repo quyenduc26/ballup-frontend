@@ -1,21 +1,34 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
-import { Input } from "@heroui/react";
-import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-
+import { useState, ChangeEvent, FormEvent, useEffect, act } from "react";
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from "@heroui/react";
+import { Edit, Plus } from "lucide-react";
+import { SonnerToast } from "@/components/sonnerMesage";
 import playingApi from "@/service/playingApi";
-import { PlayingSlotType } from "@/types";
+import { Field, PlayingSlotType, Slot } from "@/types";
 
-const PlayingSlot = () => {
-  const router = useRouter();
+const PlayingSlot = ({ field, action, refresh, slot }: { field: Field, action: string, refresh: () => void, slot?: Slot }) => {
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const [toastData, setToastData] = useState<
+    | {
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warning";
+      duration?: number;
+    }
+    | undefined
+  >();
+
   const [formData, setFormData] = useState<PlayingSlotType>({
     name: "",
     primaryPrice: 0,
     nightPrice: 0,
-    playingCenterId: 1,
+    playingCenterId: 0,
   });
+
+  const [isOpenCreateSlot, setIsOpenCreateSlot] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedCenter, setSelectedCenter] = useState<Field | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: parseInt(e.target.value) });
@@ -25,81 +38,158 @@ const PlayingSlot = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
+    setIsLoading(true)
     try {
-      const response = await playingApi.createPlayingSlot(formData);
-
-      alert("Playing Slot created successfully!");
-      router.push("/success-page");
+      if (action == "CREATE") {
+        const response = await playingApi.createPlayingSlot(formData);
+        setToastData({
+          type: "success",
+          heading: "Slot created",
+          message: "Slot created successfully!",
+          duration: 3000,
+        });
+      } else {
+        const response = await playingApi.updatePlayingSlot(formData);
+        setToastData({
+          type: "success",
+          heading: "Slot updated",
+          message: "Slot successfully!",
+          duration: 3000,
+        });
+      }
     } catch (error) {
       console.error("Error:", error);
-      alert("Failed to create Playing Slot. Please try again.");
+      setToastData({
+        type: "error",
+        heading: "Action Failed",
+        message: "Create or update unsuccessfully!",
+        duration: 3000,
+      });
     }
+    setIsLoading(false)
+    refresh()
+    onClose()
   };
 
+  const handleCreateSlot = (field: Field, slot?: Slot) => {
+    setSelectedCenter(field);
+    setIsOpenCreateSlot(true);
+
+    if (action === "UPDATE" && slot) {
+      setFormData({
+        name: slot.name,
+        primaryPrice: slot.primaryPrice,
+        nightPrice: slot.nightPrice,
+        playingCenterId: parseInt(field.id),
+        playingSlot: slot
+      });
+    } else {
+      setFormData({
+        name: "",
+        primaryPrice: 0,
+        nightPrice: 0,
+        playingCenterId: parseInt(field.id),
+      });
+    }
+    onOpen();
+  };
+
+
+  const handleCloseModal = () => {
+    setFormData({
+      name: "",
+      primaryPrice: 0,
+      nightPrice: 0,
+      playingCenterId: 0,
+    });
+    onClose();
+  };
+
+  useEffect(() => {
+    if (isOpen && action === "UPDATE" && slot) {
+      setFormData({
+        name: slot.name,
+        primaryPrice: slot.primaryPrice,
+        nightPrice: slot.nightPrice,
+        playingCenterId: parseInt(field.id),
+        playingSlot: slot,
+      });
+    }
+  }, [isOpen, action, slot]);
+
   return (
-    <div className="mt-20 max-w-2xl mx-auto p-6 border border-gray-300 rounded-lg shadow-md">
-      <h2 className="text-center font-bold text-lg">CREATE PLAYING SLOT</h2>
-      <button
-        className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded mb-4"
-        onClick={() => router.back()}
-      >
-        <ArrowLeft size={18} />
-      </button>
-      <form className="mt-6 grid grid-cols-1 gap-4" onSubmit={handleSubmit}>
-        {/* Input tên */}
-        <Input
-          isRequired
-          className="p-2 w-full"
-          errorMessage="Please enter a valid name"
-          label="NAME"
-          labelPlacement="outside"
-          name="name"
-          placeholder="Enter your name"
-          type="text"
-          value={formData.name}
-          onChange={handleChangeName}
-        />
+    <>
+      <SonnerToast toast={toastData} />
+      <Button onPress={() => handleCreateSlot(field, slot)} className="rounded-md">
+        {action === "CREATE" ? (
+          <>
+            <Plus className="w-4 h-4" /> Slot
+          </>
+        ) : (
+          <>
+            <Edit className="w-4 h-4" /> Edit
+          </>
+        )}
+      </Button>
 
-        {/* Input Primary Price */}
-        <Input
-          isRequired
-          className="p-2 w-full"
-          errorMessage="Please enter a valid primary price"
-          label="PRIMARY PRICE"
-          labelPlacement="outside"
-          name="primaryPrice"
-          placeholder="Enter primary price"
-          type="number"
-          value={formData.primaryPrice.toString()}
-          onChange={handleChange}
-        />
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">{action == "CREATE" ? `Create slot for ${selectedCenter?.name}` : `Update slot  ${selectedCenter?.name} `}</ModalHeader>
+              <ModalBody>
+                {/* Input Slot Name */}
+                <Input
+                  isRequired
+                  label="Slot name"
+                  placeholder="Enter slot name"
+                  variant="bordered"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChangeName}
+                />
 
-        {/* Input Night Price */}
-        <Input
-          isRequired
-          className="p-2 w-full"
-          errorMessage="Please enter a valid night price"
-          label="NIGHT PRICE"
-          labelPlacement="outside"
-          name="nightPrice"
-          placeholder="Enter night price"
-          type="number"
-          value={formData.nightPrice.toString()}
-          onChange={handleChange}
-        />
+                {/* Input Primary Price */}
+                <Input
+                  isRequired
+                  min="0"
+                  label="Enter day price"
+                  placeholder="Enter day price"
+                  type="number"
+                  variant="bordered"
+                  name="primaryPrice"
+                  value={formData.primaryPrice.toString()}
+                  onChange={handleChange}
+                />
 
-        {/* Nút Submit */}
-        <button
-          className="bg-orange-400 h-12 text-white px-4 py-2 rounded mt-4"
-          type="submit"
-        >
-          CREATE
-        </button>
-      </form>
-    </div>
+                {/* Input Night Price */}
+                <Input
+                  isRequired
+                  min="0"
+                  label="Enter night price"
+                  placeholder="Enter night price"
+                  type="number"
+                  variant="bordered"
+                  name="nightPrice"
+                  value={formData.nightPrice.toString()}
+                  onChange={handleChange}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="flat" onPress={handleCloseModal}>
+                  Cancel
+                </Button>
+                <Button color="primary" onPress={handleSubmit}>
+                  {isLoading ? <Spinner color="white" size="sm" /> : (action == "CREATE" ? "Create" : "Update")}
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
+
   );
 };
 

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 
-// import { Field } from "../../components/owner/field";
 import { Menu, X } from "lucide-react";
 
 import PaymentHistory from "../../components/owner/paymentHistory";
