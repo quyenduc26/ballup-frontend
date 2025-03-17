@@ -21,6 +21,8 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
   const [showOptions, setShowOptions] = useState(false);
   const [toastData, setToastData] = useState<any>(null);
   const router = useRouter();
+  const [refresh, setRefresh] = useState(false);
+
   const [teamId, setTeamId] = useState<string | null>(
     propTeamId ? String(propTeamId) : null,
   );
@@ -236,6 +238,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
           <UpdateTeamDetail
             teamId={teamId}
             onClose={() => editDialogRef.current?.close()}
+            onUpdateSuccess={() => setRefresh((prev) => !prev)}
           />
         ) : (
           <p className="text-red-500">No team ID available. Cannot edit.</p>

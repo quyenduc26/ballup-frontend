@@ -52,7 +52,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
   return (
     <div className="w-full p-1 sm:p-2 md:p-4 lg:p-6">
       <div className="flex justify-between mb-6">
-        <h1 className="text-xl font-bold mb-4">Management Booking Request</h1>
+        <h1 className="text-xl font-bold mb-4">Management Fields</h1>
         <Button
           className="bg-black rounded-none text-white"
           onPress={() => setActiveTab("CreateCenter")}

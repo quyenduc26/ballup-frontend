@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { SonnerToast } from "../sonnerMesage"; // ✅ Import SonnerToast
+
 import { CreateTeamData } from "@/types/form";
 import createTeamApi from "@/service/createTeamApi";
 import { uploadImage } from "@/utils/uploadImage";
@@ -16,15 +18,24 @@ const CreateTeam = () => {
     address: "",
     intro: "",
     sport: "",
-    userId: 1, // ID user lấy từ context hoặc state
+    userId: 1,
   });
+
   const [coverPreview, setCoverPreview] = useState<string | undefined>(
     undefined,
   );
   const [logoPreview, setLogoPreview] = useState<string | undefined>(undefined);
+  const [toastData, setToastData] = useState<
+    | {
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
+    | undefined
+  >();
   const router = useRouter();
 
-  // Xử lý thay đổi input
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -38,7 +49,6 @@ const CreateTeam = () => {
     });
   };
 
-  // Xử lý upload ảnh
   const handleImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
     type: "cover" | "logo",
@@ -64,7 +74,6 @@ const CreateTeam = () => {
     }
   };
 
-  // Xóa ảnh đã upload
   const handleRemoveImage = (type: "cover" | "logo") => {
     if (type === "cover") {
       setFormData({ ...formData, cover: "" });
@@ -76,52 +85,70 @@ const CreateTeam = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent page reload
+    e.preventDefault();
 
-    // Validate form data before submission
     if (
       !formData.name ||
       !formData.address ||
       !formData.intro ||
       !formData.sport
     ) {
-      alert("Please fill in all required fields!");
+      setToastData({
+        type: "error",
+        heading: "Validation Error ❗",
+        message: "Please fill in all required fields!",
+        duration: 3000,
+      });
 
       return;
     }
 
     try {
-      // Send data to API
       const response = await createTeamApi.createTeam(formData);
 
       if (response) {
-        alert("Team created successfully!");
-        router.push("/team"); // Redirect to the team list page
+        setToastData({
+          type: "success",
+          heading: "Success 🎉",
+          message: "Team created successfully!",
+          duration: 3000,
+        });
+
+        setTimeout(() => {
+          router.push("/team");
+        }, 3000);
       }
     } catch (error) {
       console.error("Error creating team:", error);
-      alert("An error occurred, please try again!");
+      setToastData({
+        type: "error",
+        heading: "Error ❗",
+        message: "An error occurred, please try again!",
+        duration: 3000,
+      });
     }
   };
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg mt-5 border border-gray-300">
+      <SonnerToast toast={toastData} />
+
       <button
         className="flex items-center px-4 py-2 mb-4 bg-black text-white rounded"
-        onClick={() => router.back()}
+        onClick={() => router.push("/team")}
       >
         ← Back
       </button>
 
       <h2 className="text-2xl font-bold text-center mb-4">CREATE TEAM</h2>
 
-      {/* Upload Cover */}
+      {/* Cover Image with Logo Overlay */}
       <div className="relative w-full h-60 bg-gray-300 flex justify-center items-center rounded-md overflow-hidden mb-6">
         {coverPreview ? (
           <>
             <img
               alt="Cover Preview"
-              className="object-contain"
+              className="object-cover w-full h-full"
               src={coverPreview}
             />
             <button
@@ -139,51 +166,51 @@ const CreateTeam = () => {
             </div>
             <input
               accept="image/*"
-              className="absolute border inset-0 opacity-0 cursor-pointer"
+              className="absolute inset-0 opacity-0 cursor-pointer"
               type="file"
               onChange={(e) => handleImageUpload(e, "cover")}
             />
           </>
         )}
-      </div>
 
-      {/* Upload Logo */}
-      <div className="absolute top-80 ml-10 w-52 h-52 bg-gray-200 flex items-center justify-center rounded-md mx-auto mb-4  overflow-hidden">
-        {logoPreview ? (
-          <>
-            <img
-              alt="Logo Preview"
-              className="absolute top-0 left-0 w-full h-full object-cover rounded-md"
-              src={logoPreview}
-            />
-            <button
-              className="absolute top-1 right-1 text-white w-6 h-6 rounded-full flex items-center justify-center"
-              onClick={() => handleRemoveImage("logo")}
-            >
-              ❌
-            </button>
-          </>
-        ) : (
-          <>
-            <div className="flex items-center text-gray-400 text-lg">
-              <Upload className="text-gray-500 mr-2" size={24} />
-              <span>Logo</span>
-            </div>
-            <input
-              accept="image/*"
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              type="file"
-              onChange={(e) => handleImageUpload(e, "logo")}
-            />
-          </>
-        )}
+        {/* Logo Overlay (Chồng lên ảnh cover) */}
+        <div className="absolute top-1/3 w-32 h-32 sm:w-40 sm:h-40 bg-gray-200 flex items-center justify-center overflow-hidden mr-96">
+          {logoPreview ? (
+            <>
+              <img
+                alt="Logo Preview"
+                className="w-full h-full object-cover"
+                src={logoPreview}
+              />
+              <button
+                className="absolute top-1 right-1 text-white w-6 h-6 flex items-center justify-center bg-red-500"
+                onClick={() => handleRemoveImage("logo")}
+              >
+                ❌
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center text-gray-400 text-lg">
+                <Upload className="text-gray-500 mr-2" size={24} />
+                <span>Upload Logo</span>
+              </div>
+              <input
+                accept="image/*"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                type="file"
+                onChange={(e) => handleImageUpload(e, "logo")}
+              />
+            </>
+          )}
+        </div>
       </div>
 
       {/* Form nhập thông tin */}
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4 mb-4 mt-20">
+        <div className="grid grid-cols-2 gap-4 mb-4 mt-14">
           <div>
-            <label className="text-sm font-semibold" htmlFor="anme">
+            <label className="text-sm font-semibold" htmlFor="name">
               TEAM NAME
             </label>
             <input
@@ -228,7 +255,6 @@ const CreateTeam = () => {
 
         <div>
           <label className="text-sm font-semibold" htmlFor="sport">
-            {" "}
             SPORT
           </label>
           <select

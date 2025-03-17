@@ -58,8 +58,11 @@ export default function ModernProfileLayout() {
     try {
       await authApi.logout();
       localStorage.removeItem("data");
-      router.push("/auth/login");
-      setToastData({ type: "success", message: "Logged out successfully!" });
+      router.push("/auth/login"); // Chuyển hướng trước
+
+      setTimeout(() => {
+        window.location.reload(); // Reload sau khi chuyển trang
+      }, 500);
     } catch (error) {
       console.error("Logout failed:", error);
       setToastData({
@@ -93,17 +96,17 @@ export default function ModernProfileLayout() {
         if (filename) {
           const newAvatarUrl = getImageUrl(filename.toString());
 
-          // 🌟 **Cập nhật state**
+          // **Cập nhật state**
           setEditedUser((prev) =>
             prev ? { ...prev, avatar: newAvatarUrl } : null,
           );
           setUser((prev) => (prev ? { ...prev, avatar: newAvatarUrl } : null));
 
-          // 🌟 **Lưu avatar vào localStorage**
+          // **Lưu avatar vào localStorage**
           localStorage.setItem("userAvatar", newAvatarUrl || "");
           window.dispatchEvent(new Event("storage"));
 
-          // 🌟 **Gọi API cập nhật vào database**
+          // **Gọi API cập nhật vào database**
           const userId = localStorage.getItem("data")
             ? JSON.parse(localStorage.getItem("data")!).id
             : null;
@@ -145,7 +148,7 @@ export default function ModernProfileLayout() {
         <div className="bg-white overflow-hidden mb-6">
           <div className="h-32 bg-gradient-to-r from-purple-500 to-pink-500 relative">
             <button
-              className="absolute top-4 right-4 px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-lg transition-colors flex items-center"
+              className="absolute top-4 right-7 px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-lg transition-colors flex items-center"
               onClick={handleLogout}
             >
               <LogOut className="h-5 w-5 mr-1" />
@@ -222,10 +225,9 @@ export default function ModernProfileLayout() {
           {isEditing ? (
             <EditProfile
               editedUser={editedUser!}
+              handleCancel={() => setIsEditing(false)}
               handleInputChange={handleInputChange}
               setEditedUser={setEditedUser}
-              handleCancel={() => setIsEditing(false)}
-              // onUpdateSuccess={handleUpdateSuccess}
             />
           ) : (
             <>

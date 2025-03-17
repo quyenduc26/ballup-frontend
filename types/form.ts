@@ -51,7 +51,9 @@ export type PlayingCenterType = {
   description: string;
   images: string[];
   ownerId: number;
+  centerType: string;
   type: string;
+  // sport : string;
 };
 export type PlayingSlotType = {
   id?: number;

@@ -16,11 +16,19 @@ const truncateText = (text: string, maxLength: number) => {
 const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const [loading, setLoading] = useState(false);
   const [joined, setJoined] = useState(false);
-  const [toastData, setToastData] = useState<any>(null);
+  const [toastData, setToastData] = useState<
+    | {
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
+    | undefined
+  >();
   const router = useRouter();
 
   const handleJoinTeam = async () => {
-    if (!team || !team.id) return;
+    if (!team || !team.id || joined || loading) return;
     const user_id = 1;
 
     setLoading(true);
@@ -36,12 +44,12 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
 
       setTimeout(() => {
         router.replace(`/team/${team.id}`);
-      });
+      }, 1500);
     } catch (error) {
       console.error("Error joining team:", error);
       setToastData({
         heading: "Error",
-        message: "Failed to join the team.",
+        message: "Failed to join the team",
         type: "error",
       });
     } finally {
@@ -54,8 +62,12 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   }
 
   return (
-    <>
-      {toastData && <SonnerToast toast={toastData} />}
+    <div className="relative">
+      {toastData && (
+        <div className="fixed top-4 right-4 z-50">
+          <SonnerToast toast={toastData} />
+        </div>
+      )}
 
       <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105">
         <div className="relative h-40">
@@ -99,9 +111,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
               </button>
             </Link>
             <button
-              className={`w-full py-2 px-4 rounded-lg font-semibold transition duration-300 ${
-                joined ? "bg-gray-500" : "bg-black text-white hover:bg-gray-800"
-              }`}
+              className="w-full py-2 px-4 rounded-lg font-semibold transition duration-300 bg-black text-white hover:bg-gray-800 min-w-[120px] text-center"
               disabled={loading || joined}
               onClick={handleJoinTeam}
             >
@@ -110,7 +120,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

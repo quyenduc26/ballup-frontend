@@ -10,9 +10,11 @@ import { SonnerToast } from "@/components/sonnerMesage";
 export default function UpdateTeamDetail({
   teamId: propTeamId,
   onClose: propOnClose,
+  onUpdateSuccess,
 }: {
   teamId?: string;
   onClose?: () => void;
+  onUpdateSuccess?: () => void;
 }) {
   const router = useRouter();
   const [teamId, setTeamId] = useState(propTeamId || null);
@@ -44,10 +46,6 @@ export default function UpdateTeamDetail({
   };
 
   const handleChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -92,14 +90,27 @@ export default function UpdateTeamDetail({
       return;
     }
     setLoading(true);
+
+    console.log("Submitting data:", formData); // Debug dữ liệu gửi đi
+
     try {
-      await TeamDetailApi.updateTeam(parseInt(teamId), formData);
+      const response = await TeamDetailApi.updateTeam(
+        parseInt(teamId),
+        formData,
+      );
+
+      console.log("Update response:", response); // Debug response từ API
+
       setToastData({
         type: "success",
         heading: "Team updated successfully",
         message: "",
         duration: 3000,
       });
+
+      if (onUpdateSuccess) {
+        onUpdateSuccess(); // 🔹 Gọi để cập nhật danh sách team
+      }
 
       setTimeout(() => {
         setLoading(false);
@@ -110,6 +121,7 @@ export default function UpdateTeamDetail({
         }
       }, 3200);
     } catch (error: any) {
+      console.log("API Error:", error.response?.data); // Log lỗi nếu có
       setToastData({
         type: "error",
         heading: "Team update failed",
@@ -233,23 +245,6 @@ export default function UpdateTeamDetail({
             value={formData.intro}
             onChange={handleChangeTextArea}
           />
-        </div>
-
-        <div>
-          <label className="text-sm font-semibold" htmlFor="sport">
-            SPORT
-          </label>
-          <select
-            className="w-full p-2 border rounded h-10"
-            id="sport"
-            name="sport"
-            value={formData.sport}
-            onChange={handleChangeSelect}
-          >
-            <option value="">Type Of Sport</option>
-            <option value="FOOTBALL">Football</option>
-            <option value="BADMINTON">Badminton</option>
-          </select>
         </div>
 
         <div className="flex justify-end gap-4 mt-4">

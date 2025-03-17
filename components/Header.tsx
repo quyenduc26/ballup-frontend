@@ -13,17 +13,20 @@ const Header = () => {
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    // Kiểm tra localStorage để xác định người dùng đã đăng nhập hay chưa
-    const userData = localStorage.getItem("data");
+    const updateAuthState = () => {
+      const userData = localStorage.getItem("data");
 
-    setIsLoggedIn(!!userData); // Chuyển đổi thành boolean
+      setIsLoggedIn(!!userData);
+      setAvatar(localStorage.getItem("userAvatar"));
+    };
 
-    // Lấy avatar từ localStorage
-    const storedAvatar = localStorage.getItem("userAvatar");
+    updateAuthState(); // Chạy khi component mount
 
-    if (storedAvatar) {
-      setAvatar(storedAvatar);
-    }
+    window.addEventListener("storage", updateAuthState); // Lắng nghe sự kiện
+
+    return () => {
+      window.removeEventListener("storage", updateAuthState); // Cleanup khi unmount
+    };
   }, []);
 
   return (

@@ -1,20 +1,26 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-import { ToastMessage } from "../ToastMessage";
+import { SonnerToast } from "../sonnerMesage";
 
 import feedbackApi from "@/service/contactFormApi";
-import { ToastType } from "@/types/common";
 
 const ContactForm = () => {
+  const [toastData, setToastData] = useState<
+    | {
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
+    | undefined
+  >();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     content: "",
   });
-
-  const [toastData, setToastData] = useState<ToastType | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -40,16 +46,23 @@ const ContactForm = () => {
       if (response?.data?.message) {
         setToastData({
           type: "error",
-          heading: "Submission Failed ❌",
+          heading: "Submission Failed ",
           message: "Failed to send your feedback. Please try again!",
           duration: 3000,
         });
       } else {
         setToastData({
           type: "success",
-          heading: "Submission Successful 🎉",
+          heading: "Submission Successful",
           message: "Your feedback has been sent successfully!",
           duration: 3000,
+        });
+
+        // Reset form after successful submission
+        setFormData({
+          name: "",
+          email: "",
+          content: "",
         });
       }
     } catch (error: unknown) {
@@ -62,18 +75,10 @@ const ContactForm = () => {
     }
   };
 
-  // Tự động ẩn toast sau thời gian duration
-  useEffect(() => {
-    if (toastData) {
-      const timer = setTimeout(() => setToastData(null), toastData.duration);
-
-      return () => clearTimeout(timer);
-    }
-  }, [toastData]);
-
   return (
     <div className="max-w-5xl mx-auto py-16 px-4">
-      {toastData && <ToastMessage toast={toastData} />}
+      {/* Toast Message */}
+      <SonnerToast toast={toastData} />
 
       <div className="mb-8">
         <h2 className="text-sm uppercase text-gray-600 font-medium">
@@ -131,7 +136,7 @@ const ContactForm = () => {
             />
           </div>
 
-          {/* Submit Button & Success Message */}
+          {/* Submit Button */}
           <div className="flex justify-center flex-col items-center">
             <button
               className="bg-black text-white px-12 py-4 font-medium hover:bg-gray-800 transition duration-300"
@@ -139,12 +144,6 @@ const ContactForm = () => {
             >
               SUBMIT
             </button>
-
-            {toastData?.type === "success" && (
-              <p className="text-green-600 font-medium mt-4">
-                ✅ Feedback submitted successfully!
-              </p>
-            )}
           </div>
         </form>
       </div>

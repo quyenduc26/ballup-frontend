@@ -13,6 +13,7 @@ const TeamDetailApi = {
 
   leaveTeam: (teamId: number, memberId: number) =>
     api.delete(`/team-member/${teamId}/leave?memberId=${memberId}`),
+
   updateTeam: (teamId: number, formData: object) =>
     api.patch(`/team/${teamId}`, formData),
 };

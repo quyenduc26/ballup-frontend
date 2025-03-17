@@ -12,14 +12,17 @@ export default function TeamIntro() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const team_id = Number(localStorage.getItem("teamId"));
+  const user_id = Number(localStorage.getItem("userId"));
+
   useEffect(() => {
     const fetchTeamDetail = async () => {
       try {
-        const response = await TeamApi.getTeamDetail(20, 3);
+        const response = await TeamApi.getTeamDetail(team_id, user_id);
 
         setTeam(response.data);
       } catch (err: any) {
-        setError(err.response?.data?.message || "Lỗi khi tải dữ liệu");
+        setError(err.response?.data?.message || "Error loading data");
       } finally {
         setLoading(false);
       }
