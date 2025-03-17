@@ -164,10 +164,16 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                         <p>From</p>
                       </div>
                       <p className="font-bold">
-                        {centerInfor.bookingTime.slice(0, 6)}
+                        {centerInfor.bookingTime &&
+                        centerInfor.bookingTime.length >= 7
+                          ? centerInfor.bookingTime.slice(0, 6)
+                          : centerInfor.bookingTime || "N/A"}
                       </p>
                       <p className="font-bold">
-                        {centerInfor.bookingTime.slice(7)}
+                        {centerInfor.bookingTime &&
+                        centerInfor.bookingTime.length >= 7
+                          ? centerInfor.bookingTime.slice(7)
+                          : ""}
                       </p>
                     </div>
                     <div className="bg-gray-50 p-3 rounded-lg text-start">
@@ -176,10 +182,16 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                         <p>To</p>
                       </div>
                       <p className="font-bold">
-                        {centerInfor.returnTime.slice(0, 6)}
+                        {centerInfor.returnTime &&
+                        centerInfor.returnTime.length >= 7
+                          ? centerInfor.returnTime.slice(0, 6)
+                          : centerInfor.returnTime || "N/A"}
                       </p>
                       <p className="font-bold">
-                        {centerInfor.returnTime.slice(7)}
+                        {centerInfor.returnTime &&
+                        centerInfor.returnTime.length >= 7
+                          ? centerInfor.returnTime.slice(7)
+                          : ""}
                       </p>
                     </div>
                   </div>

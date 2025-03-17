@@ -17,3 +17,12 @@ export type CenterInfo = {
   imageUrls: string[];
   slots: Slot[];
 };
+
+export interface Field {
+  id: string;
+  name: string;
+  address: string;
+  description: string;
+  imageUrls: string[];
+  slots: Slot[];
+}

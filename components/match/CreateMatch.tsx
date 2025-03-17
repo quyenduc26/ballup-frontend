@@ -38,7 +38,7 @@ export default function CreateMatch() {
     name: "",
     fromTime: 0,
     toTime: 0,
-    location: "",
+    address: "",
     description: "",
     cover: "",
     memberIdList: [],
@@ -189,7 +189,7 @@ export default function CreateMatch() {
       });
       setFormData((prev) => ({
         ...prev,
-        location: center.address,
+        address: center.address,
       }));
 
       fetchSlots(centerId);
@@ -445,7 +445,7 @@ export default function CreateMatch() {
                 name="location"
                 placeholder={selectedCenter?.address || "Enter address"}
                 type="text"
-                value={formData.location}
+                value={formData.address}
                 onChange={handleChange}
               />
             </div>
@@ -576,7 +576,7 @@ export default function CreateMatch() {
               required
               className="w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg"
               id="match-date"
-              min={new Date().toISOString().split("T")[0]} // Prevent selecting past dates
+              min={new Date().toISOString().split("T")[0]}
               name="matchDate"
               type="date"
               value={selectedDate}

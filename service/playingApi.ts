@@ -11,6 +11,15 @@ const playingApi = {
 
   getCenterInfor: (id: number) => api.get(`/center/${id}`),
   
+  getBlockedSlot: (slotId: number, startOfDay: number, endOfDay: number) =>
+    api.get(
+      `/unavailable-slot/${slotId}/blocked?startOfDay=${startOfDay}&endOfDay=${endOfDay}`,
+    ),
+  updatePlayingSlot: (formData: PlayingSlotType) => {
+    const slotId = formData.playingSlot?.id ?? 0;
+
+    return api.patch(`/owner/slot/update/${slotId}`, formData);
+  },
 };
 
 export default playingApi;

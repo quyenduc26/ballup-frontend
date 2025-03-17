@@ -3,7 +3,10 @@ import { BookingDataType } from "@/types/form";
 
 const bookingRequestApi = {
   getBookings: (id: number) => api.get(`/owner/booking/requests/${id}`),
+  getPayments: (id: number) => api.get(`/owner/booking/payments/${id}`),
+
   confirmBooking: (id: number) => api.patch(`/owner/booking/${id}/confirm`),
+  receivePayment: (id: number) => api.patch(`/owner/booking/${id}/receive`),
   rejectBooking: (id: number) => api.patch(`/owner/booking/${id}/reject`),
   booking: (bookingData: BookingDataType) =>
     api.post(`/slot/takeSlot`, bookingData),
