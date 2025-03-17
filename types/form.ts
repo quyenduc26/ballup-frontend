@@ -73,6 +73,7 @@ export type CreateTeamData = {
 };
 
 export type Team = {
+  members: any;
   id: number;
   name: string;
   logo: string;
@@ -183,6 +184,50 @@ export type TeamOverviewResponse = {
   sport: string;
   totalMembers: number;
 };
+export type MyGameResponse = {
+  createdBy: number;
+  membersRequired: number;
+  description: string;
+  id: number;
+  name: string;
+  fromTime: string;
+  toTime: string;
+  center: string;
+  cover: string;
+  type: string;
+  conversationId: number;
+  slotId: number;
+  isCreator: boolean;
+  teamA: GameTeamResponse;
+  teamB: GameTeamResponse;
+};
+export type GameResponse = {
+  sport: string;
+  id: number;
+  name: string;
+  fromTime: string;
+  toTime: string;
+  cover: string;
+  type: string;
+  conversationId: number;
+  slotId: number;
+  centerName?: string;
+  slotName: string;
+  teamA: GameTeamResponse;
+  teamB?: GameTeamResponse;
+};
+export type GameTeamResponse = {
+  name: string;
+  intro: string;
+  logo: string;
+  members: GameTeamMemberResponse[];
+};
+export type GameTeamMemberResponse = {
+  id: any;
+  avatar: string;
+  firstName: string;
+  lastName: string;
+};
 
 export type UserInfo = {
   id: string;
@@ -197,4 +242,17 @@ export type UserInfo = {
   oldPassword?: string;
   newPassword?: string;
   confirmPassword?: string;
+};
+export type UpdateGameTimeAndSlotRequest = {
+  gameId: number;
+  fromTime?: number | null;
+  toTime?: number | null;
+  newSlotId?: number | null;
+};
+export type UpdateGameInfoRequest = {
+  gameId: number;
+  name: string;
+  cover: string;
+  description: string;
+  membersRequired: number;
 };

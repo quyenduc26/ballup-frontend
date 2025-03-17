@@ -96,7 +96,7 @@ const CreateTeam = () => {
 
       if (response) {
         alert("Team created successfully!");
-        router.push("/teams"); // Redirect to the team list page
+        router.push("/team"); // Redirect to the team list page
       }
     } catch (error) {
       console.error("Error creating team:", error);
