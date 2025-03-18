@@ -173,7 +173,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                       <p className="font-bold">
                         {centerInfor.bookingTime &&
                         centerInfor.bookingTime.length >= 7
-                          ? centerInfor.bookingTime.slice(7)
+                          ? centerInfor.bookingTime.slice(6)
                           : ""}
                       </p>
                     </div>
@@ -191,7 +191,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                       <p className="font-bold">
                         {centerInfor.returnTime &&
                         centerInfor.returnTime.length >= 7
-                          ? centerInfor.returnTime.slice(7)
+                          ? centerInfor.returnTime.slice(6)
                           : ""}
                       </p>
                     </div>

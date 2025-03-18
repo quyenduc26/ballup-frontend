@@ -21,6 +21,8 @@ import {
 import bookingRequestApi from "@/service/bookingRequestApi";
 import { formatTimestamp } from "@/utils/formatTimestamp";
 import { useUser } from "@/context/UserContext";
+import { useRouter } from "next/navigation";
+import { SonnerToast } from "@/components/sonnerMesage";
 
 type TabType = "pending" | "completed";
 
@@ -31,20 +33,45 @@ export function BookingHistory() {
   const [activeTab, setActiveTab] = useState<TabType>("pending");
   const [translateX, setTranslateX] = useState("translate-x-full");
   const modalRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const [bookings, setBookings] = useState<BookingDetailResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedBookingId, setExpandedBookingId] = useState<number | null>(
     null,
   );
+  const [toastData, setToastData] = useState<
+    | {
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warning";
+      duration?: number;
+    }
+    | undefined
+  >();
 
   const handleCancel = async (bookingId: number) => {
     try {
       await bookingRequestApi.cancelBooking(bookingId);
+      setToastData({
+        type: "success",
+        heading: "Cancel successfully",
+        message: "Cancel booking successfully",
+        duration: 3000,
+      });
       setIsUpdate(true);
     } catch (error) {
-      throw error;
+      setToastData({
+        type: "error",
+        heading: "Error",
+        message: "Cancel booking unsuccessfully!",
+        duration: 3000,
+      });
+
     }
+
+
+
   };
 
   useEffect(() => {
@@ -147,8 +174,7 @@ export function BookingHistory() {
 
   // Handle payment
   const handlePayment = (bookingId: number, event: React.MouseEvent) => {
-    event.stopPropagation();
-    // Add your payment logic here
+    router.push(`/payment/${bookingId}`)
     console.log("Process payment:", bookingId);
   };
 
@@ -280,6 +306,7 @@ export function BookingHistory() {
 
   return (
     <div className="w-full">
+      <SonnerToast toast={toastData} />
       <button
         aria-label="View booking history"
         className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-black text-white shadow-lg flex items-center justify-center hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white z-50 transition-all duration-200 hover:scale-110"
@@ -311,21 +338,19 @@ export function BookingHistory() {
             {/* Tabs */}
             <div className="flex border-b border-gray-200">
               <button
-                className={`flex-1 py-3 text-center font-medium transition-colors ${
-                  activeTab === "pending"
+                className={`flex-1 py-3 text-center font-medium transition-colors ${activeTab === "pending"
                     ? "text-black border-b-2 border-black"
                     : "text-gray-500 hover:text-gray-700"
-                }`}
+                  }`}
                 onClick={() => setActiveTab("pending")}
               >
                 Pending
               </button>
               <button
-                className={`flex-1 py-3 text-center font-medium transition-colors ${
-                  activeTab === "completed"
+                className={`flex-1 py-3 text-center font-medium transition-colors ${activeTab === "completed"
                     ? "text-black border-b-2 border-black"
                     : "text-gray-500 hover:text-gray-700"
-                }`}
+                  }`}
                 onClick={() => setActiveTab("completed")}
               >
                 Completed

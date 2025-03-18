@@ -8,18 +8,27 @@ import { BookingDetailResponse } from "@/types";
 import bookingRequestApi from "@/service/bookingRequestApi";
 import { formatTimestamp } from "@/utils/formatTimestamp";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { SonnerToast } from "@/components/sonnerMesage";
 
 export default function ScanPayment({ bookingId }: { bookingId: number }) {
   const [booking, setBooking] = useState<BookingDetailResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isDepositing, setIsDepositing] = useState<boolean>(false);
   const router = useRouter();
+  const [toastData, setToastData] = useState<
+    | {
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warning";
+      duration?: number;
+    }
+    | undefined
+  >();
 
   useEffect(() => {
     async function fetchBooking() {
       try {
         const res = await bookingRequestApi.getBookingDetail(bookingId);
-
         setBooking(res.data);
       } catch (err) {
         throw err;
@@ -34,8 +43,22 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
     setIsDepositing(true);
     try {
       await bookingRequestApi.depositBooking(bookingId);
-      router.push("/booking");
+      setToastData({
+        type: "success",
+        heading: "Action success",
+        message: "Deposited successfully",
+        duration: 3000,
+      });
+      setTimeout(() => {
+        router.push("/booking");
+      }, 3000)
     } catch (error) {
+      setToastData({
+        type: "error",
+        heading: "Action fail",
+        message: "Deposited unsuccessfully",
+        duration: 3000,
+      });
       throw error;
     } finally {
       setIsDepositing(false);
@@ -46,6 +69,7 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
     <Spinner className="h-screen w-screen" color="default" />
   ) : (
     <div className="w-[1500px]  mx-auto py-8 px-4">
+      <SonnerToast toast={toastData} />
       <div className="space-y-4">
         <div className="flex flex-col items-center justify-center ">
           <div className="w-1/2 mx-auto py-8  h-full">
@@ -158,11 +182,10 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
                 {booking?.status === "CONFIRMED" && (
                   <>
                     <button
-                      className={`w-full ${
-                        isDepositing
+                      className={`w-full ${isDepositing
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-green-600 hover:bg-green-700"
-                      } text-white py-2 px-4 rounded-md flex items-center justify-center mb-3`}
+                        } text-white py-2 px-4 rounded-md flex items-center justify-center mb-3`}
                       disabled={isDepositing}
                       onClick={() => handleDeposit(booking.bookingId)}
                     >
