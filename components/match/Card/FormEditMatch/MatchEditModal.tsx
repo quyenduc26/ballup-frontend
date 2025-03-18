@@ -6,8 +6,8 @@ import type {
   UpdateGameInfoRequest,
   UpdateGameTimeAndSlotRequest,
 } from "@/types";
-import { useState, useRef } from "react";
-import { ArrowLeft } from "lucide-react";
+import { useState, useRef } from "react"; 
+import { ArrowLeft, ShieldCheck,Clock } from "lucide-react";
 import { toast, Toaster } from "sonner";
 import { getImageUrl } from "@/utils/getImage";
 import { uploadImage } from "@/utils/uploadImage";
@@ -264,24 +264,24 @@ export default function MatchEditModal({
             >
               <ArrowLeft className="h-5 w-5 text-white" />
             </button>
-            <div className="flex gap-3 flex-2 ">
+            <div className="flex gap-3 flex-2">
               <button
-                className={`flex-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${activeTab === "info"
+                className={`flex-2 flex items-center gap-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${activeTab === "info"
                     ? "bg-gray-900 text-white shadow-md"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 onClick={() => setActiveTab("info")}
               >
-                Match
+                <ShieldCheck  size={18} /> Match
               </button>
               <button
-                className={`flex-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${activeTab === "time"
+                className={`flex-2 flex items-center gap-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${activeTab === "time"
                     ? "bg-gray-900 text-white shadow-md"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 onClick={() => setActiveTab("time")}
               >
-                Time
+                <Clock size={18} /> Time
               </button>
             </div>
           </div>
