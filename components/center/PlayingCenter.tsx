@@ -29,7 +29,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
     name: "",
     address: "",
     description: "",
-    images: Array(MAX_IMAGES).fill(null),
+    images: Array(MAX_IMAGES).fill(""),
     ownerId: userId,
     centerType: "", // Added to match backend expectation
   });
