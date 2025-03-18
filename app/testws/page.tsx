@@ -20,7 +20,7 @@ export default function Page() {
       reconnectDelay: 5000,
       onConnect: () => {
         console.log("✅ Connected to WebSocket");
-        client.subscribe("/topic/owner/2", (msg) => {
+        client.subscribe("/topic/user/1", (msg) => {
           const receivedMessage: string = msg.toString();
           setMessages((prev) => [...prev, receivedMessage]);
         });
@@ -45,7 +45,7 @@ export default function Page() {
       const chatMessage: Message = { sender: "User", content: message };
 
       stompClient.publish({
-        destination: "/app/sendToUser",
+        destination: "/app/sendToOwner",
         body: JSON.stringify(chatMessage),
       });
       setMessage("");

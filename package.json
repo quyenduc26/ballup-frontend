@@ -44,7 +44,7 @@
  },
  "devDependencies": {
   "@next/eslint-plugin-next": "15.0.4",
-  "@react-types/shared": "3.25.0",
+  "@react-types/shared": "^3.25.0",
   "@stomp/stompjs": "^7.0.1",
   "@types/node": "20.5.7",
   "@types/react": "18.3.3",
