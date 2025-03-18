@@ -1,13 +1,12 @@
 "use client";
 
 import type { GameResponse } from "@/types";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
 import { getImageUrl } from "@/utils/getImage";
 import { formatTimestamp } from "@/utils/formatTimestamp";
 import matchApi from "@/service/matchApi";
+import { toast } from "sonner";
 
 interface MatchCardProps {
   match: GameResponse;
@@ -15,7 +14,6 @@ interface MatchCardProps {
 }
 
 export default function MatchCard({ match, onUpdate }: MatchCardProps) {
-  const [teamBLogo, setTeamBLogo] = useState<string>("/image/preview.png");
   const [teamBPlayers, setTeamBPlayers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
@@ -23,7 +21,7 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
   const router = useRouter();
   const data = localStorage.getItem("data");
   const parsedData = data ? JSON.parse(data) : null;
-  const userId = parsedData.id;
+  const userId = parsedData?.id;
 
   useEffect(() => {
     if (match.teamB?.members && match.teamB.members.length > 0) {
@@ -43,8 +41,7 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
 
   const handleJoinSingle = async () => {
     if (hasJoined) {
-      alert("You have already joined this match!");
-
+      toast.warning("You have already joined this match!");
       return;
     }
 
@@ -74,12 +71,12 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
 
         setHasJoined(true);
         setJoinMessage("You've joined as a single player");
-        alert("Successfully joined the game!");
+        toast.success("Successfully joined the game!");
         onUpdate?.();
       }
     } catch (error) {
       console.error("Error joining game:", error);
-      alert("Failed to join game");
+      toast.error("Failed to join game");
     } finally {
       setLoading(false);
     }
@@ -87,8 +84,7 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
 
   const handleJoinTeam = async () => {
     if (hasJoined) {
-      alert("You have already joined this match!");
-
+      toast.warning("You have already joined this match!");
       return;
     }
 
@@ -105,13 +101,13 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
 
         setHasJoined(true);
         setJoinMessage("You've joined as a team");
-        alert("Successfully joined as team!");
+        toast.success("Successfully joined as team!");
         onUpdate?.();
         router.push("/match?view=myMatch");
       }
     } catch (error) {
       console.error("Error joining team:", error);
-      alert("Failed to join as team");
+      toast.error("Failed to join as team");
     } finally {
       setLoading(false);
     }
