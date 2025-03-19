@@ -1,7 +1,6 @@
 "use client";
 
 import type { PaymentRequest } from "@/types/owner";
-
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -14,7 +13,7 @@ import {
   Button,
   Spinner,
 } from "@heroui/react";
-
+import { toast, Toaster } from "sonner";
 import bookingRequestApi from "@/service/bookingRequestApi";
 
 export default function PaymentTable() {
@@ -23,7 +22,6 @@ export default function PaymentTable() {
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [refresh, setRefresh] = useState(false);
 
-  // Lấy userId từ localStorage
   const getUserId = () => {
     const data = localStorage.getItem("data");
     const parsedData = data ? JSON.parse(data) : null;
@@ -31,7 +29,6 @@ export default function PaymentTable() {
     return parsedData?.id || null;
   };
 
-  // Gọi API lấy danh sách payments
   const fetchPayments = async () => {
     const ownerId = getUserId();
 
@@ -40,50 +37,61 @@ export default function PaymentTable() {
 
     try {
       const response = await bookingRequestApi.getPayments(ownerId);
-
       setPayments(response.data);
     } catch (error) {
       console.error("Error fetching payments:", error);
+      toast.error("Unable to load payment list", {
+        description: "Please try again later",
+        duration: 3000
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  // useEffect chạy lại khi refresh thay đổi
   useEffect(() => {
     fetchPayments();
-  }, [refresh]); // Mỗi khi refresh thay đổi, danh sách cập nhật lại
+  }, [refresh]);
 
-  // Xử lý Confirm Payment
   const handleConfirm = async (paymentId: number) => {
     setLoadingId(paymentId);
     try {
       await bookingRequestApi.receivePayment(paymentId);
-      alert("Payment confirmed successfully!");
-      setRefresh((prev) => !prev); // Kích hoạt cập nhật danh sách
+      toast.success("Payment Confirmation Successful!", {
+        duration: 3000
+      });
+      setRefresh((prev) => !prev); 
     } catch (error) {
       console.error("Error confirming payment:", error);
-      alert("Failed to confirm payment.");
+      toast.error("Payment confirmation failed", {
+        description: "Please try again later",
+        duration: 3000
+      });
     }
     setLoadingId(null);
   };
 
-  // Xử lý Reject Payment
   const handleReject = async (paymentId: number) => {
     setLoadingId(paymentId);
     try {
       await bookingRequestApi.rejectBooking(paymentId);
-      alert("Payment rejected successfully!");
-      setRefresh((prev) => !prev); // Kích hoạt cập nhật danh sách
+      toast.success("Payment declined successfully!", {
+        duration: 3000
+      });
+      setRefresh((prev) => !prev);
     } catch (error) {
       console.error("Error rejecting payment:", error);
-      alert("Failed to reject payment.");
+      toast.error("Payment decline failed", {
+        description: "Please try again later",
+        duration: 3000
+      });
     }
     setLoadingId(null);
   };
 
   return (
     <div className="p-4 px-2 max-w-6xl mx-auto">
+      <Toaster richColors position="top-center" />
       <h1 className="text-2xl font-bold mb-6 text-gray-800">
         Management Payment Request
       </h1>

@@ -13,6 +13,7 @@ import {
   TableCell,
   Spinner,
 } from "@heroui/react";
+import { toast, Toaster } from "sonner";
 
 import bookingRequestApi from "@/service/bookingRequestApi";
 
@@ -32,6 +33,7 @@ export default function BookingTable() {
         setOwnerId(parsedData?.id || null);
       } catch (error) {
         console.error("Error parsing owner ID:", error);
+        toast.error("Error loading owner data");
       }
     }
   }, []);
@@ -48,6 +50,7 @@ export default function BookingTable() {
         setBookings(response.data);
       } catch (error) {
         console.error("Error fetching bookings:", error);
+        toast.error("Error fetching booking requests");
       } finally {
         setLoading(false);
       }
@@ -60,11 +63,11 @@ export default function BookingTable() {
   const handleConfirm = async (id: number) => {
     try {
       await bookingRequestApi.confirmBooking(id);
-      alert(`Booking ${id} confirmed successfully!`);
+      toast.success(`Booking ${id} confirmed successfully!`);
       setBookings((prev) => prev.filter((b) => b.id !== id));
     } catch (error) {
       console.error("Error confirming booking:", error);
-      alert("Failed to confirm booking!");
+      toast.error("Failed to confirm booking!");
     }
   };
 
@@ -72,11 +75,11 @@ export default function BookingTable() {
   const handleReject = async (id: number) => {
     try {
       await bookingRequestApi.rejectBooking(id);
-      alert(`Booking ${id} rejected successfully!`);
+      toast.success(`Booking ${id} rejected successfully!`);
       setBookings((prev) => prev.filter((b) => b.id !== id));
     } catch (error) {
       console.error("Error rejecting booking:", error);
-      alert("Failed to reject booking!");
+      toast.error("Failed to reject booking!");
     }
   };
 
@@ -97,6 +100,7 @@ export default function BookingTable() {
 
   return (
     <div className="p-4 px-2 max-w-6xl mx-auto">
+      <Toaster richColors position="top-center" />
       <h1 className="text-2xl font-bold mb-6 text-gray-800">
         Management Booking Request
       </h1>
