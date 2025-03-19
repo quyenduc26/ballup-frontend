@@ -6,14 +6,17 @@ import { Card, CardBody, CardHeader } from "@heroui/react";
 import { Button } from "@heroui/react";
 
 import image from "@/public/images/image 3.png";
-// import { Field } from "@/types/owner";
-
 import ownerApi from "@/service/ownerApi";
 import PlayingSlot from "@/components/center/PlayingSlot";
 import { Field } from "@/types";
 
 type FieldListProps = {
   setActiveTab: (tab: string) => void;
+};
+
+// Hàm format giá tiền theo kiểu Việt Nam
+const formatVND = (value: number): string => {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ";
 };
 
 export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
@@ -57,7 +60,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
           className="bg-black rounded-none text-white"
           onPress={() => setActiveTab("CreateCenter")}
         >
-          Create center
+          Create Center
         </Button>
       </div>
 
@@ -65,7 +68,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
       <div className="grid grid-cols-4 font-semibold border-b pb-2 text-xs sm:text-sm md:text-base w-full">
         <div className="pl-2 md:pl-4 lg:pl-6">Field Name</div>
         <div className="text-center">Image</div>
-        <div className="text-center">Location</div>
+        <div className="text-center">Address</div>
         <div className="text-right pr-2 md:pr-6">Action</div>
       </div>
 
@@ -139,24 +142,24 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                       <div className="grid grid-cols-4 items-center gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4">
                         <div className="text-left md:pl-4">
                           <h2 className="text-xs sm:text-sm font-medium">
-                            Name
+                            Slot Name
                           </h2>
                         </div>
 
                         <div className="text-center">
                           <span className="text-[10px] sm:text-xs md:text-sm font-medium">
-                            Primary price
+                            Day Price
                           </span>
                         </div>
 
                         <div className="text-center">
                           <span className="text-[10px] sm:text-xs md:text-sm font-medium">
-                            Night price
+                            Night Price
                           </span>
                         </div>
 
                         <div className="text-right md:pr-4">
-                          <span className="text-xs font-medium">Actions</span>
+                          <span className="text-xs font-medium">Action</span>
                         </div>
                       </div>
                     </div>
@@ -175,13 +178,13 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
 
                         <div className="text-center">
                           <span className="text-[10px] sm:text-xs md:text-sm">
-                            {slot.primaryPrice}
+                            {formatVND(slot.primaryPrice)}
                           </span>
                         </div>
 
                         <div className="text-center">
                           <span className="text-[10px] sm:text-xs md:text-sm">
-                            {slot.nightPrice}
+                            {formatVND(slot.nightPrice)}
                           </span>
                         </div>
 
@@ -202,8 +205,6 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
           </Card>
         ))}
       </div>
-
-      {/* Create Slot Modal */}
     </div>
   );
 };

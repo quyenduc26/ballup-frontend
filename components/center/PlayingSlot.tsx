@@ -18,6 +18,16 @@ import { SonnerToast } from "@/components/sonnerMesage";
 import playingApi from "@/service/playingApi";
 import { Field, PlayingSlotType, Slot } from "@/types";
 
+// Function to format price in Vietnamese style
+const formatVND = (value: number): string => {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ";
+};
+
+// Function to parse price from string to number
+const parseVND = (value: string): number => {
+  return parseInt(value.replace(/[^\d]/g, "")) || 0;
+};
+
 const PlayingSlot = ({
   field,
   action,
@@ -47,57 +57,167 @@ const PlayingSlot = ({
     playingCenterId: 0,
   });
 
-  const [isOpenCreateSlot, setIsOpenCreateSlot] = useState(false);
+  const [displayPrices, setDisplayPrices] = useState({
+    primaryPrice: "",
+    nightPrice: "",
+  });
+
+  const [errors, setErrors] = useState({
+    name: "",
+    primaryPrice: "",
+    nightPrice: "",
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCenter, setSelectedCenter] = useState<Field | null>(null);
 
+  const validateForm = () => {
+    const newErrors = { name: "", primaryPrice: "", nightPrice: "" };
+    let isValid = true;
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Slot name is required";
+      isValid = false;
+    }
+
+    if (!formData.primaryPrice || formData.primaryPrice <= 0) {
+      newErrors.primaryPrice = "Day price must be greater than 0";
+      isValid = false;
+    }
+
+    if (!formData.nightPrice || formData.nightPrice <= 0) {
+      newErrors.nightPrice = "Night price must be greater than 0";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+
+    return isValid;
+  };
+
+  const isFormValid = () => {
+    return (
+      formData.name.trim() !== "" &&
+      formData.primaryPrice > 0 &&
+      formData.nightPrice > 0
+    );
+  };
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: parseInt(e.target.value) });
+    const { name, value } = e.target;
+
+    if (name === "name") {
+      setFormData({ ...formData, [name]: value });
+      setErrors({ ...errors, [name]: "" });
+    } else {
+      const numericValue = parseVND(value);
+
+      setFormData({ ...formData, [name]: numericValue });
+      setDisplayPrices({ ...displayPrices, [name]: value });
+      setErrors({ ...errors, [name]: "" });
+    }
   };
 
-  const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+
+    if (name !== "name") {
+      const value = formData[name as "primaryPrice" | "nightPrice"];
+
+      setDisplayPrices({
+        ...displayPrices,
+        [name]: formatVND(value),
+      });
+    }
   };
 
+  const handleFocus = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+
+    if (name !== "name") {
+      const value = formData[name as "primaryPrice" | "nightPrice"];
+
+      setDisplayPrices({
+        ...displayPrices,
+        [name]: value.toString(),
+      });
+    }
+  };
+
+  // In PlayingSlot component
   const handleSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    // Check for duplicate slot name when creating
+    if (action === "CREATE" && field.slots) {
+      const isDuplicateName = field.slots.some(
+        (slot) =>
+          slot.name.toLowerCase() === formData.name.trim().toLowerCase(),
+      );
+
+      if (isDuplicateName) {
+        setErrors({
+          ...errors,
+          name: "Slot name already exists in this field",
+        });
+
+        return;
+      }
+    }
+
     setIsLoading(true);
     try {
-      if (action == "CREATE") {
-        const response = await playingApi.createPlayingSlot(formData);
+      let response;
 
+      if (action === "CREATE") {
+        response = await playingApi.createPlayingSlot(formData);
         setToastData({
           type: "success",
-          heading: "Slot created",
-          message: "Slot created successfully!",
+          heading: "Slot created successfully",
+          message: "The slot has been created successfully!",
           duration: 3000,
         });
       } else {
-        const response = await playingApi.updatePlayingSlot(formData);
-
+        response = await playingApi.updatePlayingSlot(formData);
         setToastData({
           type: "success",
-          heading: "Slot updated",
-          message: "Slot successfully!",
+          heading: "Slot updated successfully",
+          message: "The slot has been updated successfully!",
           duration: 3000,
         });
       }
-    } catch (error) {
+      refresh();
+      onClose();
+    } catch (error: any) {
       console.error("Error:", error);
-      setToastData({
-        type: "error",
-        heading: "Action Failed",
-        message: "Create or update unsuccessfully!",
-        duration: 3000,
-      });
-    }
-    setIsLoading(false);
-    refresh();
-    onClose();
-  };
+      const errorMessage = error.response?.data?.message?.toLowerCase() || "";
 
+      if (
+        errorMessage.includes("duplicate") ||
+        errorMessage.includes("exists") ||
+        errorMessage.includes("already")
+      ) {
+        setErrors({
+          ...errors,
+          name: "Slot name already exists in this field",
+        });
+      } else {
+        setToastData({
+          type: "error",
+          heading: "Operation failed",
+          message: error.response?.data?.message || "Create or update failed!",
+          duration: 3000,
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const handleCreateSlot = (field: Field, slot?: Slot) => {
     setSelectedCenter(field);
-    setIsOpenCreateSlot(true);
+    setErrors({ name: "", primaryPrice: "", nightPrice: "" });
 
     if (action === "UPDATE" && slot) {
       setFormData({
@@ -107,12 +227,20 @@ const PlayingSlot = ({
         playingCenterId: parseInt(field.id),
         playingSlot: slot,
       });
+      setDisplayPrices({
+        primaryPrice: formatVND(slot.primaryPrice),
+        nightPrice: formatVND(slot.nightPrice),
+      });
     } else {
       setFormData({
         name: "",
         primaryPrice: 0,
         nightPrice: 0,
         playingCenterId: parseInt(field.id),
+      });
+      setDisplayPrices({
+        primaryPrice: "",
+        nightPrice: "",
       });
     }
     onOpen();
@@ -125,6 +253,11 @@ const PlayingSlot = ({
       nightPrice: 0,
       playingCenterId: 0,
     });
+    setDisplayPrices({
+      primaryPrice: "",
+      nightPrice: "",
+    });
+    setErrors({ name: "", primaryPrice: "", nightPrice: "" });
     onClose();
   };
 
@@ -136,6 +269,10 @@ const PlayingSlot = ({
         nightPrice: slot.nightPrice,
         playingCenterId: parseInt(field.id),
         playingSlot: slot,
+      });
+      setDisplayPrices({
+        primaryPrice: formatVND(slot.primaryPrice),
+        nightPrice: formatVND(slot.nightPrice),
       });
     }
   }, [isOpen, action, slot]);
@@ -163,46 +300,53 @@ const PlayingSlot = ({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                {action == "CREATE"
+                {action === "CREATE"
                   ? `Create slot for ${selectedCenter?.name}`
-                  : `Update slot  ${selectedCenter?.name} `}
+                  : `Update slot ${selectedCenter?.name}`}
               </ModalHeader>
               <ModalBody>
-                {/* Input Slot Name */}
                 <Input
                   isRequired
+                  errorMessage={errors.name}
+                  isInvalid={!!errors.name}
                   label="Slot name"
                   name="name"
                   placeholder="Enter slot name"
                   value={formData.name}
                   variant="bordered"
-                  onChange={handleChangeName}
+                  onChange={handleChange}
                 />
 
-                {/* Input Primary Price */}
                 <Input
                   isRequired
-                  label="Enter day price"
-                  min="0"
+                  errorMessage={errors.primaryPrice}
+                  isInvalid={!!errors.primaryPrice}
+                  label="Day price"
+                  min="1"
                   name="primaryPrice"
                   placeholder="Enter day price"
-                  type="number"
-                  value={formData.primaryPrice.toString()}
+                  type="text"
+                  value={displayPrices.primaryPrice}
                   variant="bordered"
+                  onBlur={handleBlur}
                   onChange={handleChange}
+                  onFocus={handleFocus}
                 />
 
-                {/* Input Night Price */}
                 <Input
                   isRequired
-                  label="Enter night price"
-                  min="0"
+                  errorMessage={errors.nightPrice}
+                  isInvalid={!!errors.nightPrice}
+                  label="Night price"
+                  min="1"
                   name="nightPrice"
                   placeholder="Enter night price"
-                  type="number"
-                  value={formData.nightPrice.toString()}
+                  type="text"
+                  value={displayPrices.nightPrice}
                   variant="bordered"
+                  onBlur={handleBlur}
                   onChange={handleChange}
+                  onFocus={handleFocus}
                 />
               </ModalBody>
               <ModalFooter>
@@ -213,10 +357,14 @@ const PlayingSlot = ({
                 >
                   Cancel
                 </Button>
-                <Button color="primary" onPress={handleSubmit}>
+                <Button
+                  color="primary"
+                  isDisabled={!isFormValid() || isLoading}
+                  onPress={handleSubmit}
+                >
                   {isLoading ? (
                     <Spinner color="white" size="sm" />
-                  ) : action == "CREATE" ? (
+                  ) : action === "CREATE" ? (
                     "Create"
                   ) : (
                     "Update"

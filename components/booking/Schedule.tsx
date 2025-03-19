@@ -18,6 +18,30 @@ export default function Schedule() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
+  // 🛠 Lấy giờ hiện tại
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+
+  // 🛠 Xử lý chọn thời gian hợp lệ
+  const isTimeDisabled = (time: string) => {
+    if (!selectedDate) return false;
+
+    const selectedDay = new Date(selectedDate);
+    const isToday = selectedDay.toDateString() === now.toDateString();
+
+    if (isToday) {
+      const [hours, minutes] = time.split(":").map(Number);
+
+      return (
+        hours < currentHour ||
+        (hours === currentHour && minutes < currentMinute)
+      );
+    }
+
+    return false;
+  };
+
   const handleCheck = () => {
     if (!selectedDate) {
       setToast({ message: "Please select a date!", type: "error" } as any);
@@ -25,19 +49,57 @@ export default function Schedule() {
       return;
     }
 
-    if (!fromTime) {
+    if (!fromTime || !toTime) {
       setToast({
-        message: "Please select a start time!",
+        message: "Please select both start and end time!",
         type: "error",
       } as any);
 
       return;
     }
 
-    if (!toTime) {
-      setToast({ message: "Please select an end time!", type: "error" } as any);
+    if (toTime <= fromTime) {
+      setToast({
+        message: "End time must be after start time!",
+        type: "error",
+      } as any);
 
       return;
+    }
+
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    const [fromHour, fromMinute] = fromTime.split(":").map(Number);
+    const [toHour, toMinute] = toTime.split(":").map(Number);
+
+    // Nếu ngày được chọn là hôm nay, kiểm tra giờ nhập vào
+    const isToday = selectedDate.toDateString() === now.toDateString();
+
+    if (isToday) {
+      if (
+        fromHour < currentHour ||
+        (fromHour === currentHour && fromMinute < currentMinute)
+      ) {
+        setToast({
+          message: "This time has passed, please choose the right time!",
+          type: "error",
+        } as any);
+
+        return;
+      }
+      if (
+        toHour < currentHour ||
+        (toHour === currentHour && toMinute < currentMinute)
+      ) {
+        setToast({
+          message: "This time has passed, please choose the right time!",
+          type: "error",
+        } as any);
+
+        return;
+      }
     }
 
     const convertToTimestamp = (selectedDate: Date, time: string) => {
@@ -51,12 +113,6 @@ export default function Schedule() {
     const fromTimestamp = convertToTimestamp(selectedDate, fromTime);
     const toTimestamp = convertToTimestamp(selectedDate, toTime);
 
-    if (!fromTimestamp || !toTimestamp) {
-      setToast({ message: "Invalid time format!", type: "error" } as any);
-
-      return;
-    }
-
     setLoading(true);
 
     if (address) {
@@ -65,21 +121,13 @@ export default function Schedule() {
       params.delete("address");
     }
 
-    if (fromTimestamp) {
-      params.set("fromTime", fromTimestamp.toString());
-    } else {
-      params.delete("fromTime");
-    }
-
-    if (toTimestamp) {
-      params.set("toTime", toTimestamp.toString());
-    } else {
-      params.delete("toTime");
-    }
+    params.set("fromTime", fromTimestamp?.toString() || "");
+    params.set("toTime", toTimestamp?.toString() || "");
 
     router.replace(`/booking?${params.toString()}`, { scroll: false });
     setLoading(false);
   };
+
   const handleClear = () => {
     setSelectedDate(null);
     setBookingTime("");
@@ -95,7 +143,7 @@ export default function Schedule() {
 
   return (
     <div className="flex justify-center items-center p-4 sm:p-8 mb-10 mt-20 ml-1">
-      <div className="flex flex-col  md:flex-row gap-6 w-full max-w-[1200px] bg-white p-6 sm:p-8 shadow-lg rounded-md mr-3">
+      <div className="flex flex-col md:flex-row gap-6 w-full max-w-[1200px] bg-white p-6 sm:p-8 shadow-lg rounded-md mr-3">
         <div className="w-full md:w-[50%]">
           <h2 className="text-2xl font-bold mb-4 text-center text-black md:text-left bg-clip-text">
             CALENDAR
@@ -108,26 +156,36 @@ export default function Schedule() {
             SCHEDULE
           </h2>
 
+          {/* Start Time */}
           <div className="mb-4">
             <p className="text-black text-left flex flex-col">Start Time</p>
             <input
               className="border p-2 w-full rounded-xl h-14"
+              min={
+                selectedDate &&
+                selectedDate.toDateString() === now.toDateString()
+                  ? `${String(currentHour).padStart(2, "0")}:${String(currentMinute).padStart(2, "0")}`
+                  : "00:00"
+              }
               type="time"
               value={fromTime}
               onChange={(e) => setBookingTime(e.target.value)}
             />
           </div>
 
+          {/* End Time */}
           <div className="mb-4">
             <p className="text-black text-left flex flex-col">End Time</p>
             <input
               className="border p-2 w-full rounded-xl h-14"
+              min={fromTime || "00:00"}
               type="time"
               value={toTime}
               onChange={(e) => setReturnTime(e.target.value)}
             />
           </div>
 
+          {/* Address */}
           <div className="mb-4">
             <p className="text-black text-left flex flex-col">Address</p>
             <input
@@ -139,6 +197,7 @@ export default function Schedule() {
             />
           </div>
 
+          {/* Buttons */}
           <div className="flex gap-4 text-[12px] sm:text-xl">
             <button
               className="p-3 w-full rounded-xl h-14 text-black border-2 border-black font-bold hover:scale-95 transition"

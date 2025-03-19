@@ -39,7 +39,6 @@ export default function Page() {
     };
   }, [userId]);
 
-
   return (
     <div className="chat-container h-screen mt-20">
       <h2>📢 WebSocket for Owner</h2>
@@ -58,7 +57,6 @@ export default function Page() {
           <p key={index}>{msg}</p>
         ))}
       </div>
-    
     </div>
   );
 }
