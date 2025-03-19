@@ -35,5 +35,5 @@ export type BlockedSlot = {
 };
 
 export type Error = {
-  message: string
-}
+  message: string;
+};

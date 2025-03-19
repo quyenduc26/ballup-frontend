@@ -1,4 +1,3 @@
-
 import { Toaster } from "sonner";
 export default function MatchLayout({
   children,
@@ -7,15 +6,16 @@ export default function MatchLayout({
 }) {
   return (
     <section className=" mt-5 items-center justify-center">
-      <div className="text-center ">{children}
-      <Toaster 
-          position="top-center" 
-          richColors 
-          toastOptions={{ 
-            style: { 
-              zIndex: 9999 
-            } 
-          }} 
+      <div className="text-center ">
+        {children}
+        <Toaster
+          richColors
+          position="top-center"
+          toastOptions={{
+            style: {
+              zIndex: 9999,
+            },
+          }}
         />
       </div>
     </section>

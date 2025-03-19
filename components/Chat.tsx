@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
@@ -26,6 +26,7 @@ export default function Page() {
         setConnected(true);
         client.subscribe(`/topic/owner/${ownerId}`, (msg) => {
           const receivedMessage: string = msg.body;
+
           setMessages((prev) => [...prev, receivedMessage]);
         });
       },
@@ -46,6 +47,7 @@ export default function Page() {
   const sendMessage = () => {
     if (stompClient && message.trim() !== "") {
       const chatMessage: Message = { sender: "Owner", content: message };
+
       stompClient.publish({
         destination: "/app/sendToOwner",
         body: JSON.stringify(chatMessage),
@@ -58,13 +60,13 @@ export default function Page() {
     <div className="chat-container h-screen mt-20">
       <h2>📢 WebSocket for Owner</h2>
       <input
+        disabled={connected}
         placeholder="Enter Owner ID..."
         type="text"
         value={ownerId}
         onChange={(e) => setOwnerId(e.target.value)}
-        disabled={connected}
       />
-      <button onClick={() => setOwnerId(ownerId)} disabled={connected}>
+      <button disabled={connected} onClick={() => setOwnerId(ownerId)}>
         Connect as Owner
       </button>
       <div className="chat-box">

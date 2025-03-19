@@ -19,7 +19,8 @@ export default function TeamDetail() {
   const userId = parsedData.id;
 
   const { detailID } = useParams();
-  console.log(detailID)
+
+  console.log(detailID);
   const parsedTeamId = parseInt(detailID as string, 10);
 
   useEffect(() => {

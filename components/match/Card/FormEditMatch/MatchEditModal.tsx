@@ -6,9 +6,11 @@ import type {
   UpdateGameInfoRequest,
   UpdateGameTimeAndSlotRequest,
 } from "@/types";
-import { useState, useRef } from "react"; 
-import { ArrowLeft, ShieldCheck,Clock } from "lucide-react";
+
+import { useState, useRef } from "react";
+import { ArrowLeft, ShieldCheck, Clock } from "lucide-react";
 import { toast, Toaster } from "sonner";
+
 import { getImageUrl } from "@/utils/getImage";
 import { uploadImage } from "@/utils/uploadImage";
 import { convertToTimestamp } from "@/utils/convertToTimestamp";
@@ -253,7 +255,11 @@ export default function MatchEditModal({
   return (
     <>
       {/* Add Toaster component at the top level */}
-      <Toaster richColors position="top-center" toastOptions={{ style: { zIndex: 9999 } }} />
+      <Toaster
+        richColors
+        position="top-center"
+        toastOptions={{ style: { zIndex: 9999 } }}
+      />
       <div className="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
           {/* Header */}
@@ -266,19 +272,21 @@ export default function MatchEditModal({
             </button>
             <div className="flex gap-3 flex-2">
               <button
-                className={`flex-2 flex items-center gap-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${activeTab === "info"
+                className={`flex-2 flex items-center gap-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${
+                  activeTab === "info"
                     ? "bg-gray-900 text-white shadow-md"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                }`}
                 onClick={() => setActiveTab("info")}
               >
-                <ShieldCheck  size={18} /> Match
+                <ShieldCheck size={18} /> Match
               </button>
               <button
-                className={`flex-2 flex items-center gap-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${activeTab === "time"
+                className={`flex-2 flex items-center gap-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${
+                  activeTab === "time"
                     ? "bg-gray-900 text-white shadow-md"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                }`}
                 onClick={() => setActiveTab("time")}
               >
                 <Clock size={18} /> Time

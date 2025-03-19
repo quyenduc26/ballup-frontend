@@ -1,12 +1,14 @@
 "use client";
 
 import type { GameResponse } from "@/types";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 import { getImageUrl } from "@/utils/getImage";
 import { formatTimestamp } from "@/utils/formatTimestamp";
 import matchApi from "@/service/matchApi";
-import { toast } from "sonner";
 
 interface MatchCardProps {
   match: GameResponse;
@@ -42,6 +44,7 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
   const handleJoinSingle = async () => {
     if (hasJoined) {
       toast.warning("You have already joined this match!");
+
       return;
     }
 
@@ -85,6 +88,7 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
   const handleJoinTeam = async () => {
     if (hasJoined) {
       toast.warning("You have already joined this match!");
+
       return;
     }
 
