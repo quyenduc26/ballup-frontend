@@ -4,7 +4,6 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, X, Upload } from "lucide-react";
 import { Input } from "@heroui/react";
-
 import { SonnerToast } from "@/components/sonnerMesage";
 import { uploadImage } from "@/utils/uploadImage";
 import { PlayingCenterType } from "@/types";
@@ -17,9 +16,7 @@ type PlayingCenterProps = {
   setActiveTab: (tab: string) => void;
 };
 
-export const PlayingCenter: React.FC<PlayingCenterProps> = ({
-  setActiveTab,
-}) => {
+export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) => {
   const router = useRouter();
   const data = localStorage.getItem("data");
   const parsedData = data ? JSON.parse(data) : null;
@@ -31,55 +28,65 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
     description: "",
     images: Array(MAX_IMAGES).fill(""),
     ownerId: userId,
-    centerType: "", // Added to match backend expectation
+    centerType: "",
+  });
+
+  const [errors, setErrors] = useState({
+    name: false,
+    address: false,
+    addressLength: false, 
+    description: false,
+    descriptionLength: false, 
+    centerType: false,
+    images: false,
   });
 
   const [toastData, setToastData] = useState<
     | {
-        heading?: string;
-        message?: string;
-        type?: "error" | "success" | "info" | "warning";
-        duration?: number;
-      }
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warning";
+      duration?: number;
+    }
     | undefined
   >(undefined);
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
 
-    // Special handling for "type" to also set "centerType"
     if (name === "type") {
       setFormData((prev) => ({
         ...prev,
-        [name]: value,
-        centerType: value, // Set both fields
+        centerType: value,
       }));
+      if (value) {
+        setErrors((prev) => ({ ...prev, centerType: false }));
+      }
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
+      setErrors((prev) => ({
+        ...prev,
+        [name]: false,
+        ...(name === "address" && { addressLength: false }),
+        ...(name === "description" && { descriptionLength: false }),
+      }));
     }
   };
 
-  const handleImageUpload = async (
-    e: ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const file = e.target.files?.[0];
-
     if (file) {
       const filename = await uploadImage(file);
-
       if (filename) {
         const imageUrl = getImageUrl(filename);
-
         setFormData((prev) => {
           const updatedImages = [...prev.images];
-
           if (imageUrl) updatedImages[index] = imageUrl;
-
           return { ...prev, images: updatedImages };
         });
+        setErrors((prev) => ({ ...prev, images: false }));
       }
     }
   };
@@ -87,9 +94,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
   const handleImageDelete = (index: number) => {
     setFormData((prev) => {
       const updatedImages = [...prev.images];
-
-      updatedImages[index] = ""; // Sử dụng chuỗi rỗng thay vì null
-
+      updatedImages[index] = "";
       return { ...prev, images: updatedImages };
     });
   };
@@ -97,50 +102,29 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validate required fields
-    if (
-      !formData.name.trim() ||
-      !formData.address.trim() ||
-      !formData.description.trim()
-    ) {
-      setToastData({
-        type: "error",
-        heading: "Validation Error",
-        message: "Vui lòng điền đầy đủ các trường bắt buộc!",
-        duration: 3000,
-      });
+    const newErrors = {
+      name: !formData.name.trim(),
+      address: !formData.address.trim(),
+      addressLength: formData.address.trim() ? formData.address.trim().length < 8 : false,
+      description: !formData.description.trim(),
+      descriptionLength: formData.description.trim() ? formData.description.trim().length < 20 : false,
+      centerType: !formData.centerType,
+      images: !formData.images.some((img) => img.trim() !== ""),
+    };
 
-      return;
-    }
-
-    // Validate type separately with clear message
-    if (!formData.centerType || formData.centerType === "") {
-      setToastData({
-        type: "error",
-        heading: "Error ❗",
-        message: "Vui lòng chọn loại sân (Type)!",
-        duration: 3000,
-      });
-
-      return;
-    }
+    setErrors(newErrors);
 
     try {
-      // Create payload with the centerType field that matches backend expectation
       const payload = {
         name: formData.name.trim(),
         address: formData.address.trim(),
         description: formData.description.trim(),
         ownerId: formData.ownerId,
-        centerType: formData.centerType, // Use the frontend "type" value but with the correct backend field name
+        centerType: formData.centerType,
         images: formData.images.filter((img) => img !== null && img !== ""),
       };
 
-      console.log("📤 Payload Sent to API:", JSON.stringify(payload, null, 2));
-
       const response = await playingApi.createCreatePlayingCenter(payload);
-
-      console.log("✅ API Response:", response);
 
       setToastData({
         type: "success",
@@ -154,32 +138,36 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
       }, 3000);
     } catch (error) {
       console.error("API Error:", error);
-
       setToastData({
         type: "error",
         heading: "Error ❗",
-        message:
-          "Error creating stadium. Please check all fields and try again!",
+        message: "Error creating stadium. Please check all fields and try again!",
         duration: 3000,
       });
     }
   };
-
   const handleCancel = () => {
     setFormData({
       name: "",
       address: "",
       description: "",
-      images: Array(MAX_IMAGES).fill(null),
+      images: Array(MAX_IMAGES).fill(""),
       ownerId: userId,
-      // type: "",
-      centerType: "", // Reset both fields
+      centerType: "",
+    });
+    setErrors({
+      name: false,
+      address: false,
+      addressLength: false,
+      description: false,
+      descriptionLength: false,
+      centerType: false,
+      images: false,
     });
   };
 
   return (
     <div className="mt-10 p-4 sm:p-6 border border-gray-300 rounded-lg shadow-md w-full">
-      {/* Display toast notification if available */}
       <SonnerToast toast={toastData} />
 
       <h2 className="text-center font-bold text-lg">CREATE PLAYING CENTER</h2>
@@ -190,12 +178,12 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
         <ArrowLeft size={18} />
       </button>
 
-      {/* Image Upload Section */}
       <div className="relative bg-gray-100 p-4 sm:p-6 rounded-lg grid grid-cols-1 sm:grid-cols-2 gap-4">
         {formData.images.map((image, index) => (
           <div
             key={index}
-            className="relative w-full sm:w-[550px] sm:h-80 flex ml-5 items-center justify-center border border-gray-400 rounded-lg"
+            className={`relative w-full sm:w-[550px] sm:h-80 flex ml-5 items-center justify-center border rounded-lg ${errors.images ? "border-red-500" : "border-gray-400"
+              }`}
           >
             {image ? (
               <>
@@ -226,65 +214,90 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
             )}
           </div>
         ))}
+        {errors.images && (
+          <p className="text-red-500 text-sm mt-1 col-span-2">
+            Please upload at least one image
+          </p>
+        )}
       </div>
 
-      {/* Form Fields */}
-      <form
-        className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4"
-        onSubmit={handleSubmit}
-      >
-        <Input
-          isRequired
-          className="p-2 w-full"
-          errorMessage="Please enter a valid stadium name"
-          label="STADIUM NAME"
-          labelPlacement="outside"
-          name="name"
-          placeholder="Enter your stadium name"
-          type="text"
-          value={formData.name}
-          onChange={handleChange}
-        />
+      <form className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={handleSubmit}>
+        <div>
+          <label className="block text-left text-sm font-medium uppercase mb-2">
+            STADIUM NAME <span className="text-red-500">*</span>
+          </label>
+          <Input
+            labelPlacement="outside"
+            name="name"
+            placeholder="Enter your stadium name"
+            type="text"
+            value={formData.name}
+            onChange={handleChange}
+            className={`w-full border rounded-lg ${errors.name ? "border-red-500" : "border-gray-300"
+              }`}
+          />
+          {errors.name && (
+            <p className="text-red-500 text-sm mt-1">Please enter a valid stadium name</p>
+          )}
+        </div>
 
-        <Input
-          isRequired
-          className="p-2 w-full"
-          errorMessage="Please enter a valid address"
-          label="ADDRESS"
-          labelPlacement="outside"
-          name="address"
-          placeholder="Enter your address"
-          type="text"
-          value={formData.address}
-          onChange={handleChange}
-        />
+        <div>
+          <label className="block text-left text-sm font-medium uppercase mb-2">
+            ADDRESS <span className="text-red-500">*</span>
+          </label>
+          <Input
+            labelPlacement="outside"
+            name="address"
+            placeholder="Enter your address"
+            type="text"
+            value={formData.address}
+            onChange={handleChange}
+            className={`w-full border rounded-lg ${errors.address || errors.addressLength ? "border-red-500" : "border-gray-300"
+              }`}
+          />
+          {errors.address && (
+            <p className="text-red-500 text-sm mt-1">Please enter an address</p>
+          )}
+          {errors.addressLength && !errors.address && (
+            <p className="text-red-500 text-sm mt-1">
+              Address must be at least 8 characters long
+            </p>
+          )}
+        </div>
 
-        <div className="text-[14px]">DESCRIPTION</div>
-        <textarea
-          required
-          className="border p-2 w-full col-span-1 sm:col-span-2"
-          name="description"
-          placeholder="Enter description"
-          value={formData.description}
-          onChange={handleChange}
-        />
-
-        {/* Select Sport - Keep the UI name as "type" but ensure we're setting centerType behind the scenes */}
         <div className="col-span-1 sm:col-span-2">
-          <label
-            className="block text-left text-sm font-medium uppercase mb-2"
-            htmlFor="type"
-          >
+          <label className="block text-left text-sm font-medium uppercase mb-2">
+            DESCRIPTION <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            className={`border p-2 w-full rounded-lg ${errors.description || errors.descriptionLength
+                ? "border-red-500"
+                : "border-gray-300"
+              }`}
+            name="description"
+            placeholder="Enter description"
+            value={formData.description}
+            onChange={handleChange}
+          />
+          {errors.description && (
+            <p className="text-red-500 text-sm mt-1">Please enter a description</p>
+          )}
+          {errors.descriptionLength && !errors.description && (
+            <p className="text-red-500 text-sm mt-1">
+              Description must be at least 20 characters long
+            </p>
+          )}
+        </div>
+
+        <div className="col-span-1 sm:col-span-2">
+          <label className="block text-left text-sm font-medium uppercase mb-2">
             SPORT <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <select
-              required
-              className={`w-full border h-12 border-gray-300 p-2 text-md pr-10 rounded-lg appearance-none ${
-                !formData.centerType ? "border-red-500" : ""
-              }`}
-              id="type"
-              name="type" // Keep name as "type" for UI consistency
+              className={`w-full border h-12 p-2 text-md pr-10 rounded-lg appearance-none ${errors.centerType ? "border-red-500" : "border-gray-300"
+                }`}
+              name="type"
               value={formData.centerType}
               onChange={handleChange}
             >
@@ -292,30 +305,12 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
               <option value="FOOTBALL">FOOTBALL</option>
               <option value="BADMINTON">BADMINTON</option>
             </select>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <svg
-                aria-hidden="true"
-                className="h-5 w-5 text-gray-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clipRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  fillRule="evenodd"
-                />
-              </svg>
-            </div>
+            {errors.centerType && (
+              <p className="text-red-500 text-sm mt-1">Please select a sport</p>
+            )}
           </div>
-          {!formData.centerType && (
-            <p className="text-xs text-red-500 mt-1">
-              Sport selection is required
-            </p>
-          )}
         </div>
 
-        {/* Buttons */}
         <div className="flex flex-col sm:flex-row justify-between col-span-1 sm:col-span-2 mt-4 gap-2">
           <button
             className="bg-gray-400 h-12 text-white px-4 py-2 rounded w-full sm:w-1/2"

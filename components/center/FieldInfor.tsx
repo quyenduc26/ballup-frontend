@@ -26,11 +26,11 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
 
   const [toastData, setToastData] = useState<
     | {
-        heading?: string;
-        message?: string;
-        type?: "error" | "success" | "info" | "warning";
-        duration?: number;
-      }
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warning";
+      duration?: number;
+    }
     | undefined
   >();
 
@@ -148,7 +148,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
               <div className="p-5 space-y-4">
                 {/* Description */}
                 <div className="bg-gray-50 p-3 rounded-lg text-sm text-gray-600 flex gap-2">
-                  <Info className="h-5 w-5 text-gray-500 flex-shrink-0 mt-0.5" />
+                  <Info className="h-5 w-5 text-gray-500 flex-shrink-0" />
                   <div>{centerInfor.description}</div>
                 </div>
 
@@ -166,13 +166,13 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                       </div>
                       <p className="font-bold">
                         {centerInfor.bookingTime &&
-                        centerInfor.bookingTime.length >= 7
+                          centerInfor.bookingTime.length >= 7
                           ? centerInfor.bookingTime.slice(0, 6)
                           : centerInfor.bookingTime || "N/A"}
                       </p>
                       <p className="font-bold">
                         {centerInfor.bookingTime &&
-                        centerInfor.bookingTime.length >= 7
+                          centerInfor.bookingTime.length >= 7
                           ? centerInfor.bookingTime.slice(7)
                           : ""}
                       </p>
@@ -184,13 +184,13 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                       </div>
                       <p className="font-bold">
                         {centerInfor.returnTime &&
-                        centerInfor.returnTime.length >= 7
+                          centerInfor.returnTime.length >= 7
                           ? centerInfor.returnTime.slice(0, 6)
                           : centerInfor.returnTime || "N/A"}
                       </p>
                       <p className="font-bold">
                         {centerInfor.returnTime &&
-                        centerInfor.returnTime.length >= 7
+                          centerInfor.returnTime.length >= 7
                           ? centerInfor.returnTime.slice(7)
                           : ""}
                       </p>
@@ -200,7 +200,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
 
                 {/* Pricing */}
                 <div>
-                  <h3 className="text-black text-sm uppercase font-semibold mb-2 flex items-center gap-2">
+                  <h3 className="text-black text-sm uppercase font-semibold mb-2 flex items-center gap-1">
                     <DollarSign className="h-4 w-4" />
                     PRICING DETAILS
                   </h3>
@@ -222,7 +222,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                     <div className="h-px bg-gray-200 my-2" />
                     <div className="flex justify-between items-center font-bold text-lg">
                       <span className="flex items-center gap-1">
-                        <DollarSign className="h-5 w-5" />
+                        <DollarSign className="h-4 w-4" />
                         Total
                       </span>
                       <span className="text-green-600">

@@ -23,6 +23,13 @@ export default function Calendar({
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
   const handleDateClick = (day: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Đặt thời gian về 00:00:00 để so sánh chính xác
+
+    if (day < today) {
+      return; // Không cho phép chọn ngày trong quá khứ
+    }
+
     onSelect(day);
   };
 
@@ -39,10 +46,9 @@ export default function Calendar({
   const end = endOfMonth(currentDate);
   const days = eachDayOfInterval({ start, end });
 
-  // 🛠 Tìm ngày bắt đầu của tháng (thứ mấy) để thêm ngày trống phía trước
   const startDayIndex = (getDay(start) + 6) % 7; // Điều chỉnh vì date-fns bắt đầu từ Chủ Nhật
 
-  // 🛠 Thêm ngày trống đầu tháng (nếu cần)
+  // Thêm ngày trống đầu tháng (nếu cần)
   const blankDays = Array(startDayIndex).fill(null);
 
   return (
@@ -50,12 +56,12 @@ export default function Calendar({
       {/* Điều hướng tháng */}
       <div className="flex justify-between items-center mb-2">
         <button
-          className="text-black  px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"
+          className="text-black px-2 py-1 rounded bg-gray-200 hover:bg-gray-300"
           onClick={handlePrevMonth}
         >
           {"<"}
         </button>
-        <h2 className="text-black text-lg font-bold text-center ">
+        <h2 className="text-black text-lg font-bold text-center">
           {format(currentDate, "MMMM yyyy")}
         </h2>
         <button
@@ -86,17 +92,25 @@ export default function Calendar({
         ))}
 
         {/* Hiển thị ngày trong tháng */}
-        {days.map((day) => (
-          <button
-            key={day.toString()}
-            className={`p-2 sm:p-3 text-sm w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-md 
-              ${isSameMonth(day, currentDate) ? "text-black" : "text-gray-400"}
-              ${selected && isSameDay(selected, day) ? "bg-black text-white" : "hover:bg-gray-200"}`}
-            onClick={() => handleDateClick(day)}
-          >
-            {format(day, "d")}
-          </button>
-        ))}
+        {days.map((day) => {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const isPastDay = day < today;
+
+          return (
+            <button
+              key={day.toString()}
+              className={`p-2 sm:p-3 text-sm w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-md 
+                ${isSameMonth(day, currentDate) ? "text-black" : "text-gray-400"}
+                ${selected && isSameDay(selected, day) ? "bg-black text-white" : "hover:bg-gray-200"}
+                ${isPastDay ? "opacity-50 cursor-not-allowed" : ""}`} // Làm mờ ngày đã qua
+              onClick={() => !isPastDay && handleDateClick(day)} // Chặn chọn ngày đã qua
+              disabled={isPastDay} // Vô hiệu hóa button
+            >
+              {format(day, "d")} 
+            </button>
+          );
+        })}
       </div>
     </div>
   );
