@@ -148,7 +148,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
               <div className="p-5 space-y-4">
                 {/* Description */}
                 <div className="bg-gray-50 p-3 rounded-lg text-sm text-gray-600 flex gap-2">
-                  <Info className="h-5 w-5 text-gray-500 flex-shrink-0 mt-0.5" />
+                  <Info className="h-5 w-5 text-gray-500 flex-shrink-0" />
                   <div>{centerInfor.description}</div>
                 </div>
 
@@ -200,7 +200,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
 
                 {/* Pricing */}
                 <div>
-                  <h3 className="text-black text-sm uppercase font-semibold mb-2 flex items-center gap-2">
+                  <h3 className="text-black text-sm uppercase font-semibold mb-2 flex items-center gap-1">
                     <DollarSign className="h-4 w-4" />
                     PRICING DETAILS
                   </h3>
@@ -222,7 +222,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                     <div className="h-px bg-gray-200 my-2" />
                     <div className="flex justify-between items-center font-bold text-lg">
                       <span className="flex items-center gap-1">
-                        <DollarSign className="h-5 w-5" />
+                        <DollarSign className="h-4 w-4" />
                         Total
                       </span>
                       <span className="text-green-600">

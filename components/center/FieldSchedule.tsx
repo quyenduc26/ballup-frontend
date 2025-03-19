@@ -65,7 +65,7 @@ const FieldSchedule = ({ slotList }: { slotList: Slot[] }) => {
           };
         });
 
-        console.log(convertedBookings);
+        // console.log(convertedBookings);
         setConvertedBlockedSlots(convertedBookings);
         setIsLoading(false);
       } catch (error) {

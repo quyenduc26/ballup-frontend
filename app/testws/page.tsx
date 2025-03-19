@@ -3,11 +3,6 @@ import { useState, useEffect } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-interface Message {
-  sender: string;
-  content: string;
-}
-
 export default function Page() {
   const [stompClient, setStompClient] = useState<Client | null>(null);
   const [messages, setMessages] = useState<string[]>([]);
@@ -44,18 +39,6 @@ export default function Page() {
     };
   }, [userId]);
 
-  const sendMessage = () => {
-    if (stompClient && message.trim() !== "") {
-      const chatMessage: Message = { sender: "Owner", content: message };
-
-      stompClient.publish({
-        destination: "/app/sendToOwner",
-        body: JSON.stringify(chatMessage),
-      });
-      setMessage("");
-    }
-  };
-
   return (
     <div className="chat-container h-screen mt-20">
       <h2>📢 WebSocket for Owner</h2>
@@ -74,13 +57,6 @@ export default function Page() {
           <p key={index}>{msg}</p>
         ))}
       </div>
-      <input
-        placeholder="Type a message..."
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
-      <button onClick={sendMessage}>Send</button>
     </div>
   );
 }

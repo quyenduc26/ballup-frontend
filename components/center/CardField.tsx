@@ -1,6 +1,5 @@
 "use client";
 import { Heart, MapPinned, Phone } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 
 import { CardFieldType, queryTime } from "@/types";
@@ -17,17 +16,6 @@ const CardField = ({
   const [favorites, setFavorites] = useState<number[]>([]);
   const [toastData, setToastData] = useState<any>(null);
 
-  let url = `/booking/${field.id}`;
-
-  if (queryTime) {
-    const { fromTime, toTime } = queryTime;
-    const queryParams = new URLSearchParams();
-
-    if (fromTime) queryParams.append("fromTime", fromTime.toString());
-    if (toTime) queryParams.append("toTime", toTime.toString());
-    url = `${url}?${queryParams.toString()}`;
-  }
-
   const toggleFavorite = (id: number, event: React.MouseEvent) => {
     event.stopPropagation();
     setFavorites((prev) =>
@@ -38,15 +26,28 @@ const CardField = ({
   const handleBookNow = (event: React.MouseEvent) => {
     event.preventDefault();
 
+    // Kiểm tra nếu không có thời gian được chọn
     if (!queryTime?.fromTime || !queryTime?.toTime) {
       setToastData({
         heading: "Error",
         message: "Please select a time range before booking.",
         type: "error",
+        img: getImageUrl(field.image),
       });
 
       return;
     }
+
+    // Tạo query parameters
+    const queryParams = new URLSearchParams();
+
+    queryParams.append("fromTime", queryTime.fromTime.toString());
+    queryParams.append("toTime", queryTime.toTime.toString());
+    queryParams.append("primaryPrice", field.primaryPrice?.toString() || "0"); // Thêm giá ban ngày
+    queryParams.append("nightPrice", field.nightPrice?.toString() || "0"); // Thêm giá ban đêm
+
+    // Tạo URL đầy đủ và chuyển hướng
+    const url = `/booking/${field.id}?${queryParams.toString()}`;
 
     window.location.href = url;
   };
@@ -59,13 +60,11 @@ const CardField = ({
         </div>
       )}
       <div className="relative w-full max-w-lg mx-auto p-4 bg-white shadow-md rounded-lg overflow-hidden transition transform hover:scale-105">
-        <Link className="block relative" href={url}>
-          <img
-            alt="sân bóng đá"
-            className="w-full h-40 sm:h-72 object-cover bg-yellow-300 rounded-lg"
-            src={getImageUrl(field.image)}
-          />
-        </Link>
+        <img
+          alt="sân bóng đá"
+          className="w-full h-40 sm:h-72 object-cover bg-yellow-300 rounded-lg"
+          src={getImageUrl(field.image)}
+        />
 
         <div className="py-4">
           <h2 className="text-2xl font-bold text-left text-black">
