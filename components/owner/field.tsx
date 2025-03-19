@@ -65,6 +65,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
   }, [isRefresh])
 
   const handleDelete = async (fieldId: string) => {
+    // Using toast.promise for the delete operation with confirmation-like behavior
     toast(
       "Are you sure you want to delete this center?",
       {

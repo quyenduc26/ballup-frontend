@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import SearchBar from "@/components/search/searchPage";
 import HeroSection from "@/components/Banner";
-import TeamIntro from "@/app/introTeam/page";
 import ListTeamCard from "@/components/team/teamCard/ListTeamCard";
 import CreateTeam from "@/components/team/FormCreateTeam";
+import TeamIntro from "@/components/team/inforTeam/detailTeam";
 
 const Team = () => {
   const [showExplore, setShowExplore] = useState(true);
@@ -54,7 +54,7 @@ const Team = () => {
 
       {/* Nếu showCreateTeam = true, chỉ hiển thị CreateTeam và ẩn ListTeamCard */}
       {showCreateTeam ? (
-        <CreateTeam />
+        <CreateTeam setIsOpen={() => setShowCreateTeam(false)} />
       ) : showExplore ? (
         <ListTeamCard />
       ) : (

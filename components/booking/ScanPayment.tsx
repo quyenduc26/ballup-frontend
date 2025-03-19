@@ -8,12 +8,22 @@ import { BookingDetailResponse } from "@/types";
 import bookingRequestApi from "@/service/bookingRequestApi";
 import { formatTimestamp } from "@/utils/formatTimestamp";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { SonnerToast } from "@/components/sonnerMesage";
 
 export default function ScanPayment({ bookingId }: { bookingId: number }) {
   const [booking, setBooking] = useState<BookingDetailResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isDepositing, setIsDepositing] = useState<boolean>(false);
   const router = useRouter();
+  const [toastData, setToastData] = useState<
+    | {
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
+    | undefined
+  >();
 
   useEffect(() => {
     async function fetchBooking() {
@@ -34,8 +44,22 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
     setIsDepositing(true);
     try {
       await bookingRequestApi.depositBooking(bookingId);
-      router.push("/booking");
+      setToastData({
+        type: "success",
+        heading: "Action success",
+        message: "Deposited successfully",
+        duration: 3000,
+      });
+      setTimeout(() => {
+        router.push("/booking");
+      }, 3000);
     } catch (error) {
+      setToastData({
+        type: "error",
+        heading: "Action fail",
+        message: "Deposited unsuccessfully",
+        duration: 3000,
+      });
       throw error;
     } finally {
       setIsDepositing(false);
@@ -46,6 +70,7 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
     <Spinner className="h-screen w-screen" color="default" />
   ) : (
     <div className="w-[1500px]  mx-auto py-8 px-4">
+      <SonnerToast toast={toastData} />
       <div className="space-y-4">
         <div className="flex flex-col items-center justify-center ">
           <div className="w-1/2 mx-auto py-8  h-full">
