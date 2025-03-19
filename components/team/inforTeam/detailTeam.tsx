@@ -28,6 +28,7 @@ export default function TeamIntro() {
         setLoading(false);
       }
     };
+
     fetchMyTeam();
   }, []);
 

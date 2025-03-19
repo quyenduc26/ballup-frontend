@@ -17,11 +17,11 @@ import {
   Info,
   CreditCardIcon as PaymentIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import bookingRequestApi from "@/service/bookingRequestApi";
 import { formatTimestamp } from "@/utils/formatTimestamp";
 import { useUser } from "@/context/UserContext";
-import { useRouter } from "next/navigation";
 import { SonnerToast } from "@/components/sonnerMesage";
 
 type TabType = "pending" | "completed";
@@ -42,11 +42,11 @@ export function BookingHistory() {
   );
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
 
@@ -67,11 +67,7 @@ export function BookingHistory() {
         message: "Cancel booking unsuccessfully!",
         duration: 3000,
       });
-
     }
-
-
-
   };
 
   useEffect(() => {
@@ -174,7 +170,7 @@ export function BookingHistory() {
 
   // Handle payment
   const handlePayment = (bookingId: number, event: React.MouseEvent) => {
-    router.push(`/payment/${bookingId}`)
+    router.push(`/payment/${bookingId}`);
     console.log("Process payment:", bookingId);
   };
 
@@ -338,19 +334,21 @@ export function BookingHistory() {
             {/* Tabs */}
             <div className="flex border-b border-gray-200">
               <button
-                className={`flex-1 py-3 text-center font-medium transition-colors ${activeTab === "pending"
+                className={`flex-1 py-3 text-center font-medium transition-colors ${
+                  activeTab === "pending"
                     ? "text-black border-b-2 border-black"
                     : "text-gray-500 hover:text-gray-700"
-                  }`}
+                }`}
                 onClick={() => setActiveTab("pending")}
               >
                 Pending
               </button>
               <button
-                className={`flex-1 py-3 text-center font-medium transition-colors ${activeTab === "completed"
+                className={`flex-1 py-3 text-center font-medium transition-colors ${
+                  activeTab === "completed"
                     ? "text-black border-b-2 border-black"
                     : "text-gray-500 hover:text-gray-700"
-                  }`}
+                }`}
                 onClick={() => setActiveTab("completed")}
               >
                 Completed

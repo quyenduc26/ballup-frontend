@@ -17,11 +17,11 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
   const router = useRouter();
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
 
@@ -29,6 +29,7 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
     async function fetchBooking() {
       try {
         const res = await bookingRequestApi.getBookingDetail(bookingId);
+
         setBooking(res.data);
       } catch (err) {
         throw err;
@@ -51,7 +52,7 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
       });
       setTimeout(() => {
         router.push("/booking");
-      }, 3000)
+      }, 3000);
     } catch (error) {
       setToastData({
         type: "error",
@@ -182,10 +183,11 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
                 {booking?.status === "CONFIRMED" && (
                   <>
                     <button
-                      className={`w-full ${isDepositing
+                      className={`w-full ${
+                        isDepositing
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-green-600 hover:bg-green-700"
-                        } text-white py-2 px-4 rounded-md flex items-center justify-center mb-3`}
+                      } text-white py-2 px-4 rounded-md flex items-center justify-center mb-3`}
                       disabled={isDepositing}
                       onClick={() => handleDeposit(booking.bookingId)}
                     >

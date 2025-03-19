@@ -10,7 +10,7 @@ import createTeamApi from "@/service/createTeamApi";
 import { uploadImage } from "@/utils/uploadImage";
 import { getImageUrl } from "@/utils/getImage";
 
-const CreateTeam = ({setIsOpen}:{ setIsOpen: () => void; }) => {
+const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
   const [formData, setFormData] = useState<CreateTeamData>({
     cover: "",
     logo: "",
