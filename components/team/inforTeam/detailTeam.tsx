@@ -12,13 +12,14 @@ export default function TeamIntro() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const team_id = Number(localStorage.getItem("teamId"));
-  const user_id = Number(localStorage.getItem("userId"));
+  const data = localStorage.getItem("data");
+  const parsedData = data ? JSON.parse(data) : null;
+  const user_id = parsedData.id;
 
   useEffect(() => {
-    const fetchTeamDetail = async () => {
+    const fetchMyTeam = async () => {
       try {
-        const response = await TeamApi.getTeamDetail(team_id, user_id);
+        const response = await TeamApi.getMyTeams(user_id);
 
         setTeam(response.data);
       } catch (err: any) {
@@ -28,7 +29,7 @@ export default function TeamIntro() {
       }
     };
 
-    fetchTeamDetail();
+    fetchMyTeam();
   }, []);
 
   if (loading) return <p className="text-center">Loading data...</p>;

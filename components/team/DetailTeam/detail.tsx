@@ -9,15 +9,18 @@ import { DetailTeam, Player } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 
 export default function TeamDetail() {
-  const { teamId } = useParams();
   const [team, setTeam] = useState<DetailTeam | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const userId = 1;
-  const params = useParams();
+  const data = localStorage.getItem("data");
+  const parsedData = data ? JSON.parse(data) : null;
+  const userId = parsedData.id;
+
   const { detailID } = useParams();
+
+  console.log(detailID);
   const parsedTeamId = parseInt(detailID as string, 10);
 
   useEffect(() => {

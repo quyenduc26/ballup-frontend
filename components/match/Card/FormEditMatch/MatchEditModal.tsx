@@ -8,7 +8,7 @@ import type {
 } from "@/types";
 
 import { useState, useRef } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Clock } from "lucide-react";
 import { toast, Toaster } from "sonner";
 
 import { getImageUrl } from "@/utils/getImage";
@@ -195,12 +195,16 @@ export default function MatchEditModal({
       });
 
       // Show success toast
+      // Thay vì đóng modal ngay lập tức
       toast.success("Match updated successfully!", {
         duration: 3000,
       });
 
-      if (onUpdate) onUpdate();
-      onClose();
+      // Đợi 1 giây trước khi đóng modal
+      setTimeout(() => {
+        if (onUpdate) onUpdate();
+        onClose();
+      }, 1000);
     } catch (err) {
       console.error("Error updating match info:", err);
       // Show error toast instead of setting error state
@@ -225,8 +229,10 @@ export default function MatchEditModal({
         duration: 3000,
       });
 
-      if (onUpdate) onUpdate();
-      onClose();
+      setTimeout(() => {
+        if (onUpdate) onUpdate();
+        onClose();
+      }, 1000);
     } catch (err) {
       console.error("Error updating match time:", err);
       // Show error toast instead of setting error state
@@ -249,7 +255,11 @@ export default function MatchEditModal({
   return (
     <>
       {/* Add Toaster component at the top level */}
-      <Toaster richColors position="top-center" />
+      <Toaster
+        richColors
+        position="top-center"
+        toastOptions={{ style: { zIndex: 9999 } }}
+      />
       <div className="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
           {/* Header */}
@@ -260,26 +270,26 @@ export default function MatchEditModal({
             >
               <ArrowLeft className="h-5 w-5 text-white" />
             </button>
-            <div className="flex gap-3 flex-2 ">
+            <div className="flex gap-3 flex-2">
               <button
-                className={`flex-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${
+                className={`flex-2 flex items-center gap-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${
                   activeTab === "info"
                     ? "bg-gray-900 text-white shadow-md"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
                 onClick={() => setActiveTab("info")}
               >
-                Match
+                <ShieldCheck size={18} /> Match
               </button>
               <button
-                className={`flex-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${
+                className={`flex-2 flex items-center gap-2 py-2.5 px-4 rounded-lg font-medium text-base transition-all duration-200 ${
                   activeTab === "time"
                     ? "bg-gray-900 text-white shadow-md"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
                 onClick={() => setActiveTab("time")}
               >
-                Time
+                <Clock size={18} /> Time
               </button>
             </div>
           </div>

@@ -33,3 +33,7 @@ export type BlockedSlot = {
   createBy: string;
   creatorName: string;
 };
+
+export type Error = {
+  message: string;
+};

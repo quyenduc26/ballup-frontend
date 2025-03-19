@@ -162,7 +162,6 @@ export default function CreateMatch() {
         description: "",
         images: [],
         ownerId: 0,
-        type: "",
         centerType: "",
       };
       const response = await matchApi.getPlayingCenter(playingCenterParams);
