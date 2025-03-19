@@ -39,7 +39,6 @@ export default function Page() {
     };
   }, [ownerId]);
 
-
   return (
     <div className="chat-container h-screen mt-20">
       <h2>📢 WebSocket for Owner</h2>

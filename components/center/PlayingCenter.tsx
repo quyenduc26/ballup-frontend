@@ -4,6 +4,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, X, Upload } from "lucide-react";
 import { Input } from "@heroui/react";
+
 import { SonnerToast } from "@/components/sonnerMesage";
 import { uploadImage } from "@/utils/uploadImage";
 import { PlayingCenterType } from "@/types";
@@ -16,7 +17,9 @@ type PlayingCenterProps = {
   setActiveTab: (tab: string) => void;
 };
 
-export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) => {
+export const PlayingCenter: React.FC<PlayingCenterProps> = ({
+  setActiveTab,
+}) => {
   const router = useRouter();
   const data = localStorage.getItem("data");
   const parsedData = data ? JSON.parse(data) : null;
@@ -34,25 +37,25 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
   const [errors, setErrors] = useState({
     name: false,
     address: false,
-    addressLength: false, 
+    addressLength: false,
     description: false,
-    descriptionLength: false, 
+    descriptionLength: false,
     centerType: false,
     images: false,
   });
 
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >(undefined);
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -75,15 +78,23 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
     }
   };
 
-  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleImageUpload = async (
+    e: ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) => {
     const file = e.target.files?.[0];
+
     if (file) {
       const filename = await uploadImage(file);
+
       if (filename) {
         const imageUrl = getImageUrl(filename);
+
         setFormData((prev) => {
           const updatedImages = [...prev.images];
+
           if (imageUrl) updatedImages[index] = imageUrl;
+
           return { ...prev, images: updatedImages };
         });
         setErrors((prev) => ({ ...prev, images: false }));
@@ -94,7 +105,9 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
   const handleImageDelete = (index: number) => {
     setFormData((prev) => {
       const updatedImages = [...prev.images];
+
       updatedImages[index] = "";
+
       return { ...prev, images: updatedImages };
     });
   };
@@ -105,9 +118,13 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
     const newErrors = {
       name: !formData.name.trim(),
       address: !formData.address.trim(),
-      addressLength: formData.address.trim() ? formData.address.trim().length < 8 : false,
+      addressLength: formData.address.trim()
+        ? formData.address.trim().length < 8
+        : false,
       description: !formData.description.trim(),
-      descriptionLength: formData.description.trim() ? formData.description.trim().length < 20 : false,
+      descriptionLength: formData.description.trim()
+        ? formData.description.trim().length < 20
+        : false,
       centerType: !formData.centerType,
       images: !formData.images.some((img) => img.trim() !== ""),
     };
@@ -141,7 +158,8 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
       setToastData({
         type: "error",
         heading: "Error ❗",
-        message: "Error creating stadium. Please check all fields and try again!",
+        message:
+          "Error creating stadium. Please check all fields and try again!",
         duration: 3000,
       });
     }
@@ -182,8 +200,9 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
         {formData.images.map((image, index) => (
           <div
             key={index}
-            className={`relative w-full sm:w-[550px] sm:h-80 flex ml-5 items-center justify-center border rounded-lg ${errors.images ? "border-red-500" : "border-gray-400"
-              }`}
+            className={`relative w-full sm:w-[550px] sm:h-80 flex ml-5 items-center justify-center border rounded-lg ${
+              errors.images ? "border-red-500" : "border-gray-400"
+            }`}
           >
             {image ? (
               <>
@@ -201,12 +220,16 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
                 </button>
               </>
             ) : (
-              <label className="flex flex-col items-center justify-center cursor-pointer w-full h-full">
+              <label
+                className="flex flex-col items-center justify-center cursor-pointer w-full h-full"
+                htmlFor={`image-upload-${index}`}
+              >
                 <Upload className="text-gray-500" size={24} />
                 <span className="text-xs text-gray-500">Upload Image</span>
                 <input
                   accept="image/*"
                   className="hidden"
+                  id={`image-upload-${index}`}
                   type="file"
                   onChange={(e) => handleImageUpload(e, index)}
                 />
@@ -221,39 +244,56 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
         )}
       </div>
 
-      <form className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={handleSubmit}>
+      <form
+        className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4"
+        onSubmit={handleSubmit}
+      >
         <div>
-          <label className="block text-left text-sm font-medium uppercase mb-2">
+          <label
+            className="block text-left text-sm font-medium uppercase mb-2"
+            htmlFor="stadium-name"
+          >
             STADIUM NAME <span className="text-red-500">*</span>
           </label>
           <Input
+            className={`w-full border rounded-lg ${
+              errors.name ? "border-red-500" : "border-gray-300"
+            }`}
+            id="stadium-name"
             labelPlacement="outside"
             name="name"
             placeholder="Enter your stadium name"
             type="text"
             value={formData.name}
             onChange={handleChange}
-            className={`w-full border rounded-lg ${errors.name ? "border-red-500" : "border-gray-300"
-              }`}
           />
           {errors.name && (
-            <p className="text-red-500 text-sm mt-1">Please enter a valid stadium name</p>
+            <p className="text-red-500 text-sm mt-1">
+              Please enter a valid stadium name
+            </p>
           )}
         </div>
 
         <div>
-          <label className="block text-left text-sm font-medium uppercase mb-2">
+          <label
+            className="block text-left text-sm font-medium uppercase mb-2"
+            htmlFor="stadium-address"
+          >
             ADDRESS <span className="text-red-500">*</span>
           </label>
           <Input
+            className={`w-full border rounded-lg ${
+              errors.address || errors.addressLength
+                ? "border-red-500"
+                : "border-gray-300"
+            }`}
+            id="stadium-address"
             labelPlacement="outside"
             name="address"
             placeholder="Enter your address"
             type="text"
             value={formData.address}
             onChange={handleChange}
-            className={`w-full border rounded-lg ${errors.address || errors.addressLength ? "border-red-500" : "border-gray-300"
-              }`}
           />
           {errors.address && (
             <p className="text-red-500 text-sm mt-1">Please enter an address</p>
@@ -266,21 +306,28 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
         </div>
 
         <div className="col-span-1 sm:col-span-2">
-          <label className="block text-left text-sm font-medium uppercase mb-2">
+          <label
+            className="block text-left text-sm font-medium uppercase mb-2"
+            htmlFor="stadium-description"
+          >
             DESCRIPTION <span className="text-red-500">*</span>
           </label>
           <textarea
-            className={`border p-2 w-full rounded-lg ${errors.description || errors.descriptionLength
+            className={`border p-2 w-full rounded-lg ${
+              errors.description || errors.descriptionLength
                 ? "border-red-500"
                 : "border-gray-300"
-              }`}
+            }`}
+            id="stadium-description"
             name="description"
             placeholder="Enter description"
             value={formData.description}
             onChange={handleChange}
           />
           {errors.description && (
-            <p className="text-red-500 text-sm mt-1">Please enter a description</p>
+            <p className="text-red-500 text-sm mt-1">
+              Please enter a description
+            </p>
           )}
           {errors.descriptionLength && !errors.description && (
             <p className="text-red-500 text-sm mt-1">
@@ -290,13 +337,18 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({ setActiveTab }) =>
         </div>
 
         <div className="col-span-1 sm:col-span-2">
-          <label className="block text-left text-sm font-medium uppercase mb-2">
+          <label
+            className="block text-left text-sm font-medium uppercase mb-2"
+            htmlFor="stadium-sport"
+          >
             SPORT <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <select
-              className={`w-full border h-12 p-2 text-md pr-10 rounded-lg appearance-none ${errors.centerType ? "border-red-500" : "border-gray-300"
-                }`}
+              className={`w-full border h-12 p-2 text-md pr-10 rounded-lg appearance-none ${
+                errors.centerType ? "border-red-500" : "border-gray-300"
+              }`}
+              id="stadium-sport"
               name="type"
               value={formData.centerType}
               onChange={handleChange}

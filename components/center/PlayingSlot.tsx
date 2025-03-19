@@ -42,11 +42,11 @@ const PlayingSlot = ({
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
 
@@ -91,6 +91,7 @@ const PlayingSlot = ({
     }
 
     setErrors(newErrors);
+
     return isValid;
   };
 
@@ -110,6 +111,7 @@ const PlayingSlot = ({
       setErrors({ ...errors, [name]: "" });
     } else {
       const numericValue = parseVND(value);
+
       setFormData({ ...formData, [name]: numericValue });
       setDisplayPrices({ ...displayPrices, [name]: value });
       setErrors({ ...errors, [name]: "" });
@@ -118,8 +120,10 @@ const PlayingSlot = ({
 
   const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
+
     if (name !== "name") {
       const value = formData[name as "primaryPrice" | "nightPrice"];
+
       setDisplayPrices({
         ...displayPrices,
         [name]: formatVND(value),
@@ -129,8 +133,10 @@ const PlayingSlot = ({
 
   const handleFocus = (e: ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
+
     if (name !== "name") {
       const value = formData[name as "primaryPrice" | "nightPrice"];
+
       setDisplayPrices({
         ...displayPrices,
         [name]: value.toString(),
@@ -147,13 +153,16 @@ const PlayingSlot = ({
     // Check for duplicate slot name when creating
     if (action === "CREATE" && field.slots) {
       const isDuplicateName = field.slots.some(
-        (slot) => slot.name.toLowerCase() === formData.name.trim().toLowerCase()
+        (slot) =>
+          slot.name.toLowerCase() === formData.name.trim().toLowerCase(),
       );
+
       if (isDuplicateName) {
         setErrors({
           ...errors,
           name: "Slot name already exists in this field",
         });
+
         return;
       }
     }
@@ -161,6 +170,7 @@ const PlayingSlot = ({
     setIsLoading(true);
     try {
       let response;
+
       if (action === "CREATE") {
         response = await playingApi.createPlayingSlot(formData);
         setToastData({
@@ -183,6 +193,7 @@ const PlayingSlot = ({
     } catch (error: any) {
       console.error("Error:", error);
       const errorMessage = error.response?.data?.message?.toLowerCase() || "";
+
       if (
         errorMessage.includes("duplicate") ||
         errorMessage.includes("exists") ||
@@ -196,8 +207,7 @@ const PlayingSlot = ({
         setToastData({
           type: "error",
           heading: "Operation failed",
-          message:
-            error.response?.data?.message || "Create or update failed!",
+          message: error.response?.data?.message || "Create or update failed!",
           duration: 3000,
         });
       }
@@ -297,18 +307,20 @@ const PlayingSlot = ({
               <ModalBody>
                 <Input
                   isRequired
+                  errorMessage={errors.name}
+                  isInvalid={!!errors.name}
                   label="Slot name"
                   name="name"
                   placeholder="Enter slot name"
                   value={formData.name}
                   variant="bordered"
                   onChange={handleChange}
-                  errorMessage={errors.name}
-                  isInvalid={!!errors.name}
                 />
 
                 <Input
                   isRequired
+                  errorMessage={errors.primaryPrice}
+                  isInvalid={!!errors.primaryPrice}
                   label="Day price"
                   min="1"
                   name="primaryPrice"
@@ -316,15 +328,15 @@ const PlayingSlot = ({
                   type="text"
                   value={displayPrices.primaryPrice}
                   variant="bordered"
-                  onChange={handleChange}
                   onBlur={handleBlur}
+                  onChange={handleChange}
                   onFocus={handleFocus}
-                  errorMessage={errors.primaryPrice}
-                  isInvalid={!!errors.primaryPrice}
                 />
 
                 <Input
                   isRequired
+                  errorMessage={errors.nightPrice}
+                  isInvalid={!!errors.nightPrice}
                   label="Night price"
                   min="1"
                   name="nightPrice"
@@ -332,11 +344,9 @@ const PlayingSlot = ({
                   type="text"
                   value={displayPrices.nightPrice}
                   variant="bordered"
-                  onChange={handleChange}
                   onBlur={handleBlur}
+                  onChange={handleChange}
                   onFocus={handleFocus}
-                  errorMessage={errors.nightPrice}
-                  isInvalid={!!errors.nightPrice}
                 />
               </ModalBody>
               <ModalFooter>
@@ -349,8 +359,8 @@ const PlayingSlot = ({
                 </Button>
                 <Button
                   color="primary"
-                  onPress={handleSubmit}
                   isDisabled={!isFormValid() || isLoading}
+                  onPress={handleSubmit}
                 >
                   {isLoading ? (
                     <Spinner color="white" size="sm" />

@@ -24,6 +24,7 @@ export default function Calendar({
 
   const handleDateClick = (day: Date) => {
     const today = new Date();
+
     today.setHours(0, 0, 0, 0); // Đặt thời gian về 00:00:00 để so sánh chính xác
 
     if (day < today) {
@@ -94,6 +95,7 @@ export default function Calendar({
         {/* Hiển thị ngày trong tháng */}
         {days.map((day) => {
           const today = new Date();
+
           today.setHours(0, 0, 0, 0);
           const isPastDay = day < today;
 
@@ -104,10 +106,10 @@ export default function Calendar({
                 ${isSameMonth(day, currentDate) ? "text-black" : "text-gray-400"}
                 ${selected && isSameDay(selected, day) ? "bg-black text-white" : "hover:bg-gray-200"}
                 ${isPastDay ? "opacity-50 cursor-not-allowed" : ""}`} // Làm mờ ngày đã qua
-              onClick={() => !isPastDay && handleDateClick(day)} // Chặn chọn ngày đã qua
               disabled={isPastDay} // Vô hiệu hóa button
+              onClick={() => !isPastDay && handleDateClick(day)} // Chặn chọn ngày đã qua
             >
-              {format(day, "d")} 
+              {format(day, "d")}
             </button>
           );
         })}

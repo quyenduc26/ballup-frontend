@@ -1,5 +1,3 @@
-
-
 export interface WebSocketConfig {
   apiUrl: string;
   topicEndpoint: string;

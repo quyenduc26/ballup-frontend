@@ -19,7 +19,7 @@ const CardField = ({
   const toggleFavorite = (id: number, event: React.MouseEvent) => {
     event.stopPropagation();
     setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id],
     );
   };
 
@@ -34,18 +34,21 @@ const CardField = ({
         type: "error",
         img: getImageUrl(field.image),
       });
+
       return;
     }
 
     // Tạo query parameters
     const queryParams = new URLSearchParams();
+
     queryParams.append("fromTime", queryTime.fromTime.toString());
     queryParams.append("toTime", queryTime.toTime.toString());
     queryParams.append("primaryPrice", field.primaryPrice?.toString() || "0"); // Thêm giá ban ngày
-    queryParams.append("nightPrice", field.nightPrice?.toString() || "0");    // Thêm giá ban đêm
+    queryParams.append("nightPrice", field.nightPrice?.toString() || "0"); // Thêm giá ban đêm
 
     // Tạo URL đầy đủ và chuyển hướng
     const url = `/booking/${field.id}?${queryParams.toString()}`;
+
     window.location.href = url;
   };
 
@@ -79,10 +82,11 @@ const CardField = ({
           <div className="flex justify-between gap-3 mt-4">
             <div className="flex gap-3">
               <button
-                className={`p-2 rounded-full border ${favorites.includes(field.id)
+                className={`p-2 rounded-full border ${
+                  favorites.includes(field.id)
                     ? "bg-red-500 text-white"
                     : "text-black hover:bg-red-500"
-                  }`}
+                }`}
                 onClick={(event) => toggleFavorite(field.id, event)}
               >
                 <Heart

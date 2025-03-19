@@ -41,6 +41,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
 
         if (userId) {
           const response = await ownerApi.getOwnerCenter(userId);
+
           setFields(response.data);
         }
       } catch (error) {
@@ -141,7 +142,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                       <div className="grid grid-cols-4 items-center gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4">
                         <div className="text-left md:pl-4">
                           <h2 className="text-xs sm:text-sm font-medium">
-                             Slot Name
+                            Slot Name
                           </h2>
                         </div>
 
