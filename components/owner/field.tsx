@@ -105,8 +105,8 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                 </div>
 
                 {/* Expand/Collapse Button */}
-                {field.slots?.length > 0 && (
-                  <div className="flex justify-end gap-1">
+                <div className="flex justify-end gap-1">
+                  {field.slots?.length > 0 && (
                     <Button
                       className="h-8 w-8 md:h-10 md:w-10"
                       size="sm"
@@ -119,13 +119,13 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                         <ChevronDown className="h-4 w-4 md:h-5 md:w-5" />
                       )}
                     </Button>
-                    <PlayingSlot
-                      action="CREATE"
-                      field={field}
-                      refresh={() => setIsRefresh(true)}
-                    />
-                  </div>
-                )}
+                  )}
+                  <PlayingSlot
+                    action="CREATE"
+                    field={field}
+                    refresh={() => setIsRefresh(true)}
+                  />
+                </div>
               </div>
             </CardHeader>
 
