@@ -10,7 +10,7 @@ import createTeamApi from "@/service/createTeamApi";
 import { uploadImage } from "@/utils/uploadImage";
 import { getImageUrl } from "@/utils/getImage";
 
-const CreateTeam = () => {
+const CreateTeam = ({setIsOpen}:{ setIsOpen: () => void; }) => {
   const [formData, setFormData] = useState<CreateTeamData>({
     cover: "",
     logo: "",
@@ -135,7 +135,7 @@ const CreateTeam = () => {
 
       <button
         className="flex items-center px-4 py-2 mb-4 bg-black text-white rounded"
-        onClick={() => router.push("/team")}
+        onClick={setIsOpen}
       >
         ← Back
       </button>
