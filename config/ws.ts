@@ -1,26 +1,26 @@
 // websocketConfig.ts
+import { NotificationType } from "@/types/common";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-import { DEFAULT_CONFIG, WebSocketConfig } from "@/types/ws-config";
 
 export const createStompClient = (
-  config: WebSocketConfig = DEFAULT_CONFIG,
-  onMessageReceived: (message: Object) => void,
+  id: string,
+  subscribeChannel: string,
+  handleOnConnect: (notification: NotificationType) => void,
   onConnectCallback?: () => void,
   onDisconnectCallback?: () => void,
 ) => {
-  const socket = new SockJS(`${config.apiUrl}/ws`);
+  const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_URL}/ws`);
 
   const client = new Client({
     webSocketFactory: () => socket,
-    reconnectDelay: config.reconnectDelay,
+    reconnectDelay: 5000,
     onConnect: () => {
       console.log("✅ Connected to WebSocket");
-      client.subscribe(config.topicEndpoint, (msg) => {
-        const receivedMessage: Object = JSON.parse(msg.body);
-
-        onMessageReceived(receivedMessage);
+      client.subscribe(subscribeChannel + id, (msg) => {
+        const receivedMessage: NotificationType = JSON.parse(msg.body);
+        handleOnConnect(receivedMessage);
       });
 
       if (onConnectCallback) {

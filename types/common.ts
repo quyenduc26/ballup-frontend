@@ -1,3 +1,4 @@
+import { NOTIFICATIONS } from './../constant/index';
 export type ToastType = {
   heading?: string;
   message?: string;
@@ -16,3 +17,16 @@ export type ConvertedBlockedSlot = {
   duration: number;
   createdBy: string;
 };
+
+export type NotificationType = {
+  id: number;
+  isRead: boolean;
+  teamId?: number;
+  bookingId?: number;
+  gameId?: number;
+  type: NotificationContentType;
+  createdAt: string;
+};
+
+export type NotificationContentType = keyof typeof NOTIFICATIONS;
+
