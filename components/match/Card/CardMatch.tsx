@@ -17,7 +17,8 @@ interface MatchCardProps {
 
 export default function MatchCard({ match, onUpdate }: MatchCardProps) {
   const [teamBPlayers, setTeamBPlayers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loadingTeam, setLoadingTeam] = useState(false);
+  const [loadingSingle, setLoadingSingle] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
   const [joinMessage, setJoinMessage] = useState("");
   const router = useRouter();
@@ -44,12 +45,11 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
   const handleJoinSingle = async () => {
     if (hasJoined) {
       toast.warning("You have already joined this match!");
-
       return;
     }
 
     try {
-      setLoading(true);
+      setLoadingSingle(true);
       const response = await matchApi.joinGame(match.id, userId);
 
       if (response.status === 200) {
@@ -81,19 +81,18 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
       console.error("Error joining game:", error);
       toast.error("Failed to join game");
     } finally {
-      setLoading(false);
+      setLoadingSingle(false);
     }
   };
 
   const handleJoinTeam = async () => {
     if (hasJoined) {
       toast.warning("You have already joined this match!");
-
       return;
     }
 
     try {
-      setLoading(true);
+      setLoadingTeam(true);
       const response = await matchApi.joinGameAsTeam(match.id, userId);
 
       if (response.status === 200) {
@@ -113,7 +112,7 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
       console.error("Error joining team:", error);
       toast.error("Failed to join as team");
     } finally {
-      setLoading(false);
+      setLoadingTeam(false);
     }
   };
 
@@ -239,17 +238,17 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
             <div className="grid grid-cols-2 gap-2">
               <button
                 className="border-2 border-black py-3 text-sm font-bold text-black rounded hover:bg-gray-100 transition-colors disabled:opacity-50"
-                disabled={loading || hasJoined}
+                disabled={loadingTeam || hasJoined}
                 onClick={handleJoinTeam}
               >
-                {loading ? "Joining..." : "JOIN MATCH"}
+                {loadingTeam ? "Joining..." : "JOIN MATCH"}
               </button>
               <button
                 className="bg-black text-white py-3 text-sm font-bold rounded hover:bg-gray-800 transition-colors disabled:opacity-50"
-                disabled={loading || hasJoined}
+                disabled={loadingSingle || hasJoined}
                 onClick={handleJoinSingle}
               >
-                {loading ? "Joining..." : "JOIN SINGLE"}
+                {loadingSingle ? "Joining..." : "JOIN SINGLE"}
               </button>
             </div>
           )}
