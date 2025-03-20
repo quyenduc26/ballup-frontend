@@ -19,9 +19,9 @@ export type FieldDetailType = {
   bookingTime: string;
   returnTime: string;
   type: string;
-  price: number | {min: number, max: number};
+  price: number | { min: number; max: number };
   hours: number;
-  total: number | {min: number, max: number};
+  total: number | { min: number; max: number };
   mapUrl: string;
   slots: [];
   amount: number;
@@ -55,6 +55,7 @@ export type PlayingCenterType = {
   ownerId: number;
   centerType: string;
 };
+
 export type PlayingSlotType = {
   id?: number;
   name: string;
@@ -163,7 +164,7 @@ export type BookingDataType = {
   playingSlotId: number;
   fromTime: number;
   toTime: number;
-  amount: number | {min: number, max: number};
+  amount: number | { min: number; max: number };
 };
 
 export type CenterSelection = {
@@ -257,4 +258,14 @@ export type UpdateGameInfoRequest = {
   cover: string;
   description: string;
   membersRequired: number;
+};
+
+export type PlayingCenterEditType = {
+  id?: number;
+  name: string;
+  address: string;
+  description: string;
+  imageUrls: string[];
+  ownerId: number;
+  centerType: string;
 };

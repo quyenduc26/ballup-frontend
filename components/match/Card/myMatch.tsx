@@ -2,12 +2,13 @@
 import type { MyGameResponse } from "@/types";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
 import MatchEditModal from "./FormEditMatch/MatchEditModal";
 
 import { getImageUrl } from "@/utils/getImage";
 import { formatTimestamp } from "@/utils/formatTimestamp";
-import matchApi from "@/service/matchApi"; // Add this import
+import matchApi from "@/service/matchApi";
 
 interface CardMyMatchProps {
   match: MyGameResponse;
@@ -16,7 +17,7 @@ interface CardMyMatchProps {
 
 export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isCancelling, setIsCancelling] = useState(false); // Add loading state for cancel
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const handleEditClick = () => {
     setIsEditModalOpen(true);
@@ -27,32 +28,65 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
   };
 
   const handleUpdateSuccess = () => {
+    toast.success("Match updated successfully");
     if (onUpdate) {
       onUpdate(); // Trigger refetch of data in parent component
     }
   };
 
-  // Add this function to handle cancel
-  const handleCancelMatch = async () => {
-    if (window.confirm("Are you sure you want to cancel this match?")) {
-      try {
-        setIsCancelling(true);
-        const data = localStorage.getItem("data");
-        const parsedData = data ? JSON.parse(data) : null;
-        const userId = parsedData.id;
+  const handleCancelMatch = () => {
+    // Using toast.promise with a confirmation dialog
+    toast.custom((t) => (
+      <div className="bg-white rounded-lg shadow-lg p-4 max-w-md">
+        <h3 className="font-bold text-lg mb-2">Cancel Match</h3>
+        <p className="mb-4">Are you sure you want to cancel this match?</p>
+        <div className="flex justify-end gap-2">
+          <button
+            className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+            onClick={() => toast.dismiss(t)}
+          >
+            No
+          </button>
+          <button
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+            onClick={() => {
+              toast.dismiss(t);
+              performCancellation();
+            }}
+          >
+            Yes, Cancel
+          </button>
+        </div>
+      </div>
+    ), {
+      duration: 10000, // 10 seconds to make a decision
+    });
+  };
 
-        await matchApi.cancelGame(match.id, userId);
+  const performCancellation = async () => {
+    try {
+      setIsCancelling(true);
+      const data = localStorage.getItem("data");
+      const parsedData = data ? JSON.parse(data) : null;
+      const userId = parsedData.id;
 
-        // Call onUpdate to refresh the matches list
-        if (onUpdate) {
-          onUpdate();
+      await toast.promise(
+        matchApi.cancelGame(match.id, userId),
+        {
+          loading: 'Cancelling match...',
+          success: 'Match cancelled successfully',
+          error: 'Failed to cancel match'
         }
-      } catch (error) {
-        console.error("Error cancelling match:", error);
-        alert("Failed to cancel match. Please try again.");
-      } finally {
-        setIsCancelling(false);
+      );
+
+      // Call onUpdate to refresh the matches list
+      if (onUpdate) {
+        onUpdate();
       }
+    } catch (error) {
+      console.error("Error cancelling match:", error);
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -152,7 +186,7 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
                 if (match.conversationId) {
                   window.location.href = `/conversation/${match.conversationId}`;
                 } else {
-                  console.error("No conversation ID available");
+                  toast.error("No conversation available");
                 }
               }}
             >

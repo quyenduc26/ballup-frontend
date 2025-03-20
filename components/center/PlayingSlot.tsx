@@ -281,12 +281,12 @@ const PlayingSlot = ({
     <>
       <SonnerToast toast={toastData} />
       <Button
-        className="rounded-md"
+        className="rounded-md w-0"
         onPress={() => handleCreateSlot(field, slot)}
       >
         {action === "CREATE" ? (
           <>
-            <Plus className="w-4 h-4" /> Slot
+            <Plus className="w-4 h-4" />
           </>
         ) : (
           <>

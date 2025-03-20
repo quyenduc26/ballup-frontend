@@ -24,15 +24,19 @@ import { formatCurrency } from "@/utils/formatCurrency";
 const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [priceChanged, setPriceChanged] = useState<number | {min: number, max: number}>(centerInfor.total);
-  const [unitPriceChanged, setUnitPriceChanged] = useState<number | {min: number, max: number}>(centerInfor.price);
+  const [priceChanged, setPriceChanged] = useState<
+    number | { min: number; max: number }
+  >(centerInfor.total);
+  const [unitPriceChanged, setUnitPriceChanged] = useState<
+    number | { min: number; max: number }
+  >(centerInfor.price);
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
 
@@ -41,18 +45,23 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
   useEffect(() => {
     const primaryPrice = searchParams.get("primaryPrice");
     const nightPrice = searchParams.get("nightPrice");
-  
+
     const parsedPrimary = primaryPrice ? Number(primaryPrice) : 0;
     const parsedNight = nightPrice ? Number(nightPrice) : 0;
-    if(centerInfor.dayHours > 0 && centerInfor.nightHours > 0){
-      setUnitPriceChanged({min: parsedPrimary, max: parsedNight});
+
+    if (centerInfor.dayHours > 0 && centerInfor.nightHours > 0) {
+      setUnitPriceChanged({ min: parsedPrimary, max: parsedNight });
     } else {
-      setUnitPriceChanged( centerInfor.dayHours > 0 ? parsedPrimary : parsedNight)
+      setUnitPriceChanged(
+        centerInfor.dayHours > 0 ? parsedPrimary : parsedNight,
+      );
     }
-  
-    setPriceChanged(parsedPrimary * (centerInfor.dayHours ?? 0) + parsedNight * (centerInfor.nightHours ?? 0));
+
+    setPriceChanged(
+      parsedPrimary * (centerInfor.dayHours ?? 0) +
+        parsedNight * (centerInfor.nightHours ?? 0),
+    );
   }, [searchParams]);
-  
 
   const submitBooking = async () => {
     const data = localStorage.getItem("data");
@@ -61,7 +70,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
 
     const queryParams = new URLSearchParams(location.search);
     const fromTime = queryParams.get("fromTime");
-    const toTime = queryParams.get("toTime"); 
+    const toTime = queryParams.get("toTime");
     const slotId = queryParams.get("slotId");
 
     if (slotId == null) {
@@ -75,7 +84,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
       playingSlotId: slotId ? Number.parseInt(slotId) : 0,
       fromTime: fromTime ? Number.parseInt(fromTime) : 0,
       toTime: toTime ? Number.parseInt(toTime) : 0,
-      amount: priceChanged  ,
+      amount: priceChanged,
     };
 
     console.log(bookingData);
@@ -184,13 +193,13 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                       </div>
                       <p className="font-bold">
                         {centerInfor.bookingTime &&
-                          centerInfor.bookingTime.length >= 7
+                        centerInfor.bookingTime.length >= 7
                           ? centerInfor.bookingTime.slice(0, 6)
                           : centerInfor.bookingTime || "N/A"}
                       </p>
                       <p className="font-bold">
                         {centerInfor.bookingTime &&
-                          centerInfor.bookingTime.length >= 7
+                        centerInfor.bookingTime.length >= 7
                           ? centerInfor.bookingTime.slice(6)
                           : ""}
                       </p>
@@ -202,13 +211,13 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                       </div>
                       <p className="font-bold">
                         {centerInfor.returnTime &&
-                          centerInfor.returnTime.length >= 7
+                        centerInfor.returnTime.length >= 7
                           ? centerInfor.returnTime.slice(0, 6)
                           : centerInfor.returnTime || "N/A"}
                       </p>
                       <p className="font-bold">
                         {centerInfor.returnTime &&
-                          centerInfor.returnTime.length >= 7
+                        centerInfor.returnTime.length >= 7
                           ? centerInfor.returnTime.slice(6)
                           : ""}
                       </p>
@@ -228,7 +237,11 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                         <CreditCard className="h-4 w-4 text-gray-500" />
                         Price per hour :
                       </span>
-                      <span>{typeof unitPriceChanged === "object" ? (`${formatCurrency(unitPriceChanged.min)} - ${formatCurrency(unitPriceChanged.max)}`) : formatCurrency(unitPriceChanged)}</span>
+                      <span>
+                        {typeof unitPriceChanged === "object"
+                          ? `${formatCurrency(unitPriceChanged.min)} - ${formatCurrency(unitPriceChanged.max)}`
+                          : formatCurrency(unitPriceChanged)}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600 flex items-center gap-1">
@@ -244,7 +257,9 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                         Total
                       </span>
                       <span className="text-green-600">
-                        {typeof priceChanged === "object" ? (`${formatCurrency(priceChanged.min)} - ${formatCurrency(priceChanged.max)}`) : formatCurrency(priceChanged)}
+                        {typeof priceChanged === "object"
+                          ? `${formatCurrency(priceChanged.min)} - ${formatCurrency(priceChanged.max)}`
+                          : formatCurrency(priceChanged)}
                       </span>
                     </div>
                   </div>

@@ -1,7 +1,7 @@
 export function calculatePrice(
   slots: any[],
   fromTime: string | null,
-  toTime: string | null
+  toTime: string | null,
 ) {
   if (!fromTime || !toTime)
     return {
@@ -22,6 +22,7 @@ export function calculatePrice(
 
   while (current < to) {
     const nextHour = new Date(current);
+
     nextHour.setHours(current.getHours() + 1);
 
     if (current.getHours() >= 8 && current.getHours() < 18) {
