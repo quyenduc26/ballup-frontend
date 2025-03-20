@@ -1,0 +1,23 @@
+import { NotificationType } from "@/types/common";
+import { getNotificationData } from "@/utils/getNotificationType";
+import { Alert, Button } from "@heroui/react";
+
+export default function NotificationItem({ notification, onClickDetail }: { notification: NotificationType, onClickDetail: () => void }) {
+  const { color, title, message } = getNotificationData(notification.type);
+  return (
+    <div className="my-2 px-4 ">
+      <Alert
+        className="border-none hover:border-1 hover:-translate-y-1 hover:shadow-lg hover:scale-[1.01] hover:border-opacity-100 hover:bg-opacity-95 transition-all duration-200 ease-out cursor-pointer"
+        color={color}
+        description={message}
+        endContent={
+          <Button color={color} size="sm" variant="solid" onPress={onClickDetail}>
+            View detail
+          </Button>
+        }
+        title={title}
+        variant="bordered"
+      />
+    </div>
+  );
+}
