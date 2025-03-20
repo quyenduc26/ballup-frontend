@@ -1,6 +1,7 @@
 "use client";
 
 import type { PaymentRequest } from "@/types/owner";
+
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -14,6 +15,7 @@ import {
   Spinner,
 } from "@heroui/react";
 import { toast, Toaster } from "sonner";
+
 import bookingRequestApi from "@/service/bookingRequestApi";
 
 export default function PaymentTable() {
@@ -37,12 +39,13 @@ export default function PaymentTable() {
 
     try {
       const response = await bookingRequestApi.getPayments(ownerId);
+
       setPayments(response.data);
     } catch (error) {
       console.error("Error fetching payments:", error);
       toast.error("Unable to load payment list", {
         description: "Please try again later",
-        duration: 3000
+        duration: 3000,
       });
     } finally {
       setIsLoading(false);
@@ -58,14 +61,14 @@ export default function PaymentTable() {
     try {
       await bookingRequestApi.receivePayment(paymentId);
       toast.success("Payment Confirmation Successful!", {
-        duration: 3000
+        duration: 3000,
       });
-      setRefresh((prev) => !prev); 
+      setRefresh((prev) => !prev);
     } catch (error) {
       console.error("Error confirming payment:", error);
       toast.error("Payment confirmation failed", {
         description: "Please try again later",
-        duration: 3000
+        duration: 3000,
       });
     }
     setLoadingId(null);
@@ -76,14 +79,14 @@ export default function PaymentTable() {
     try {
       await bookingRequestApi.rejectBooking(paymentId);
       toast.success("Payment declined successfully!", {
-        duration: 3000
+        duration: 3000,
       });
       setRefresh((prev) => !prev);
     } catch (error) {
       console.error("Error rejecting payment:", error);
       toast.error("Payment decline failed", {
         description: "Please try again later",
-        duration: 3000
+        duration: 3000,
       });
     }
     setLoadingId(null);

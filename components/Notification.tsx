@@ -75,7 +75,6 @@ export default function Notification() {
 
   return (
     <div className="chat-container flex items-center ">
-
       {/* Click vào Icon để toggle hiển thị thông báo */}
       <div className="relative">
         <button
@@ -89,7 +88,7 @@ export default function Notification() {
               content={unRead.toString()}
               placement="top-right"
             >
-              <Bell  size={30} />
+              <Bell size={30} />
             </Badge>
           ) : (
             <Bell size={30} />

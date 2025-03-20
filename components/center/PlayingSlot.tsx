@@ -283,10 +283,10 @@ const PlayingSlot = ({
       <Button
         className="rounded-md w-0"
         onPress={() => handleCreateSlot(field, slot)}
-      > 
+      >
         {action === "CREATE" ? (
           <>
-            <Plus className="w-4 h-4" /> 
+            <Plus className="w-4 h-4" />
           </>
         ) : (
           <>

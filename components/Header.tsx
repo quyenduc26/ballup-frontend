@@ -6,8 +6,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AlignJustify } from "lucide-react";
 
-const Notification = dynamic(() => import("@/components/Notification"), { ssr: false });
-
+const Notification = dynamic(() => import("@/components/Notification"), {
+  ssr: false,
+});
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -24,12 +25,12 @@ const Header = () => {
       setAvatar(localStorage.getItem("userAvatar"));
     };
 
-    updateAuthState(); 
+    updateAuthState();
 
-    window.addEventListener("storage", updateAuthState); 
+    window.addEventListener("storage", updateAuthState);
 
     return () => {
-      window.removeEventListener("storage", updateAuthState); 
+      window.removeEventListener("storage", updateAuthState);
     };
   }, []);
 

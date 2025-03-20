@@ -31,11 +31,8 @@ export default function BookingPage() {
       try {
         if (centerIdNumber) {
           const response = await playingApi.getCenterInfor(centerIdNumber);
-          const { price, totalPrice, hours, dayHours, nightHours } = calculatePrice(
-            response.data.slots,
-            fromTime,
-            toTime,
-          );
+          const { price, totalPrice, hours, dayHours, nightHours } =
+            calculatePrice(response.data.slots, fromTime, toTime);
 
           setBookingInfo({
             ...response.data,
@@ -45,7 +42,7 @@ export default function BookingPage() {
             hours: hours,
             total: totalPrice,
             dayHours: dayHours,
-            nightHours: nightHours
+            nightHours: nightHours,
           });
         }
       } catch (error) {
