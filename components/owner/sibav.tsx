@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 import PaymentHistory from "../../components/owner/paymentHistory";
@@ -8,11 +8,33 @@ import PaymentRequest from "../../components/owner/paymentRequest";
 
 import { FieldList } from "@/components/owner/field";
 import PlayingCenter from "@/components/center/PlayingCenter";
+import { Client } from "@stomp/stompjs";
+import { NotificationType } from "@/types/common";
+import { createStompClient } from "@/config/ws";
+import { Badge } from "@heroui/react";
 
 export default function SibavSidebar() {
   const [activeTab, setActiveTab] = useState("Field");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [owners, setOwners] = useState([]);
+
+  const data = localStorage.getItem("data");
+  const parsedData = data ? JSON.parse(data) : null;
+  const userId = parsedData?.id;
+  const subscribeChannel = parsedData?.role == "USER" ? "/topic/user/" : "/topic/owner/";
+  const [stompClient, setStompClient] = useState<Client | null>(null);
+  const [notifications, setNotification] = useState<NotificationType[]>([]);
+  const [unReadBooking, setUnReadBooking] = useState(0);
+  const [unReadPayment, setUnReadPayment] = useState(0);
+
+  const handleOnConnect = (notification: NotificationType) => {
+    setNotification((prev) => [...prev, notification]);
+    if (notification.type == "BOOKING_REQUESTED") {
+      setUnReadBooking((prev) => prev + 1);
+    } else {
+      setUnReadPayment((prev) => prev + 1);
+    }
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -24,6 +46,18 @@ export default function SibavSidebar() {
       setIsSidebarOpen(false);
     }
   };
+
+  useEffect(() => {
+    if (!userId) return;
+    const client = createStompClient(userId, subscribeChannel, handleOnConnect);
+
+    client.activate();
+    setStompClient(client);
+
+    return () => {
+      client.deactivate();
+    };
+  }, [userId]);
 
   return (
     <div className="flex min-h-screen relative mt-10">
@@ -49,29 +83,35 @@ export default function SibavSidebar() {
 
       {/* Sidebar */}
       <div
-        className={`fixed md:static w-64 md:w-1/5 border-r border-gray-200 bg-white min-h-screen pl-5 pt-16 md:pt-10 transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        } z-40`}
+        className={`fixed md:static w-64 md:w-1/5 border-r border-gray-200 bg-white min-h-screen pl-5 pt-16 md:pt-10 transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          } z-40`}
       >
         <ul className="space-y-4">
           {[
             { key: "Field", label: "Field" },
             { key: "PaymentHistory", label: "Payment History" },
-            { key: "BookingField", label: "Booking Request" },
-            { key: "PaymentRequest", label: "Payment Request" },
-          ].map(({ key, label }) => (
+            { key: "BookingField", label: "Booking Request", badgeCount: unReadBooking },
+            { key: "PaymentRequest", label: "Payment Request", badgeCount: unReadPayment },
+          ].map(({ key, label, badgeCount }) => (
             <li key={key} className="list-none">
-              <button
-                className={`w-full text-left font-bold uppercase p-2 text-sm md:text-base transition-colors hover:bg-blue-50 ${
-                  activeTab === key ? "text-blue bg-blue-50" : "text-gray-500"
-                }`}
-                onClick={() => handleTabClick(key)}
+              <Badge
+                color="danger"
+                content={badgeCount && badgeCount > 0 ? badgeCount.toString() : undefined}
+                placement="top-right"
               >
-                {label}
-              </button>
+                <button
+                  className={`w-full text-left font-bold uppercase p-2 text-sm md:text-base transition-colors hover:bg-blue-50 ${activeTab === key ? "text-blue bg-blue-50" : "text-gray-500"
+                    }`}
+                  onClick={() => handleTabClick(key)}
+                >
+                  {label}
+                </button>
+              </Badge>
             </li>
+
           ))}
         </ul>
+
       </div>
 
       {/* Main Content */}
