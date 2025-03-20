@@ -1,4 +1,4 @@
-import { NOTIFICATIONS } from './../constant/index';
+import { NOTIFICATIONS } from "./../constant/index";
 export type ToastType = {
   heading?: string;
   message?: string;
@@ -29,4 +29,3 @@ export type NotificationType = {
 };
 
 export type NotificationContentType = keyof typeof NOTIFICATIONS;
-

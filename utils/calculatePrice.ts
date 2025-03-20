@@ -1,36 +1,62 @@
 export function calculatePrice(
   slots: any[],
   fromTime: string | null,
-  toTime: string | null,
+  toTime: string | null
 ) {
   if (!fromTime || !toTime)
-    return { price: 0, totalPrice: 0, hours: 0, amount: 0 };
+    return {
+      price: 0,
+      totalPrice: 0,
+      hours: 0,
+      amount: 0,
+      dayHours: 0,
+      nightHours: 0,
+    };
 
   const from = new Date(Number(fromTime));
   const to = new Date(Number(toTime));
 
-  // Tính số giờ
-  const hours = (to.getTime() - from.getTime()) / (1000 * 3600);
+  let current = new Date(from);
+  let dayHours = 0;
+  let nightHours = 0;
 
-  // Xác định giá theo khung giờ (ngày hoặc đêm)
-  const isDaytime = from.getHours() >= 8 && from.getHours() < 18;
-  const priceList = slots.map((slot) =>
-    isDaytime ? slot.primaryPrice : slot.nightPrice,
-  );
+  while (current < to) {
+    const nextHour = new Date(current);
+    nextHour.setHours(current.getHours() + 1);
 
-  // Tìm giá nhỏ nhất và lớn nhất
-  const minPrice = Math.min(...priceList);
-  const maxPrice = Math.max(...priceList);
+    if (current.getHours() >= 8 && current.getHours() < 18) {
+      dayHours += Math.min((to.getTime() - current.getTime()) / 3600000, 1);
+    } else {
+      nightHours += Math.min((to.getTime() - current.getTime()) / 3600000, 1);
+    }
 
-  // Tính tổng tiền
-  const minTotal = minPrice * hours;
-  const maxTotal = maxPrice * hours;
+    current = nextHour;
+  }
+
+  const totalHours = dayHours + nightHours;
+
+  // Lấy giá của khung giờ ngày và đêm
+  const dayPrices = slots.map((slot) => slot.primaryPrice);
+  const nightPrices = slots.map((slot) => slot.nightPrice);
+
+  const minDayPrice = Math.min(...dayPrices);
+  const maxDayPrice = Math.max(...dayPrices);
+  const minNightPrice = Math.min(...nightPrices);
+  const maxNightPrice = Math.max(...nightPrices);
+
+  const minTotal = minDayPrice * dayHours + minNightPrice * nightHours;
+  const maxTotal = maxDayPrice * dayHours + maxNightPrice * nightHours;
 
   return {
-    price: minPrice === maxPrice ? minPrice : { min: minPrice, max: maxPrice },
+    price:
+      minDayPrice === maxDayPrice && minNightPrice === maxNightPrice
+        ? minDayPrice
+        : { min: minDayPrice, max: maxNightPrice },
     totalPrice:
-      minPrice === maxPrice ? minTotal : { min: minTotal, max: maxTotal },
-    hours,
-    amount: maxTotal, // Chọn mức cao nhất làm amount cuối cùng
+      minTotal === maxTotal ? minTotal : { min: minTotal, max: maxTotal },
+    hours: totalHours,
+    amount: maxTotal, // Chọn mức cao nhất làm tổng tiền cuối cùng
+    dayHours,
+    nightHours,
   };
 }

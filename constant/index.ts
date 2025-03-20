@@ -37,7 +37,8 @@ export const NOTIFICATIONS = {
   },
   BOOKING_LATE_PAID: {
     title: "Late Payment Alert",
-    message: "Your booking has been paid late. Please check your payment status.",
+    message:
+      "Your booking has been paid late. Please check your payment status.",
     color: "danger",
   },
   BOOKING_SUCCEEDED: {
@@ -94,4 +95,3 @@ export const NOTIFICATIONS = {
 } as const;
 
 export type NotificationContentType = keyof typeof NOTIFICATIONS;
-

@@ -19,12 +19,14 @@ export type FieldDetailType = {
   bookingTime: string;
   returnTime: string;
   type: string;
-  price: number;
+  price: number | {min: number, max: number};
   hours: number;
-  total: number;
+  total: number | {min: number, max: number};
   mapUrl: string;
   slots: [];
   amount: number;
+  dayHours: number;
+  nightHours: number;
 };
 
 export type CardFieldType = {
@@ -161,7 +163,7 @@ export type BookingDataType = {
   playingSlotId: number;
   fromTime: number;
   toTime: number;
-  amount: number;
+  amount: number | {min: number, max: number};
 };
 
 export type CenterSelection = {

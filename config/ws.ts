@@ -1,8 +1,8 @@
 // websocketConfig.ts
-import { NotificationType } from "@/types/common";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
+import { NotificationType } from "@/types/common";
 
 export const createStompClient = (
   id: string,
@@ -19,8 +19,9 @@ export const createStompClient = (
     onConnect: () => {
       console.log("✅ Connected to WebSocket");
       client.subscribe(subscribeChannel + id, (msg) => {
-        const receivedMessage: NotificationType = JSON.parse(msg.body);
-        handleOnConnect(receivedMessage);
+        const receivedNotification: NotificationType = JSON.parse(msg.body);
+
+        handleOnConnect(receivedNotification);
       });
 
       if (onConnectCallback) {
