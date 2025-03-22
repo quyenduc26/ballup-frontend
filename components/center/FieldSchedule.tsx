@@ -30,6 +30,8 @@ const FieldSchedule = ({ slotList }: { slotList: Slot[] }) => {
     const currentUrl = new URL(window.location.href);
 
     currentUrl.searchParams.set("slotId", slot.id.toString());
+    currentUrl.searchParams.set("primaryPrice", slot.primaryPrice.toString());
+    currentUrl.searchParams.set("nightPrice", slot.nightPrice.toString());
     router.push(currentUrl.toString(), { scroll: false });
   };
 

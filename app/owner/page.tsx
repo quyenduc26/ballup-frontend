@@ -1,8 +1,11 @@
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
 
-import SibavSidebar from "@/components/owner/sibav";
+const SibavSidebar = dynamic(() => import("@/components/owner/sibav"), {
+  ssr: false,
+});
 
 export default function Sidebar() {
   return (

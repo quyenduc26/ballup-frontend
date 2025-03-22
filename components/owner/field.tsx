@@ -1,22 +1,22 @@
 "use client";
+import type React from "react";
+import type { Field } from "@/types";
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { Card, CardBody, CardHeader } from "@heroui/react";
+import { ChevronDown, ChevronUp, Pencil, Trash2 } from "lucide-react";
+import { Card, CardHeader, CardBody } from "@heroui/react";
 import { Button } from "@heroui/react";
+import { toast, Toaster } from "sonner"; // Added Sonner imports
 
 import image from "@/public/images/image 3.png";
 import ownerApi from "@/service/ownerApi";
 import PlayingSlot from "@/components/center/PlayingSlot";
-import { Field } from "@/types";
+import EditCenterModal from "@/components/owner/edit-center-modal";
+import playingApi from "@/service/playingApi";
 
 type FieldListProps = {
   setActiveTab: (tab: string) => void;
-};
-
-// Hàm format giá tiền theo kiểu Việt Nam
-const formatVND = (value: number): string => {
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VNĐ";
 };
 
 export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
@@ -25,12 +25,26 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
   const [expandedFields, setExpandedFields] = useState<Record<string, boolean>>(
     {},
   );
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedCenterId, setSelectedCenterId] = useState<number | null>(null);
 
   const toggleSubFields = (fieldId: string) => {
     setExpandedFields((prev) => ({
       ...prev,
       [fieldId]: !prev[fieldId],
     }));
+  };
+
+  const handleEdit = (fieldId: string) => {
+    setSelectedCenterId(Number(fieldId));
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSuccess = () => {
+    setIsRefresh((prev) => !prev);
+    toast.success("Center updated successfully", {
+      duration: 3000,
+    });
   };
 
   useEffect(() => {
@@ -46,32 +60,65 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
         }
       } catch (error) {
         console.error("Error fetching fields:", error);
+        toast.error("Failed to fetch fields", {
+          duration: 3000,
+        });
       }
     };
 
     fetchFields();
   }, [isRefresh]);
 
+  const handleDelete = async (fieldId: string) => {
+    // Using toast.promise for the delete operation with confirmation-like behavior
+    toast("Are you sure you want to delete this center?", {
+      action: {
+        label: "Delete",
+        onClick: async () => {
+          try {
+            await playingApi.deletePlayingCenter(Number(fieldId));
+            setFields((prevFields) =>
+              prevFields.filter((field) => field.id !== fieldId),
+            );
+            toast.success("Center deleted successfully", {
+              duration: 3000,
+            });
+          } catch (error) {
+            console.error("Error deleting center:", error);
+            toast.error("Failed to delete center", {
+              duration: 3000,
+            });
+          }
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {},
+      },
+      duration: 5000,
+    });
+  };
+
   return (
     <div className="w-full p-1 sm:p-2 md:p-4 lg:p-6">
+      <Toaster richColors position="top-center" />{" "}
+      {/* Added Toaster component */}
       <div className="flex justify-between mb-6">
         <h1 className="text-xl font-bold mb-4">Management Fields</h1>
         <Button
           className="bg-black rounded-none text-white"
           onPress={() => setActiveTab("CreateCenter")}
         >
-          Create Center
+          Create center
         </Button>
       </div>
-
       {/* Table header with grid layout */}
       <div className="grid grid-cols-4 font-semibold border-b pb-2 text-xs sm:text-sm md:text-base w-full">
         <div className="pl-2 md:pl-4 lg:pl-6">Field Name</div>
         <div className="text-center">Image</div>
-        <div className="text-center">Address</div>
+        <div className="text-center">Location</div>
         <div className="text-right pr-2 md:pr-6">Action</div>
       </div>
-
       {/* Field List */}
       <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-2 md:mt-4">
         {fields.map((field, index) => (
@@ -108,13 +155,31 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                 </div>
 
                 {/* Expand/Collapse Button */}
-                <div className="flex justify-end gap-1">
-                  {field.slots?.length > 0 && (
+                {field.slots?.length > 0 && (
+                  <div className="flex justify-end gap-1">
                     <Button
                       className="h-8 w-8 md:h-10 md:w-10"
                       size="sm"
                       variant="ghost"
-                      onPress={() => toggleSubFields(field.id)}
+                      onClick={() => handleEdit(field.id)}
+                    >
+                      <Pencil className="h-4 w-4 md:h-5 md:w-5" />
+                    </Button>
+
+                    <Button
+                      className="h-8 w-8 md:h-10 md:w-10 text-red-500 hover:bg-red-100"
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleDelete(field.id)}
+                    >
+                      <Trash2 className="h-4 w-4 md:h-5 md:w-5" />
+                    </Button>
+
+                    <Button
+                      className="h-8 w-8 md:h-10 md:w-10"
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => toggleSubFields(field.id)}
                     >
                       {expandedFields[field.id] ? (
                         <ChevronUp className="h-4 w-4 md:h-5 md:w-5" />
@@ -122,13 +187,14 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                         <ChevronDown className="h-4 w-4 md:h-5 md:w-5" />
                       )}
                     </Button>
-                  )}
-                  <PlayingSlot
-                    action="CREATE"
-                    field={field}
-                    refresh={() => setIsRefresh(true)}
-                  />
-                </div>
+
+                    <PlayingSlot
+                      action="CREATE"
+                      field={field}
+                      refresh={() => setIsRefresh(true)}
+                    />
+                  </div>
+                )}
               </div>
             </CardHeader>
 
@@ -142,24 +208,24 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                       <div className="grid grid-cols-4 items-center gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4">
                         <div className="text-left md:pl-4">
                           <h2 className="text-xs sm:text-sm font-medium">
-                            Slot Name
+                            Name
                           </h2>
                         </div>
 
                         <div className="text-center">
                           <span className="text-[10px] sm:text-xs md:text-sm font-medium">
-                            Day Price
+                            Primary price
                           </span>
                         </div>
 
                         <div className="text-center">
                           <span className="text-[10px] sm:text-xs md:text-sm font-medium">
-                            Night Price
+                            Night price
                           </span>
                         </div>
 
                         <div className="text-right md:pr-4">
-                          <span className="text-xs font-medium">Action</span>
+                          <span className="text-xs font-medium">Actions</span>
                         </div>
                       </div>
                     </div>
@@ -178,13 +244,13 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
 
                         <div className="text-center">
                           <span className="text-[10px] sm:text-xs md:text-sm">
-                            {formatVND(slot.primaryPrice)}
+                            {slot.primaryPrice}
                           </span>
                         </div>
 
                         <div className="text-center">
                           <span className="text-[10px] sm:text-xs md:text-sm">
-                            {formatVND(slot.nightPrice)}
+                            {slot.nightPrice}
                           </span>
                         </div>
 
@@ -205,6 +271,14 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
           </Card>
         ))}
       </div>
+      {selectedCenterId && (
+        <EditCenterModal
+          centerId={selectedCenterId}
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSuccess={handleEditSuccess}
+        />
+      )}
     </div>
   );
 };

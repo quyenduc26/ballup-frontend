@@ -1,6 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Client } from "@stomp/stompjs";
+import { Badge } from "@heroui/react";
 
 import PaymentHistory from "../../components/owner/paymentHistory";
 import BookingTable from "../../components/owner/booking";
@@ -8,11 +10,32 @@ import PaymentRequest from "../../components/owner/paymentRequest";
 
 import { FieldList } from "@/components/owner/field";
 import PlayingCenter from "@/components/center/PlayingCenter";
+import { NotificationType } from "@/types/common";
+import { createStompClient } from "@/config/ws";
 
 export default function SibavSidebar() {
   const [activeTab, setActiveTab] = useState("Field");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [owners, setOwners] = useState([]);
+
+  const data = localStorage.getItem("data");
+  const parsedData = data ? JSON.parse(data) : null;
+  const userId = parsedData?.id;
+  const subscribeChannel =
+    parsedData?.role == "USER" ? "/topic/user/" : "/topic/owner/";
+  const [stompClient, setStompClient] = useState<Client | null>(null);
+  const [notifications, setNotification] = useState<NotificationType[]>([]);
+  const [unReadBooking, setUnReadBooking] = useState(0);
+  const [unReadPayment, setUnReadPayment] = useState(0);
+
+  const handleOnConnect = (notification: NotificationType) => {
+    setNotification((prev) => [...prev, notification]);
+    if (notification.type == "BOOKING_REQUESTED") {
+      setUnReadBooking((prev) => prev + 1);
+    } else {
+      setUnReadPayment((prev) => prev + 1);
+    }
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -24,6 +47,18 @@ export default function SibavSidebar() {
       setIsSidebarOpen(false);
     }
   };
+
+  useEffect(() => {
+    if (!userId) return;
+    const client = createStompClient(userId, subscribeChannel, handleOnConnect);
+
+    client.activate();
+    setStompClient(client);
+
+    return () => {
+      client.deactivate();
+    };
+  }, [userId]);
 
   return (
     <div className="flex min-h-screen relative mt-10">
@@ -57,18 +92,36 @@ export default function SibavSidebar() {
           {[
             { key: "Field", label: "Field" },
             { key: "PaymentHistory", label: "Payment History" },
-            { key: "BookingField", label: "Booking Request" },
-            { key: "PaymentRequest", label: "Payment Request" },
-          ].map(({ key, label }) => (
+            {
+              key: "BookingField",
+              label: "Booking Request",
+              badgeCount: unReadBooking,
+            },
+            {
+              key: "PaymentRequest",
+              label: "Payment Request",
+              badgeCount: unReadPayment,
+            },
+          ].map(({ key, label, badgeCount }) => (
             <li key={key} className="list-none">
-              <button
-                className={`w-full text-left font-bold uppercase p-2 text-sm md:text-base transition-colors hover:bg-blue-50 ${
-                  activeTab === key ? "text-blue bg-blue-50" : "text-gray-500"
-                }`}
-                onClick={() => handleTabClick(key)}
+              <Badge
+                color="danger"
+                content={
+                  badgeCount && badgeCount > 0
+                    ? badgeCount.toString()
+                    : undefined
+                }
+                placement="top-right"
               >
-                {label}
-              </button>
+                <button
+                  className={`w-full text-left font-bold uppercase p-2 text-sm md:text-base transition-colors hover:bg-blue-50 ${
+                    activeTab === key ? "text-blue bg-blue-50" : "text-gray-500"
+                  }`}
+                  onClick={() => handleTabClick(key)}
+                >
+                  {label}
+                </button>
+              </Badge>
             </li>
           ))}
         </ul>

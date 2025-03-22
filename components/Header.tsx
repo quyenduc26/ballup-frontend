@@ -1,15 +1,20 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AlignJustify } from "lucide-react";
 
+const Notification = dynamic(() => import("@/components/Notification"), {
+  ssr: false,
+});
+
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [avatar, setAvatar] = useState<string | null>(null); // 👉 State lưu avatar
+  const [avatar, setAvatar] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
@@ -20,12 +25,12 @@ const Header = () => {
       setAvatar(localStorage.getItem("userAvatar"));
     };
 
-    updateAuthState(); // Chạy khi component mount
+    updateAuthState();
 
-    window.addEventListener("storage", updateAuthState); // Lắng nghe sự kiện
+    window.addEventListener("storage", updateAuthState);
 
     return () => {
-      window.removeEventListener("storage", updateAuthState); // Cleanup khi unmount
+      window.removeEventListener("storage", updateAuthState);
     };
   }, []);
 
@@ -93,7 +98,8 @@ const Header = () => {
           </Link>
         </nav>
 
-        <div className="hidden md:flex space-x-4">
+        <div className="hidden md:flex gap-10">
+          <Notification />
           {isLoggedIn ? (
             <Link
               className="flex items-center space-x-2"

@@ -22,6 +22,18 @@ const playingApi = {
 
     return api.patch(`/owner/slot/update/${slotId}`, formData);
   },
+  updateCenter: (
+    id: number,
+    payload: {
+      name: string;
+      address: string;
+      description: string;
+      ownerId: number;
+      type: string;
+      images: string[];
+    },
+  ) => api.patch(`owner/center/update/${id}`, payload),
+  deletePlayingCenter: (id: number) => api.delete(`/owner/center/delete/${id}`),
 };
 
 export default playingApi;

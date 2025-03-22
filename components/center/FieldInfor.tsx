@@ -1,7 +1,8 @@
 "use client";
 import type { FieldDetailType } from "@/types/form";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Clock,
   MapPin,
@@ -15,90 +16,85 @@ import {
 } from "lucide-react";
 
 import { SonnerToast } from "../sonnerMesage";
+
 import { getImageUrl } from "@/utils/getImage";
 import bookingRequestApi from "@/service/bookingRequestApi";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { calculatePrice } from "@/utils/calculatePrice";
 
 const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [priceChanged, setPriceChanged] = useState<
+    number | { min: number; max: number }
+  >(centerInfor.total);
+  const [unitPriceChanged, setUnitPriceChanged] = useState<
+    number | { min: number; max: number }
+  >(centerInfor.price);
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
+
   const [loading, setLoading] = useState(false);
 
-  const queryParams = new URLSearchParams(location.search);
-  const fromTime = queryParams.get("fromTime");
-  const toTime = queryParams.get("toTime");
-  const primaryPrice = Number.parseInt(queryParams.get("primaryPrice") || "0");
-  const nightPrice = Number.parseInt(queryParams.get("nightPrice") || "0");
-  const afternoonPrice = Number.parseInt(
-    queryParams.get("afternoonPrice") || primaryPrice.toString(),
-  ); 
+  useEffect(() => {
+    const primaryPrice = searchParams.get("primaryPrice");
+    const nightPrice = searchParams.get("nightPrice");
 
-  console.log("fromTime:", fromTime);
-  console.log("toTime:", toTime);
-  console.log("primaryPrice:", primaryPrice);
-  console.log("afternoonPrice:", afternoonPrice);
-  console.log("nightPrice:", nightPrice);
+    const parsedPrimary = primaryPrice ? Number(primaryPrice) : 0;
+    const parsedNight = nightPrice ? Number(nightPrice) : 0;
 
-  const slots = [{ primaryPrice, afternoonPrice, nightPrice }];
+    if (centerInfor.dayHours > 0 && centerInfor.nightHours > 0) {
+      setUnitPriceChanged({ min: parsedPrimary, max: parsedNight });
+    } else {
+      setUnitPriceChanged(
+        centerInfor.dayHours > 0 ? parsedPrimary : parsedNight,
+      );
+    }
 
-  const { price, totalPrice, hours, amount } = calculatePrice(
-    slots,
-    fromTime,
-    toTime,
-  );
-
-  if (hours <= 0 || !Number.isFinite(hours)) {
-    console.error("Invalid duration:", { fromTime, toTime });
-    setToastData({
-      type: "error",
-      heading: "Invalid Time Range",
-      message: "Please select a valid time range.",
-      duration: 3000,
-    });
-  }
-
-  const displayPrice = typeof price === "number" ? price : price?.min || 0;
-  const displayTotal =
-    typeof totalPrice === "number" ? totalPrice : totalPrice?.min || 0;
-
-  const fromDate = fromTime ? new Date(Number(fromTime)) : null;
-  const toDate = toTime ? new Date(Number(toTime)) : null;
+    setPriceChanged(
+      parsedPrimary * (centerInfor.dayHours ?? 0) +
+        parsedNight * (centerInfor.nightHours ?? 0),
+    );
+  }, [searchParams]);
 
   const submitBooking = async () => {
     const data = localStorage.getItem("data");
     const parsedData = data ? JSON.parse(data) : null;
-    const userId = Number.parseInt(parsedData?.id || "0");
+    const userId = Number.parseInt(parsedData.id);
 
+    const queryParams = new URLSearchParams(location.search);
+    const fromTime = queryParams.get("fromTime");
+    const toTime = queryParams.get("toTime");
     const slotId = queryParams.get("slotId");
 
-    if (!slotId) {
+    if (slotId == null) {
       alert("Please choose playing slot");
+
       return;
     }
 
     const bookingData = {
       userId: userId,
-      playingSlotId: Number.parseInt(slotId),
-      fromTime: Number(fromTime),
-      toTime: Number(toTime),
-      amount: amount,
+      playingSlotId: slotId ? Number.parseInt(slotId) : 0,
+      fromTime: fromTime ? Number.parseInt(fromTime) : 0,
+      toTime: toTime ? Number.parseInt(toTime) : 0,
+      amount: priceChanged,
     };
 
-    console.log("bookingData:", bookingData);
+    console.log(bookingData);
     setLoading(true);
 
     try {
       const booking = await bookingRequestApi.booking(bookingData);
+
       window.location.href = `/payment/${booking.data}`;
+
       setToastData({
         type: "success",
         heading: "Booking Successful",
@@ -124,7 +120,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
         {/* Header Section */}
         <div className="bg-gray-100 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <button
-            className="flex items-center text-black hover:text-black text-xl font-bold transition-colors mt-5"
+            className="flex items-center text-black hover:text-black text-xl font-bold transition-colors"
             onClick={() => router.back()}
           >
             <ArrowLeft className="h-6 w-6 mr-2" />
@@ -144,37 +140,46 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
               }
             />
             <div className="flex gap-6 overflow-x-auto pb-2">
-              {centerInfor.imageUrls?.slice(1).map((img, index) => (
-                <img
-                  key={index}
-                  alt={`Field ${index + 2}`}
-                  className="rounded-lg object-cover cursor-pointer w-48 h-32 hover:opacity-80 transition-opacity"
-                  src={getImageUrl(img) || "/placeholder.svg"}
-                />
-              ))}
+              {centerInfor.imageUrls
+                ?.slice(1)
+                .map((img, index) => (
+                  <img
+                    key={index}
+                    alt={`Field ${index + 2}`}
+                    className="rounded-lg object-cover cursor-pointer w-48 h-32 hover:opacity-80 transition-opacity"
+                    src={getImageUrl(img) || "/placeholder.svg"}
+                  />
+                ))}
             </div>
           </div>
 
           {/* Right Side - Booking Details */}
           <div className="flex-1 justify-center max-w-md">
+            {/* Booking Card */}
             <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+              {/* Header with venue name */}
               <div className="bg-black text-white p-4">
                 <div className="flex items-center gap-2">
                   <Building className="h-5 w-5" />
-                  <h1 className="text-2xl font-bold">{centerInfor.name}</h1>
+                  <h1 className="text-2xl  font-bold">{centerInfor.name}</h1>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
                   <MapPin className="ml-0.5 h-4 w-4 text-gray-300" />
-                  <p className="text-gray-300 text-sm">{centerInfor.address}</p>
+                  <p className="text-gray-300 text-sm ">
+                    {centerInfor.address}
+                  </p>
                 </div>
               </div>
 
+              {/* Booking information */}
               <div className="p-5 space-y-4">
+                {/* Description */}
                 <div className="bg-gray-50 p-3 rounded-lg text-sm text-gray-600 flex gap-2">
                   <Info className="h-5 w-5 text-gray-500 flex-shrink-0" />
                   <div>{centerInfor.description}</div>
                 </div>
 
+                {/* Booking Time */}
                 <div className="border-b pb-4">
                   <h3 className="text-black text-sm uppercase font-semibold mb-2 flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
@@ -186,56 +191,41 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                         <Clock className="h-3 w-3" />
                         <p>From</p>
                       </div>
-                      <div>
-                        <p className="font-bold">
-                          {fromDate
-                            ? fromDate.toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })
-                            : ""}
-                        </p>
-
-                        <p className="font-bold">
-                          {toDate
-                            ? toDate.toLocaleDateString([], {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                            })
-                            : "N/A"}
-                        </p>
-                      </div>
+                      <p className="font-bold">
+                        {centerInfor.bookingTime &&
+                        centerInfor.bookingTime.length >= 7
+                          ? centerInfor.bookingTime.slice(0, 6)
+                          : centerInfor.bookingTime || "N/A"}
+                      </p>
+                      <p className="font-bold">
+                        {centerInfor.bookingTime &&
+                        centerInfor.bookingTime.length >= 7
+                          ? centerInfor.bookingTime.slice(6)
+                          : ""}
+                      </p>
                     </div>
                     <div className="bg-gray-50 p-3 rounded-lg text-start">
                       <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
                         <Clock className="h-3 w-3" />
                         <p>To</p>
                       </div>
-                      <div>
-
-                        <p className="font-bold">
-                          {toDate
-                            ? toDate.toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })
-                            : ""}
-                        </p>
-                        <p className="font-bold">
-                          {toDate
-                            ? toDate.toLocaleDateString([], {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                            })
-                            : "N/A"}
-                        </p>
-                      </div>
+                      <p className="font-bold">
+                        {centerInfor.returnTime &&
+                        centerInfor.returnTime.length >= 7
+                          ? centerInfor.returnTime.slice(0, 6)
+                          : centerInfor.returnTime || "N/A"}
+                      </p>
+                      <p className="font-bold">
+                        {centerInfor.returnTime &&
+                        centerInfor.returnTime.length >= 7
+                          ? centerInfor.returnTime.slice(6)
+                          : ""}
+                      </p>
                     </div>
                   </div>
                 </div>
 
+                {/* Pricing */}
                 <div>
                   <h3 className="text-black text-sm uppercase font-semibold mb-2 flex items-center gap-1">
                     <DollarSign className="h-4 w-4" />
@@ -247,14 +237,18 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                         <CreditCard className="h-4 w-4 text-gray-500" />
                         Price per hour :
                       </span>
-                      <span>{formatCurrency(displayPrice)}</span>
+                      <span>
+                        {typeof unitPriceChanged === "object"
+                          ? `${formatCurrency(unitPriceChanged.min)} - ${formatCurrency(unitPriceChanged.max)}`
+                          : formatCurrency(unitPriceChanged)}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600 flex items-center gap-1">
                         <HourglassIcon className="h-4 w-4 text-gray-500" />
                         Duration:
                       </span>
-                      <span>{hours.toFixed(1)} Hour(s)</span>
+                      <span>{centerInfor.hours} Hour(s)</span>
                     </div>
                     <div className="h-px bg-gray-200 my-2" />
                     <div className="flex justify-between items-center font-bold text-lg">
@@ -263,15 +257,18 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
                         Total
                       </span>
                       <span className="text-green-600">
-                        {formatCurrency(displayTotal)}
+                        {typeof priceChanged === "object"
+                          ? `${formatCurrency(priceChanged.min)} - ${formatCurrency(priceChanged.max)}`
+                          : formatCurrency(priceChanged)}
                       </span>
                     </div>
                   </div>
                 </div>
 
+                {/* Book Button */}
                 <button
                   className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors text-lg font-semibold mt-4 flex items-center justify-center gap-2"
-                  disabled={loading || hours <= 0}
+                  disabled={loading}
                   onClick={submitBooking}
                 >
                   {loading ? (
