@@ -18,11 +18,11 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
   const [joined, setJoined] = useState(false);
   const [toastData, setToastData] = useState<
     | {
-        heading?: string;
-        message?: string;
-        type?: "error" | "success" | "info" | "warning";
-        duration?: number;
-      }
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warning";
+      duration?: number;
+    }
     | undefined
   >();
   const router = useRouter();
@@ -87,7 +87,10 @@ const TeamCard: React.FC<TeamCardProps> = ({ team }) => {
         </div>
         <div className="p-5 flex flex-col flex-grow">
           <h2 className="text-xl font-bold text-black mb-2">{team.name}</h2>
-          <p className="text-gray-600 text-base mb-4 flex-grow">{team.intro}</p>
+          <p className="text-gray-600 text-base mb-4 flex-grow truncate max-w-[300px]">
+            {team.intro}
+          </p>
+
           <div className="grid grid-cols-3 gap-3 text-gray-700 mb-4">
             <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50">
               <span className="text-base mb-1">📍</span>
