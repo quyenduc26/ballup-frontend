@@ -163,7 +163,7 @@ export default function Schedule() {
               className="border p-2 w-full rounded-xl h-14"
               min={
                 selectedDate &&
-                selectedDate.toDateString() === now.toDateString()
+                  selectedDate.toDateString() === now.toDateString()
                   ? `${String(currentHour).padStart(2, "0")}:${String(currentMinute).padStart(2, "0")}`
                   : "00:00"
               }
@@ -206,9 +206,8 @@ export default function Schedule() {
               CLEAR TIME
             </button>
             <button
-              className={`p-3 w-full rounded-xl h-14 text-white font-bold hover:scale-95 transition ${
-                loading ? "bg-black" : "bg-black hover:bg-gray-800 text-white"
-              }`}
+              className={`p-3 w-full rounded-xl h-14 text-white font-bold hover:scale-95 transition ${loading ? "bg-black" : "bg-black hover:bg-gray-800 text-white"
+                }`}
               disabled={loading}
               onClick={handleCheck}
             >
