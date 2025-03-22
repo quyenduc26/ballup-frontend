@@ -165,7 +165,7 @@ export default function ModernProfileLayout() {
                     src={
                       editedUser?.avatar
                         ? `${editedUser.avatar}?t=${new Date().getTime()}`
-                        : ""
+                        : "/images/userProfile.png"
                     }
                   />
 
