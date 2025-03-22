@@ -4,8 +4,13 @@ import Image from "next/image";
 import { FiExternalLink } from "react-icons/fi";
 
 import ListMatchCard from "../match/Card/ListCardMatch";
+import { useRouter } from "next/navigation";
 
 export default function MatchSection() {
+    const router = useRouter(); 
+    const handleSeeMore = () => {
+      router.push("/match");
+    }; 
   return (
     <div>
       <div className="w-full max-w-full mx-auto p-6 flex flex-col md:flex-row items-center bg-white mt-10">
@@ -27,10 +32,11 @@ export default function MatchSection() {
             MATCH
           </h2>
 
-          <button className="mt-6 md:mt-10 w-[160px] sm:w-[200px] mx-auto mr-1 flex items-center gap-2 text-sm sm:text-lg text-black border border-gray-300 px-6 py-4 rounded-lg hover:bg-gray-100">
+          <button className="mt-6 md:mt-10 w-[160px] sm:w-[200px] mx-auto mr-1 flex items-center gap-2 text-sm sm:text-lg text-black border border-gray-300 px-6 py-4 rounded-lg hover:bg-gray-100"
+           onClick={handleSeeMore} >
             SEE MORE <FiExternalLink className="w-[30px] sm:w" />
           </button>
-          <hr className="w-full border-t border-gray-500 my-6" />
+          <hr className="w-full border-t border-gray-500 mt-12 " />
         </div>
       </div>
       <ListMatchCard />
