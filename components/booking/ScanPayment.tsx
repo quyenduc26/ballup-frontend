@@ -9,28 +9,35 @@ import bookingRequestApi from "@/service/bookingRequestApi";
 import { formatTimestamp } from "@/utils/formatTimestamp";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { SonnerToast } from "@/components/sonnerMesage";
+import paymentApi from "@/service/paymentApi";
+import { PaymentMethod } from "@/types/owner";
+import { getImageUrl } from "@/utils/getImage";
+import { Copy, CheckCircle2 } from "lucide-react"
 
 export default function ScanPayment({ bookingId }: { bookingId: number }) {
   const [booking, setBooking] = useState<BookingDetailResponse | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isDepositing, setIsDepositing] = useState<boolean>(false);
+  const [copied, setCopied] = useState<string | null>(null)
   const router = useRouter();
   const [toastData, setToastData] = useState<
     | {
-        heading?: string;
-        message?: string;
-        type?: "error" | "success" | "info" | "warning";
-        duration?: number;
-      }
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warning";
+      duration?: number;
+    }
     | undefined
   >();
 
   useEffect(() => {
     async function fetchBooking() {
       try {
-        const res = await bookingRequestApi.getBookingDetail(bookingId);
-
-        setBooking(res.data);
+        const booking = await bookingRequestApi.getBookingDetail(bookingId);
+        const paymentMethod = await paymentApi.getOwnerPaymentMethodByBookingId(bookingId);
+        setBooking(booking.data);
+        setPaymentMethod(paymentMethod.data)
       } catch (err) {
         throw err;
       } finally {
@@ -66,6 +73,12 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
     }
   };
 
+  const copyToClipboard = (text: string, field: string) => {
+    navigator.clipboard.writeText(text)
+    setCopied(field)
+    setTimeout(() => setCopied(null), 2000)
+  }
+
   return loading ? (
     <Spinner className="h-screen w-screen" color="default" />
   ) : (
@@ -94,13 +107,80 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="flex justify-center">
-                      {/* <QRCode value={`https://payment.example.com/${booking.paymentCode}`} size={200} className="mx-auto" /> */}
+                  <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-200 max-w-3xl mx-auto">
+                    <div className="flex justify-center mb-5">
+                      <div className="relative p-2 bg-white border-2 border-gray-100 rounded-lg shadow-sm">
+                        <img
+                          src={
+                            paymentMethod?.qrImageUrl
+                              ? getImageUrl(paymentMethod.qrImageUrl)
+                              : "/placeholder.svg?height=300&width=300"
+                          }
+                          alt="QR Code"
+                          className="w-[350px] h-[350px] object-cover rounded-md"
+                        />
+                      </div>
                     </div>
-                    <p className="text-center mt-2 text-sm text-gray-500">
-                      Mã thanh toán: gjasgwejbrj
-                    </p>
+
+                    <div className="text-center mb-4">
+                      <h3 className="text-xl font-bold text-gray-800">{paymentMethod?.name}</h3>
+                      {paymentMethod?.bankName && <p className="text-md text-gray-600 mt-1">{paymentMethod.bankName}</p>}
+                    </div>
+
+                    <div className="bg-gray-50 p-4 rounded-lg space-y-3 mb-4">
+                      {paymentMethod?.accountNumber && (
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">Số tài khoản</p>
+                            <p className="text-base font-semibold text-gray-800">{paymentMethod.accountNumber}</p>
+                          </div>
+                          <button
+                            onClick={() => copyToClipboard(paymentMethod.accountNumber, "accountNumber")}
+                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                            aria-label="Copy account number"
+                          >
+                            {copied === "accountNumber" ? (
+                              <CheckCircle2 className="h-5 w-5 text-green-500" />
+                            ) : (
+                              <Copy className="h-5 w-5" />
+                            )}
+                          </button>
+                        </div>
+                      )}
+
+                      {paymentMethod?.accountHolderName && (
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">Chủ tài khoản</p>
+                            <p className="text-base font-semibold text-gray-800">{paymentMethod.accountHolderName}</p>
+                          </div>
+                          <button
+                            onClick={() => copyToClipboard(paymentMethod.accountHolderName, "accountHolderName")}
+                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                            aria-label="Copy account holder name"
+                          >
+                            {copied === "accountHolderName" ? (
+                              <CheckCircle2 className="h-5 w-5 text-green-500" />
+                            ) : (
+                              <Copy className="h-5 w-5" />
+                            )}
+                          </button>
+                        </div>
+                      )}
+
+                      {paymentMethod?.bankBranch && (
+                        <div>
+                          <p className="text-sm font-medium text-gray-500">Chi nhánh</p>
+                          <p className="text-base text-gray-800">{paymentMethod.bankBranch}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {paymentMethod?.instructions && (
+                      <div className="p-3 bg-blue-50 border-l-4 border-blue-500 rounded-r-md">
+                        <p className="text-sm text-blue-800 leading-relaxed">{paymentMethod.instructions}</p>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -165,29 +245,26 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
                   </div>
                 )}
               </div>
-              <div className="p-6 border-t">
-                {booking?.status === "REQUESTED" && (
-                  <>
-                    <button
-                      className={`w-full bg-gray-400 text-white hover:bg-gray-500 hover:scale-105 transition py-2 px-4 rounded-md flex items-center justify-center mb-3`}
-                      onClick={() => router.back()}
-                    >
-                      <span>Quay lại</span>
-                    </button>
-                  </>
-                )}
-              </div>
+              {booking?.status === "REQUESTED" && (
+                <div className="p-6 border-t">
+                  <button
+                    className="w-full bg-gray-400 text-white hover:bg-gray-500 hover:scale-105 transition py-2 px-4 rounded-md flex items-center justify-center mb-3"
+                    onClick={() => router.back()}
+                  >
+                    <span>Quay lại</span>
+                  </button>
+                </div>
+              )}
 
               {/* Footer with Buttons */}
               <div className="p-6 border-t">
                 {booking?.status === "CONFIRMED" && (
                   <>
                     <button
-                      className={`w-full ${
-                        isDepositing
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-green-600 hover:bg-green-700"
-                      } text-white py-2 px-4 rounded-md flex items-center justify-center mb-3`}
+                      className={`w-full ${isDepositing
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-green-600 hover:bg-green-700"
+                        } text-white py-2 px-4 rounded-md flex items-center justify-center mb-3`}
                       disabled={isDepositing}
                       onClick={() => handleDeposit(booking.bookingId)}
                     >
