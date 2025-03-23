@@ -8,6 +8,7 @@ import { Bell } from "lucide-react";
 import { Badge } from "@heroui/react";
 
 import { createStompClient } from "@/config/ws";
+import notificationApi from "@/service/notificationApi";
 import NotificationItem from "@/components/NotificationItem";
 
 export default function Notification() {
@@ -19,28 +20,70 @@ export default function Notification() {
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [stompClient, setStompClient] = useState<Client | null>(null);
-  const [notifications, setNotification] = useState<NotificationType[]>([]);
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const [unRead, setUnRead] = useState(0);
 
   // Add ref for notification container and button
   const notificationRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  //prepare for ws param
+  // Fetch notifications from API
+  useEffect(() => {
+    if (!userId) return;
+
+    async function fetchNotifications() {
+      try {
+        const response = await notificationApi.getUserNotification(userId);
+        if (response?.data) {
+          setNotifications(response.data);
+          setUnRead(response.data.filter((noti: NotificationType ) => !noti.read).length);
+        }
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    }
+
+    fetchNotifications();
+  }, [userId]);
+
+  // WebSocket event handler
   const handleOnConnect = (notification: NotificationType) => {
-    setNotification((prev) => [...prev, notification]);
+    setNotifications((prev) => [ notification, ...prev]);
     setUnRead((prev) => prev + 1);
   };
 
-  const handleToggleNotifications = () => {
+  // Toggle notification dropdown
+  const handleToggleNotifications = async () => {
     setShowNotifications((prev) => !prev);
+
+    if (!showNotifications) {
+      // Mark all unread notifications as read
+      const unreadIds = notifications
+        .filter((noti) => !noti.read)
+        .map((noti) => noti.id);
+
+      if (unreadIds.length > 0) {
+        try {
+          await notificationApi.markAsRead(unreadIds);
+          setNotifications((prev) =>
+            prev.map((noti) =>
+              unreadIds.includes(noti.id) ? { ...noti, read: true } : noti
+            )
+          );
+          setUnRead(0);
+        } catch (error) {
+          console.error("Error marking notifications as read:", error);
+        }
+      }
+    }
   };
 
+  // Click on notification item
   const handleOnclickNotification = () => {
     setUnRead((prev) => prev - 1);
   };
 
-  // Add click outside handler
+  // Click outside handler
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -55,12 +98,10 @@ export default function Notification() {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showNotifications]);
 
+  // Connect WebSocket
   useEffect(() => {
     if (!userId) return;
     const client = createStompClient(userId, subscribeChannel, handleOnConnect);
@@ -74,8 +115,7 @@ export default function Notification() {
   }, [userId]);
 
   return (
-    <div className="chat-container flex items-center ">
-      {/* Click vào Icon để toggle hiển thị thông báo */}
+    <div className="chat-container flex items-center">
       <div className="relative">
         <button
           ref={buttonRef}
@@ -95,7 +135,6 @@ export default function Notification() {
           )}
         </button>
 
-        {/* Hiển thị danh sách thông báo khi showNotifications === true */}
         {showNotifications && (
           <div
             ref={notificationRef}
@@ -105,13 +144,12 @@ export default function Notification() {
               <span>Notifications</span>
             </div>
 
-            {/* content */}
             {notifications.length > 0 ? (
               <div className="chat-box p-2 rounded-b-lg bg-white shadow-md max-h-[300px] overflow-y-auto">
                 {notifications
                   .slice()
                   .reverse()
-                  .map((notification, index) => (
+                  .map((notification) => (
                     <NotificationItem
                       key={notification.id}
                       notification={notification}
@@ -121,10 +159,7 @@ export default function Notification() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center max-h-[250px] py-4 px-4 text-center bg-white rounded-b-lg">
-                <Bell
-                  className="text-gray-300 dark:text-gray-600 mb-3"
-                  size={40}
-                />
+                <Bell className="text-gray-300 dark:text-gray-600 mb-3" size={40} />
                 <p className="text-gray-500 dark:text-gray-400">
                   You don&apos;t have any notifications yet
                 </p>
