@@ -36,10 +36,16 @@ const Header = () => {
 
   return (
     <header className="w-full border-b bg-white fixed top-0 left-0 z-50">
-      <div className="container mx-auto flex items-center justify-between py-4 px-6">
+      <div className="container mx-auto flex items-center justify-between py-2 px-4">
         {/* Logo */}
-        <Link className="text-3xl font-bold text-black" href="/">
-          BALLUP
+        <Link href="/" className="ml-10"> {/* Thêm mr-auto để đẩy logo sát trái */}
+          <img
+            src="/images/logo_ballUp.jpg"
+            alt="BALLUP Logo"
+            width={90}
+            height={30}
+            className="object-contain"
+          />
         </Link>
 
         {/* Mobile Menu Button */}
