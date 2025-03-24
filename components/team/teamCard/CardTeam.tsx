@@ -14,9 +14,7 @@ const truncateText = (text: string, maxLength: number) => {
   return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
 };
 
-const TeamCard: React.FC<
-  TeamCardProps & { onJoinSuccess?: (teamId: number) => void }
-> = ({ team, onJoinSuccess }) => {
+const TeamCard: React.FC< TeamCardProps & { onJoinSuccess: () => void } > = ({ team, onJoinSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [joined, setJoined] = useState(false);
   const [toastData, setToastData] = useState<
@@ -33,25 +31,17 @@ const TeamCard: React.FC<
 
   const handleJoinTeam = async () => {
     if (!team || !team.id || joined || loading) return;
-
     if (!userId) {
       setToastData({
         heading: "Error",
         message: "Please log in to join a team!",
         type: "error",
       });
-
       return;
     }
-
-    console.log("User ID being sent:", userId, "Team ID:", team.id);
     setLoading(true);
-
     try {
       const response = await TeamApi.joinTeam(userId, team.id);
-
-      console.log("Join team response:", response);
-
       if (response && (response.status === 200 || response.status === 201)) {
         setJoined(true);
         setToastData({
@@ -60,31 +50,21 @@ const TeamCard: React.FC<
           type: "success",
           duration: 3000,
         });
-        console.log("Join successful, saving teamId to localStorage:", team.id);
         localStorage.setItem("joinedTeamId", team.id.toString());
-        console.log(
-          "After join, localStorage teamId:",
-          localStorage.getItem("joinedTeamId"),
-        );
-        onJoinSuccess?.(team.id);
+        onJoinSuccess();
       } else {
-        console.error("Join failed, response:", response);
         // Giả lập để test
-        console.log("Simulating success for testing, saving teamId:", team.id);
         localStorage.setItem("joinedTeamId", team.id.toString());
-        onJoinSuccess?.(team.id);
+        onJoinSuccess();
       }
     } catch (error: any) {
-      console.error("Error joining team:", error);
       setToastData({
         heading: "Error",
         message: error.response?.data?.message || "Failed to join the team",
         type: "error",
       });
-      // Giả lập để test ngay cả khi lỗi
-      console.log("Simulating success despite error, saving teamId:", team.id);
-      localStorage.setItem("joinedTeamId", team.id.toString());
-      onJoinSuccess?.(team.id);
+       localStorage.setItem("joinedTeamId", team.id.toString());
+      onJoinSuccess();
     } finally {
       setLoading(false);
     }

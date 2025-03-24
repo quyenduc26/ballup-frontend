@@ -1,30 +1,47 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import TeamHeader from "../inforTeam/intro";
 import PlayerTable from "../inforTeam/tableTeam";
-
 import { DetailTeam } from "@/types/form";
+import TeamDetailApi from "@/service/teamDetail";
 
 export default function TeamIntro({ teamDetail }: { teamDetail: DetailTeam }) {
-  console.log("teamDetail:", teamDetail);
+  const [teamData, setTeamData] = useState<DetailTeam | null>(teamDetail);
+
+  useEffect(() => {
+    const fetchTeamDetail = async () => {
+      try {
+        const data = localStorage.getItem("data");
+        const parsedData = data ? JSON.parse(data) : null;
+        const userId = parsedData?.id;
+
+        if (!teamDetail?.id || !userId) return;
+
+        const response = await TeamDetailApi.getTeamDetail(teamDetail.id, userId);
+        setTeamData(response.data);
+      } catch (error) {
+        console.error("Error fetching team details:", error);
+      }
+    };
+
+    fetchTeamDetail();
+  }, [teamDetail.id]);
 
   return (
     <div className="w-full mx-auto mt-10 p-4">
-      {teamDetail ? (
+      {teamData ? (
         <>
           <TeamHeader
-            address={teamDetail.address}
-            cover={teamDetail.cover}
-            intro={teamDetail.intro}
-            logo={teamDetail.logo}
-            name={teamDetail.name}
-            sport={teamDetail.sport}
-            teamId={teamDetail.id}
+            address={teamData.address}
+            cover={teamData.cover}
+            intro={teamData.intro}
+            logo={teamData.logo}
+            name={teamData.name}
+            sport={teamData.sport}
+            teamId={teamData.id}
           />
-          <PlayerTable
-            players={teamDetail.members || []}
-            teamId={teamDetail.id}
-          />
+          <PlayerTable players={teamData.members || []} teamId={teamData.id} />
         </>
       ) : (
         <p className="text-center text-gray-500">
