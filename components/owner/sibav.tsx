@@ -12,28 +12,33 @@ import { FieldList } from "@/components/owner/field";
 import PlayingCenter from "@/components/center/PlayingCenter";
 import { NotificationType } from "@/types/common";
 import { createStompClient } from "@/config/ws";
+import notificationApi from "@/service/notificationApi";
+import PaymentMethodSettings from "@/components/owner/paymentSetting";
 
 export default function SibavSidebar() {
   const [activeTab, setActiveTab] = useState("Field");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [owners, setOwners] = useState([]);
+  const [notifications, setNotification] = useState<NotificationType[]>([]);
+  const [unReadBooking, setUnReadBooking] = useState(0);
+  const [unReadPayment, setUnReadPayment] = useState(0);
+  const [unReadBookingIds, setUnReadBookingIds] = useState<number[]>([]);
+  const [unReadPaymentIds, setUnReadPaymentIds] = useState<number[]>([]);
 
   const data = localStorage.getItem("data");
   const parsedData = data ? JSON.parse(data) : null;
   const userId = parsedData?.id;
   const subscribeChannel =
-    parsedData?.role == "USER" ? "/topic/user/" : "/topic/owner/";
+    parsedData?.role === "USER" ? "/topic/user/" : "/topic/owner/";
   const [stompClient, setStompClient] = useState<Client | null>(null);
-  const [notifications, setNotification] = useState<NotificationType[]>([]);
-  const [unReadBooking, setUnReadBooking] = useState(0);
-  const [unReadPayment, setUnReadPayment] = useState(0);
 
   const handleOnConnect = (notification: NotificationType) => {
-    setNotification((prev) => [...prev, notification]);
-    if (notification.type == "BOOKING_REQUESTED") {
+    setNotification((prev) => [notification, ...prev]);
+    if (notification.type === "BOOKING_REQUESTED") {
       setUnReadBooking((prev) => prev + 1);
-    } else {
+      setUnReadBookingIds((prev) => [...prev, notification.id]);
+    } else if (notification.type === "BOOKING_DEPOSITED") {
       setUnReadPayment((prev) => prev + 1);
+      setUnReadPaymentIds((prev) => [...prev, notification.id]);
     }
   };
 
@@ -41,12 +46,58 @@ export default function SibavSidebar() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleTabClick = (tab: string) => {
+  const handleReadPayment = async () => {
+    if (unReadPaymentIds) {
+      await notificationApi.markPaymentReqAsRead(unReadPaymentIds);
+      setUnReadPayment(0);
+    }
+  };
+
+  const handleReadBooking = async () => {
+    if (unReadBookingIds) {
+      await notificationApi.markBookingReqAsRead(unReadBookingIds);
+      setUnReadBooking(0);
+    }
+  };
+
+  const handleTabClick = async (tab: string) => {
     setActiveTab(tab);
     if (window.innerWidth < 768) {
       setIsSidebarOpen(false);
     }
   };
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchNotifications = async () => {
+      try {
+        const response = await notificationApi.getUserNotification(userId);
+        const notifications: NotificationType[] = response.data;
+
+        setNotification(notifications);
+
+        const unreadBookingIds = notifications
+          .filter((noti) => !noti.read && noti.type === "BOOKING_REQUESTED")
+          .map((noti) => noti.id);
+
+        const unreadPaymentIds = notifications
+          .filter((noti) => !noti.read && noti.type === "BOOKING_DEPOSITED")
+          .map((noti) => noti.id);
+
+        console.log(unreadPaymentIds);
+
+        setUnReadBookingIds(unreadBookingIds);
+        setUnReadPaymentIds(unreadPaymentIds);
+        setUnReadBooking(unreadBookingIds.length);
+        setUnReadPayment(unreadPaymentIds.length);
+      } catch (error) {
+        console.error("Failed to fetch notifications:", error);
+      }
+    };
+
+    fetchNotifications();
+  }, [userId]);
 
   useEffect(() => {
     if (!userId) return;
@@ -61,8 +112,7 @@ export default function SibavSidebar() {
   }, [userId]);
 
   return (
-    <div className="flex min-h-screen relative ">
-      {/* Mobile Menu Button */}
+    <div className="flex min-h-screen relative mt-10">
       <button
         className="md:hidden fixed top-4 left-4 z-50 p-2 bg-gray-200 rounded-md"
         onClick={toggleSidebar}
@@ -73,16 +123,6 @@ export default function SibavSidebar() {
           <Menu className="h-6 w-6" />
         )}
       </button>
-
-      {/* Overlay for mobile */}
-      {/* {isSidebarOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )} */}
-
-      {/* Sidebar */}
       <div
         className={`fixed md:static w-64 md:w-1/5 border-r border-gray-200 bg-white min-h-screen pl-5 pt-16 md:pt-10 transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
@@ -90,18 +130,19 @@ export default function SibavSidebar() {
       >
         <ul className="space-y-4">
           {[
-            { key: "Field", label: "Field" },
+            { key: "Field", label: "Manage Fields" },
             { key: "PaymentHistory", label: "Payment History" },
             {
               key: "BookingField",
-              label: "Booking Request",
+              label: "Booking Requests",
               badgeCount: unReadBooking,
             },
             {
               key: "PaymentRequest",
-              label: "Payment Request",
+              label: "Payment Requests",
               badgeCount: unReadPayment,
             },
+            { key: "PaymentEdit", label: "Payment Settings" },
           ].map(({ key, label, badgeCount }) => (
             <li key={key} className="list-none">
               <Badge
@@ -126,13 +167,16 @@ export default function SibavSidebar() {
           ))}
         </ul>
       </div>
-
-      {/* Main Content */}
       <div className="flex-1 p-4 md:p-6 md:w-4/5 pt-16 md:pt-6">
         {activeTab === "Field" && <FieldList setActiveTab={setActiveTab} />}
         {activeTab === "PaymentHistory" && <PaymentHistory />}
-        {activeTab === "BookingField" && <BookingTable />}
-        {activeTab === "PaymentRequest" && <PaymentRequest />}
+        {activeTab === "PaymentEdit" && <PaymentMethodSettings />}
+        {activeTab === "BookingField" && (
+          <BookingTable handleReadBooking={handleReadBooking} />
+        )}
+        {activeTab === "PaymentRequest" && (
+          <PaymentRequest handleReadPayment={handleReadPayment} />
+        )}
         {activeTab === "CreateCenter" && (
           <PlayingCenter setActiveTab={setActiveTab} />
         )}

@@ -20,7 +20,7 @@ export type ConvertedBlockedSlot = {
 
 export type NotificationType = {
   id: number;
-  isRead: boolean;
+  read: boolean;
   teamId?: number;
   bookingId?: number;
   gameId?: number;

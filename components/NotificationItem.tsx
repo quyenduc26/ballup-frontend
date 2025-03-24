@@ -17,7 +17,7 @@ export default function NotificationItem({
   return (
     <div className="my-2">
       <Alert
-        className="hover:border-1 hover:-translate-y-1 hover:shadow-lg hover:scale-[1.01] hover:border-opacity-100 hover:bg-opacity-95 transition-all duration-200 ease-out cursor-pointer"
+        className=" rounded-md hover:border-1 hover:-translate-y-1 hover:shadow-lg hover:scale-[1.01] hover:border-opacity-100 hover:bg-opacity-95 transition-all duration-200 ease-out cursor-pointer"
         color={color}
         description={message}
         endContent={
