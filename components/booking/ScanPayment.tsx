@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
+import { Copy, CheckCircle2 } from "lucide-react";
 
 import { BookingDetailResponse } from "@/types";
 import bookingRequestApi from "@/service/bookingRequestApi";
@@ -12,22 +13,23 @@ import { SonnerToast } from "@/components/sonnerMesage";
 import paymentApi from "@/service/paymentApi";
 import { PaymentMethod } from "@/types/owner";
 import { getImageUrl } from "@/utils/getImage";
-import { Copy, CheckCircle2 } from "lucide-react"
 
 export default function ScanPayment({ bookingId }: { bookingId: number }) {
   const [booking, setBooking] = useState<BookingDetailResponse | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
+    null,
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [isDepositing, setIsDepositing] = useState<boolean>(false);
-  const [copied, setCopied] = useState<string | null>(null)
+  const [copied, setCopied] = useState<string | null>(null);
   const router = useRouter();
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
 
@@ -35,9 +37,11 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
     async function fetchBooking() {
       try {
         const booking = await bookingRequestApi.getBookingDetail(bookingId);
-        const paymentMethod = await paymentApi.getOwnerPaymentMethodByBookingId(bookingId);
+        const paymentMethod =
+          await paymentApi.getOwnerPaymentMethodByBookingId(bookingId);
+
         setBooking(booking.data);
-        setPaymentMethod(paymentMethod.data)
+        setPaymentMethod(paymentMethod.data);
       } catch (err) {
         throw err;
       } finally {
@@ -74,10 +78,10 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
   };
 
   const copyToClipboard = (text: string, field: string) => {
-    navigator.clipboard.writeText(text)
-    setCopied(field)
-    setTimeout(() => setCopied(null), 2000)
-  }
+    navigator.clipboard.writeText(text);
+    setCopied(field);
+    setTimeout(() => setCopied(null), 2000);
+  };
 
   return loading ? (
     <Spinner className="h-screen w-screen" color="default" />
@@ -111,33 +115,48 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
                     <div className="flex justify-center mb-5">
                       <div className="relative p-2 bg-white border-2 border-gray-100 rounded-lg shadow-sm">
                         <img
+                          alt="QR Code"
+                          className="w-[350px] h-[350px] object-cover rounded-md"
                           src={
                             paymentMethod?.qrImageUrl
                               ? getImageUrl(paymentMethod.qrImageUrl)
                               : "/placeholder.svg?height=300&width=300"
                           }
-                          alt="QR Code"
-                          className="w-[350px] h-[350px] object-cover rounded-md"
                         />
                       </div>
                     </div>
 
                     <div className="text-center mb-4">
-                      <h3 className="text-xl font-bold text-gray-800">{paymentMethod?.name}</h3>
-                      {paymentMethod?.bankName && <p className="text-md text-gray-600 mt-1">{paymentMethod.bankName}</p>}
+                      <h3 className="text-xl font-bold text-gray-800">
+                        {paymentMethod?.name}
+                      </h3>
+                      {paymentMethod?.bankName && (
+                        <p className="text-md text-gray-600 mt-1">
+                          {paymentMethod.bankName}
+                        </p>
+                      )}
                     </div>
 
                     <div className="bg-gray-50 p-4 rounded-lg space-y-3 mb-4">
                       {paymentMethod?.accountNumber && (
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm font-medium text-gray-500">Số tài khoản</p>
-                            <p className="text-base font-semibold text-gray-800">{paymentMethod.accountNumber}</p>
+                            <p className="text-sm font-medium text-gray-500">
+                              Số tài khoản
+                            </p>
+                            <p className="text-base font-semibold text-gray-800">
+                              {paymentMethod.accountNumber}
+                            </p>
                           </div>
                           <button
-                            onClick={() => copyToClipboard(paymentMethod.accountNumber, "accountNumber")}
-                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                             aria-label="Copy account number"
+                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                            onClick={() =>
+                              copyToClipboard(
+                                paymentMethod.accountNumber,
+                                "accountNumber",
+                              )
+                            }
                           >
                             {copied === "accountNumber" ? (
                               <CheckCircle2 className="h-5 w-5 text-green-500" />
@@ -151,13 +170,22 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
                       {paymentMethod?.accountHolderName && (
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm font-medium text-gray-500">Chủ tài khoản</p>
-                            <p className="text-base font-semibold text-gray-800">{paymentMethod.accountHolderName}</p>
+                            <p className="text-sm font-medium text-gray-500">
+                              Chủ tài khoản
+                            </p>
+                            <p className="text-base font-semibold text-gray-800">
+                              {paymentMethod.accountHolderName}
+                            </p>
                           </div>
                           <button
-                            onClick={() => copyToClipboard(paymentMethod.accountHolderName, "accountHolderName")}
-                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
                             aria-label="Copy account holder name"
+                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                            onClick={() =>
+                              copyToClipboard(
+                                paymentMethod.accountHolderName,
+                                "accountHolderName",
+                              )
+                            }
                           >
                             {copied === "accountHolderName" ? (
                               <CheckCircle2 className="h-5 w-5 text-green-500" />
@@ -170,15 +198,21 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
 
                       {paymentMethod?.bankBranch && (
                         <div>
-                          <p className="text-sm font-medium text-gray-500">Chi nhánh</p>
-                          <p className="text-base text-gray-800">{paymentMethod.bankBranch}</p>
+                          <p className="text-sm font-medium text-gray-500">
+                            Chi nhánh
+                          </p>
+                          <p className="text-base text-gray-800">
+                            {paymentMethod.bankBranch}
+                          </p>
                         </div>
                       )}
                     </div>
 
                     {paymentMethod?.instructions && (
                       <div className="p-3 bg-blue-50 border-l-4 border-blue-500 rounded-r-md">
-                        <p className="text-sm text-blue-800 leading-relaxed">{paymentMethod.instructions}</p>
+                        <p className="text-sm text-blue-800 leading-relaxed">
+                          {paymentMethod.instructions}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -261,10 +295,11 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
                 {booking?.status === "CONFIRMED" && (
                   <>
                     <button
-                      className={`w-full ${isDepositing
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-green-600 hover:bg-green-700"
-                        } text-white py-2 px-4 rounded-md flex items-center justify-center mb-3`}
+                      className={`w-full ${
+                        isDepositing
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-green-600 hover:bg-green-700"
+                      } text-white py-2 px-4 rounded-md flex items-center justify-center mb-3`}
                       disabled={isDepositing}
                       onClick={() => handleDeposit(booking.bookingId)}
                     >

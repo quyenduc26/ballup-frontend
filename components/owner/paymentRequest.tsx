@@ -18,7 +18,11 @@ import { toast, Toaster } from "sonner";
 
 import bookingRequestApi from "@/service/bookingRequestApi";
 
-export default function PaymentTable({ handleReadPayment }: { handleReadPayment: () => Promise<void> }) {
+export default function PaymentTable({
+  handleReadPayment,
+}: {
+  handleReadPayment: () => Promise<void>;
+}) {
   const [payments, setPayments] = useState<PaymentRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingId, setLoadingId] = useState<number | null>(null);
@@ -39,6 +43,7 @@ export default function PaymentTable({ handleReadPayment }: { handleReadPayment:
 
     try {
       const response = await bookingRequestApi.getPayments(ownerId);
+
       setPayments(response.data);
       handleReadPayment();
     } catch (error) {

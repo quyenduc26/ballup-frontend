@@ -274,7 +274,7 @@ export type PlayingCenterEditType = {
 };
 
 export interface PaymentMethodRequest {
-  id?: string,
+  id?: string;
   name: string;
   bankName: string;
   accountNumber: string;

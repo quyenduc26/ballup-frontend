@@ -34,9 +34,12 @@ export default function Notification() {
     async function fetchNotifications() {
       try {
         const response = await notificationApi.getUserNotification(userId);
+
         if (response?.data) {
           setNotifications(response.data);
-          setUnRead(response.data.filter((noti: NotificationType ) => !noti.read).length);
+          setUnRead(
+            response.data.filter((noti: NotificationType) => !noti.read).length,
+          );
         }
       } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -48,7 +51,7 @@ export default function Notification() {
 
   // WebSocket event handler
   const handleOnConnect = (notification: NotificationType) => {
-    setNotifications((prev) => [ notification, ...prev]);
+    setNotifications((prev) => [notification, ...prev]);
     setUnRead((prev) => prev + 1);
   };
 
@@ -67,8 +70,8 @@ export default function Notification() {
           await notificationApi.markAsRead(unreadIds);
           setNotifications((prev) =>
             prev.map((noti) =>
-              unreadIds.includes(noti.id) ? { ...noti, read: true } : noti
-            )
+              unreadIds.includes(noti.id) ? { ...noti, read: true } : noti,
+            ),
           );
           setUnRead(0);
         } catch (error) {
@@ -98,6 +101,7 @@ export default function Notification() {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showNotifications]);
 
@@ -159,7 +163,10 @@ export default function Notification() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center max-h-[250px] py-4 px-4 text-center bg-white rounded-b-lg">
-                <Bell className="text-gray-300 dark:text-gray-600 mb-3" size={40} />
+                <Bell
+                  className="text-gray-300 dark:text-gray-600 mb-3"
+                  size={40}
+                />
                 <p className="text-gray-500 dark:text-gray-400">
                   You don&apos;t have any notifications yet
                 </p>

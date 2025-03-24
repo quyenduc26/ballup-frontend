@@ -7,6 +7,7 @@ import { Badge } from "@heroui/react";
 import PaymentHistory from "../../components/owner/paymentHistory";
 import BookingTable from "../../components/owner/booking";
 import PaymentRequest from "../../components/owner/paymentRequest";
+
 import { FieldList } from "@/components/owner/field";
 import PlayingCenter from "@/components/center/PlayingCenter";
 import { NotificationType } from "@/types/common";
@@ -41,7 +42,6 @@ export default function SibavSidebar() {
     }
   };
 
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -51,14 +51,14 @@ export default function SibavSidebar() {
       await notificationApi.markPaymentReqAsRead(unReadPaymentIds);
       setUnReadPayment(0);
     }
-  }
+  };
 
   const handleReadBooking = async () => {
     if (unReadBookingIds) {
       await notificationApi.markBookingReqAsRead(unReadBookingIds);
       setUnReadBooking(0);
     }
-  }
+  };
 
   const handleTabClick = async (tab: string) => {
     setActiveTab(tab);
@@ -85,7 +85,7 @@ export default function SibavSidebar() {
           .filter((noti) => !noti.read && noti.type === "BOOKING_DEPOSITED")
           .map((noti) => noti.id);
 
-        console.log(unreadPaymentIds)
+        console.log(unreadPaymentIds);
 
         setUnReadBookingIds(unreadBookingIds);
         setUnReadPaymentIds(unreadPaymentIds);
@@ -99,12 +99,13 @@ export default function SibavSidebar() {
     fetchNotifications();
   }, [userId]);
 
-
   useEffect(() => {
     if (!userId) return;
     const client = createStompClient(userId, subscribeChannel, handleOnConnect);
+
     client.activate();
     setStompClient(client);
+
     return () => {
       client.deactivate();
     };
@@ -123,26 +124,40 @@ export default function SibavSidebar() {
         )}
       </button>
       <div
-        className={`fixed md:static w-64 md:w-1/5 border-r border-gray-200 bg-white min-h-screen pl-5 pt-16 md:pt-10 transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-          } z-40`}
+        className={`fixed md:static w-64 md:w-1/5 border-r border-gray-200 bg-white min-h-screen pl-5 pt-16 md:pt-10 transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        } z-40`}
       >
         <ul className="space-y-4">
           {[
             { key: "Field", label: "Manage Fields" },
             { key: "PaymentHistory", label: "Payment History" },
-            { key: "BookingField", label: "Booking Requests", badgeCount: unReadBooking },
-            { key: "PaymentRequest", label: "Payment Requests", badgeCount: unReadPayment },
+            {
+              key: "BookingField",
+              label: "Booking Requests",
+              badgeCount: unReadBooking,
+            },
+            {
+              key: "PaymentRequest",
+              label: "Payment Requests",
+              badgeCount: unReadPayment,
+            },
             { key: "PaymentEdit", label: "Payment Settings" },
           ].map(({ key, label, badgeCount }) => (
             <li key={key} className="list-none">
               <Badge
                 color="danger"
-                content={badgeCount && badgeCount > 0 ? badgeCount.toString() : undefined}
+                content={
+                  badgeCount && badgeCount > 0
+                    ? badgeCount.toString()
+                    : undefined
+                }
                 placement="top-right"
               >
                 <button
-                  className={`w-full text-left font-bold uppercase p-2 text-sm md:text-base transition-colors hover:bg-blue-50 ${activeTab === key ? "text-blue bg-blue-50" : "text-gray-500"
-                    }`}
+                  className={`w-full text-left font-bold uppercase p-2 text-sm md:text-base transition-colors hover:bg-blue-50 ${
+                    activeTab === key ? "text-blue bg-blue-50" : "text-gray-500"
+                  }`}
                   onClick={() => handleTabClick(key)}
                 >
                   {label}
@@ -151,15 +166,20 @@ export default function SibavSidebar() {
             </li>
           ))}
         </ul>
-
       </div>
       <div className="flex-1 p-4 md:p-6 md:w-4/5 pt-16 md:pt-6">
         {activeTab === "Field" && <FieldList setActiveTab={setActiveTab} />}
         {activeTab === "PaymentHistory" && <PaymentHistory />}
         {activeTab === "PaymentEdit" && <PaymentMethodSettings />}
-        {activeTab === "BookingField" && <BookingTable handleReadBooking={handleReadBooking} />}
-        {activeTab === "PaymentRequest" && <PaymentRequest handleReadPayment={handleReadPayment} />}
-        {activeTab === "CreateCenter" && <PlayingCenter setActiveTab={setActiveTab} />}
+        {activeTab === "BookingField" && (
+          <BookingTable handleReadBooking={handleReadBooking} />
+        )}
+        {activeTab === "PaymentRequest" && (
+          <PaymentRequest handleReadPayment={handleReadPayment} />
+        )}
+        {activeTab === "CreateCenter" && (
+          <PlayingCenter setActiveTab={setActiveTab} />
+        )}
       </div>
     </div>
   );
