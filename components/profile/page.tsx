@@ -183,7 +183,7 @@ export default function ModernProfileLayout() {
 
               <div className="mt-6 sm:mt-0 sm:ml-6 text-center sm:text-left">
                 <h1 className="text-2xl font-bold text-gray-900">
-                  {editedUser?.firstName} {editedUser?.lastName}
+                  {user?.firstName} {user?.lastName}
                 </h1>
                 <p className="text-gray-500">{editedUser?.username}</p>
               </div>

@@ -94,6 +94,13 @@ const Header = () => {
     </>
   );
 
+  console.log("User Role:", role); // Debug xem role có đúng không
+
+  // Nếu role là "owner", không render header
+  if (role === "OWNER") {
+    return null;
+  }
+
   return (
     <header className="w-full border-b bg-white fixed top-0 left-0 z-50">
       <div className="container mx-auto flex items-center justify-between px-2 sm:px-4">

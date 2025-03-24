@@ -162,19 +162,21 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
             <h2 className="text-sm sm:text-lg font-bold text-center">
               {match.teamA?.name || "TEAM A"}
             </h2>
-            <ul className="text-xs text-gray-600 space-y-1 mt-1 w-full max-w-[100px] mx-auto">
+            <ul className="text-xs text-gray-600 space-y-1 mt-1 w-full max-w-[150px] mx-auto">
               {match.teamA?.members && match.teamA.members.length > 0 ? (
                 match.teamA.members.slice(0, 3).map((member, index) => (
                   <li
                     key={index}
-                    className="flex items-center justify-center gap-1"
+                    className="flex items-center justify-start gap-2 w-full"
                   >
                     <img
                       alt={`${member.firstName} ${member.lastName}`}
-                      className="w-5 h-5 rounded-full"
-                      src={getImageUrl(member.avatar) || "/default-avatar.png"}
+                      className="w-5 h-5 rounded-full flex-shrink-0"
+                      src={
+                        getImageUrl(member.avatar) || "/images/userprofile.png"
+                      }
                     />
-                    <span className="truncate text-xs">
+                    <span className="text-xs truncate">
                       {member.lastName} {member.firstName}
                     </span>
                   </li>
@@ -207,19 +209,21 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
             <h2 className="text-sm sm:text-base font-bold text-center">
               TEAM B
             </h2>
-            <ul className="text-xs text-gray-600 space-y-1 mt-1 w-full max-w-[100px] mx-auto">
+            <ul className="text-xs text-gray-600 space-y-1 mt-1 w-full max-w-[150px] mx-auto">
               {teamBPlayers.length > 0 ? (
                 teamBPlayers.slice(0, 3).map((player, index) => (
                   <li
                     key={index}
-                    className="flex items-center justify-center gap-1"
+                    className="flex items-center justify-start gap-2 w-full"
                   >
                     <img
                       alt={`${player.firstName} ${player.lastName}`}
-                      className="w-5 h-5 rounded-full"
-                      src={getImageUrl(player.avatar) || "/default-avatar.png"}
+                      className="w-5 h-5 rounded-full flex-shrink-0"
+                      src={
+                        getImageUrl(player.avatar) || "/images/userprofile.png"
+                      }
                     />
-                    <span className="truncate text-xs">
+                    <span className="text-xs truncate">
                       {player.lastName} {player.firstName}
                     </span>
                   </li>
