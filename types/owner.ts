@@ -37,3 +37,16 @@ export type PaymentRequest = {
   toTime: string;
   createdAt: string;
 };
+
+// Define types for payment methods
+export interface PaymentMethod {
+  id: string;
+  name: string;
+  active: boolean;
+  bankName: string;
+  accountNumber: string;
+  accountHolderName: string;
+  bankBranch?: string;
+  qrImageUrl: string;
+  instructions?: string;
+}
