@@ -2,13 +2,19 @@
 
 import Image from "next/image";
 import { FiExternalLink } from "react-icons/fi";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 import ListTeamCard from "../team/teamCard/ListTeamCard";
 
 export default function TeamSection() {
+  const router = useRouter();
+  const handleSeeMore = () => {
+    router.push("/team");
+  };
+
   return (
     <div>
-      <div className="w-full max-w-full mx-auto flex flex-col-reverse md:flex-row items-center bg-white relative">
+      <div className="w-full max-w-full gap-24 mx-auto flex flex-col-reverse md:flex-row items-center bg-white relative">
         <div className="w-full md:w-2/3 flex flex-col justify-center md:ml-20 text-center md:text-left relative mt-16 md:mt-0">
           <p className="text-xl sm:text-lg md:text-4xl font-bold text-black text-center md:text-right md:pr-28">
             MAKE
@@ -17,10 +23,13 @@ export default function TeamSection() {
             TEAM
           </h2>
 
-          <hr className="w-full border-t border-gray-500 my-12 md:my-24 mt-20" />
+          <hr className="w-full border-t border-gray-500 my-12 md:my-6 md:mb-16 mb-20" />
 
-          <div className="absolute w-[200px] sm:w-[200px] right-0 sm:left-0 mt-16">
-            <button className="flex items-center gap-2 text-sm sm:text-lg text-black border border-gray-300 px-6 py-4 rounded-lg hover:bg-gray-100">
+          <div className="absolute w-[200px] sm:w-[200px] right-0 sm:left-0">
+            <button
+              className="flex items-center gap-2 text-sm sm:text-lg text-black border border-gray-300 px-6 py-4 rounded-lg hover:bg-gray-100"
+              onClick={handleSeeMore}
+            >
               SEE MORE <FiExternalLink className="w-[30px] sm:w" />
             </button>
           </div>
