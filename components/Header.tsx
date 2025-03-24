@@ -138,7 +138,7 @@ const Header = () => {
               {avatar ? (
                 <img
                   alt="User Avatar"
-                  className="w-14 h-12 rounded-full object-cover mr-12"
+                  className="w-14 h-14 rounded-full object-cover mr-12"
                   src={avatar || "/images/userProfile.png"}
                 />
               ) : (
