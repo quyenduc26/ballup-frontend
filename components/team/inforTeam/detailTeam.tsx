@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import TeamHeader from "../inforTeam/intro";
 import PlayerTable from "../inforTeam/tableTeam";
+
 import { DetailTeam } from "@/types/form";
 import TeamDetailApi from "@/service/teamDetail";
 
@@ -18,7 +20,11 @@ export default function TeamIntro({ teamDetail }: { teamDetail: DetailTeam }) {
 
         if (!teamDetail?.id || !userId) return;
 
-        const response = await TeamDetailApi.getTeamDetail(teamDetail.id, userId);
+        const response = await TeamDetailApi.getTeamDetail(
+          teamDetail.id,
+          userId,
+        );
+
         setTeamData(response.data);
       } catch (error) {
         console.error("Error fetching team details:", error);

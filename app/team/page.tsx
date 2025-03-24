@@ -10,7 +10,6 @@ import TeamIntro from "@/components/team/inforTeam/detailTeam";
 import TeamApi from "@/service/teamCardApi";
 import { DetailTeam } from "@/types";
 import ListMyTeam from "@/components/team/ListMyTeam";
-import TeamDetail from "@/components/team/DetailTeam/detail";
 
 const Team = () => {
   const [showExplore, setShowExplore] = useState(true);
@@ -20,15 +19,16 @@ const Team = () => {
   const [userId, setUserId] = useState<number | null>(null);
 
   const handleSetMyTeamIndex = (index: number) => {
-    console.log(index)
-    if (!myTeams) return; 
+    console.log(index);
+    if (!myTeams) return;
 
     setMyTeamIndex(index);
-    const teamId = myTeams[index]?.id; 
+    const teamId = myTeams[index]?.id;
+
     if (teamId) {
-        localStorage.setItem("teamId", teamId.toString());
+      localStorage.setItem("teamId", teamId.toString());
     }
-};
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -53,8 +53,6 @@ const Team = () => {
     setShowExplore(false);
   };
 
-
-
   return (
     <div className="container mx-auto max-w-[1500px] p-4">
       <h1 className="text-4xl md:text-6xl font-extrabold text-black md:py-6 text-center md:text-left ml-4 mt-20">
@@ -64,8 +62,9 @@ const Team = () => {
 
       <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 md:gap-8 p-5 ml-2">
         <button
-          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
-            }`}
+          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${
+            showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
+          }`}
           onClick={() => {
             setShowExplore(true);
             console.log("Switching to EXPLORE");
@@ -74,8 +73,9 @@ const Team = () => {
           EXPLORE
         </button>
         <button
-          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${!showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
-            }`}
+          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${
+            !showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
+          }`}
           onClick={() => {
             const teamIdFromStorage = localStorage.getItem("joinedTeamId");
 
@@ -102,25 +102,20 @@ const Team = () => {
 
       {showCreateTeam ? (
         <CreateTeam setIsOpen={() => setShowCreateTeam(false)} />
-      ) :
-        showExplore ? (
-          <ListTeamCard onTeamJoined={onTeamJoined} />
-        ) :
-          myTeams?.length && myTeams.length == 1 ? (
-            <TeamIntro teamDetail={myTeams[0]} />
-          ) :
-            myTeams && myTeamIndex == null ? (
-              <ListMyTeam
-                listMyTeam={myTeams}
-                setMyTeamIndex={handleSetMyTeamIndex}
-              />
-            ) :
-              myTeams && myTeamIndex !== null && myTeamIndex < myTeams.length ? (
-                <TeamIntro teamDetail={myTeams[myTeamIndex]} />
-              ) :
-                (
-                  <p>Danh sách đội trống hoặc chưa tải xong!</p>
-                )}
+      ) : showExplore ? (
+        <ListTeamCard onTeamJoined={onTeamJoined} />
+      ) : myTeams?.length && myTeams.length == 1 ? (
+        <TeamIntro teamDetail={myTeams[0]} />
+      ) : myTeams && myTeamIndex == null ? (
+        <ListMyTeam
+          listMyTeam={myTeams}
+          setMyTeamIndex={handleSetMyTeamIndex}
+        />
+      ) : myTeams && myTeamIndex !== null && myTeamIndex < myTeams.length ? (
+        <TeamIntro teamDetail={myTeams[myTeamIndex]} />
+      ) : (
+        <p>Danh sách đội trống hoặc chưa tải xong!</p>
+      )}
     </div>
   );
 };

@@ -14,7 +14,10 @@ const truncateText = (text: string, maxLength: number) => {
   return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
 };
 
-const TeamCard: React.FC< TeamCardProps & { onJoinSuccess: () => void } > = ({ team, onJoinSuccess }) => {
+const TeamCard: React.FC<TeamCardProps & { onJoinSuccess: () => void }> = ({
+  team,
+  onJoinSuccess,
+}) => {
   const [loading, setLoading] = useState(false);
   const [joined, setJoined] = useState(false);
   const [toastData, setToastData] = useState<
@@ -37,11 +40,13 @@ const TeamCard: React.FC< TeamCardProps & { onJoinSuccess: () => void } > = ({ t
         message: "Please log in to join a team!",
         type: "error",
       });
+
       return;
     }
     setLoading(true);
     try {
       const response = await TeamApi.joinTeam(userId, team.id);
+
       if (response && (response.status === 200 || response.status === 201)) {
         setJoined(true);
         setToastData({
@@ -63,7 +68,7 @@ const TeamCard: React.FC< TeamCardProps & { onJoinSuccess: () => void } > = ({ t
         message: error.response?.data?.message || "Failed to join the team",
         type: "error",
       });
-       localStorage.setItem("joinedTeamId", team.id.toString());
+      localStorage.setItem("joinedTeamId", team.id.toString());
       onJoinSuccess();
     } finally {
       setLoading(false);
