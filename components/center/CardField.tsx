@@ -26,7 +26,6 @@ const CardField = ({
   const handleBookNow = (event: React.MouseEvent) => {
     event.preventDefault();
 
-    // Kiểm tra nếu không có thời gian được chọn
     if (!queryTime?.fromTime || !queryTime?.toTime) {
       setToastData({
         heading: "Error",
@@ -38,15 +37,13 @@ const CardField = ({
       return;
     }
 
-    // Tạo query parameters
     const queryParams = new URLSearchParams();
 
     queryParams.append("fromTime", queryTime.fromTime.toString());
     queryParams.append("toTime", queryTime.toTime.toString());
-    queryParams.append("primaryPrice", field.primaryPrice?.toString() || "0"); // Thêm giá ban ngày
-    queryParams.append("nightPrice", field.nightPrice?.toString() || "0"); // Thêm giá ban đêm
+    queryParams.append("primaryPrice", field.primaryPrice?.toString() || "0");
+    queryParams.append("nightPrice", field.nightPrice?.toString() || "0");
 
-    // Tạo URL đầy đủ và chuyển hướng
     const url = `/booking/${field.id}?${queryParams.toString()}`;
 
     window.location.href = url;
@@ -65,7 +62,6 @@ const CardField = ({
           className="w-full h-40 sm:h-72 object-cover bg-yellow-300 rounded-lg"
           src={getImageUrl(field.image)}
         />
-
         <div className="py-4">
           <h2 className="text-2xl font-bold text-left text-black">
             {field.name || "Không có tên"}
@@ -78,7 +74,6 @@ const CardField = ({
             {field.primaryPrice?.toLocaleString() || "0"} VND -{" "}
             {field.nightPrice?.toLocaleString() || "0"} VND
           </p>
-
           <div className="flex justify-between gap-3 mt-4">
             <div className="flex gap-3">
               <button
@@ -94,7 +89,6 @@ const CardField = ({
                   size={20}
                 />
               </button>
-
               <button className="p-2 rounded-full border text-black hover:bg-blue-500">
                 <Phone size={20} />
               </button>

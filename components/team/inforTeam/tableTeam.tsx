@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { Eye, Pencil, UserX } from "lucide-react";
 import { useState } from "react";
@@ -21,6 +22,21 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [toastData, setToastData] = useState<any>(null);
 
+  // Xử lý danh sách players để đảm bảo tên được hiển thị đúng
+  const processedPlayers = players.map((player) => {
+    const nameFromApi =
+      player.name && typeof player.name === "string" ? player.name : null;
+    const lastName = player.lastName || "";
+    const firstName = player.firstName || "";
+    const fullName =
+      nameFromApi || `${lastName} ${firstName}`.trim() || "Unknown";
+
+    return {
+      ...player,
+      name: fullName,
+    };
+  });
+
   const handleKickMember = async (id: number) => {
     if (!window.confirm("Are you sure you want to remove this player?")) return;
 
@@ -28,7 +44,7 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
     try {
       const data = localStorage.getItem("data");
       const parsedData = data ? JSON.parse(data) : null;
-      const userId = parsedData.id;
+      const userId = parsedData?.id;
 
       await TeamDetailApi.kickMember(id, { userId, teamId });
 
@@ -61,13 +77,13 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
           <tr>
             <th className="px-4 md:px-6 py-3 text-left">AVATAR</th>
             <th className="px-4 md:px-6 py-3 text-left">NAME</th>
-            <th className="px-4 md:px-6 py-3 text-left ">HEIGHT</th>
+            <th className="px-4 md:px-6 py-3 text-left">HEIGHT</th>
             <th className="px-4 md:px-6 py-3 text-left">WEIGHT</th>
             <th className="px-4 md:px-6 py-3 text-left">ACTION</th>
           </tr>
         </thead>
         <tbody>
-          {players.map((player) => (
+          {processedPlayers.map((player) => (
             <tr key={player.id} className="border-b">
               <td className="px-4 md:px-6 py-3">
                 <img
@@ -76,7 +92,7 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
                   src={
                     player.avatar
                       ? getImageUrl(player.avatar)
-                      : "/default-avatar.png"
+                      : "/images/userProfile.png"
                   }
                 />
               </td>

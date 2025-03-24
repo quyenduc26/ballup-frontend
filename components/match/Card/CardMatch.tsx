@@ -45,6 +45,7 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
   const handleJoinSingle = async () => {
     if (hasJoined) {
       toast.warning("You have already joined this match!");
+
       return;
     }
 
@@ -88,6 +89,7 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
   const handleJoinTeam = async () => {
     if (hasJoined) {
       toast.warning("You have already joined this match!");
+
       return;
     }
 

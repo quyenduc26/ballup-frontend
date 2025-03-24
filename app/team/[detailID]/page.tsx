@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-import Detail from "@/components/team/DetailTeam/detail";
+import TeamDetail from "@/components/team/DetailTeam/detail";
 import UpdateTeamDetail from "@/components/team/inforTeam/UpdateTeamDetail";
 
 export default function Page() {
@@ -10,5 +10,5 @@ export default function Page() {
     setIsUpdate(!isUpdate);
   };
 
-  return <div>{isUpdate ? <UpdateTeamDetail /> : <Detail />}</div>;
+  return <div>{isUpdate ? <UpdateTeamDetail /> : <TeamDetail />}</div>;
 }

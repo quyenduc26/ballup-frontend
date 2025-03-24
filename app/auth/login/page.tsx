@@ -60,6 +60,8 @@ export default function Login() {
       setLoading(true);
       const response = await authApi.login(formData);
 
+      console.log("Login response:", response);
+
       if (response.data) {
         const { id, role } = response.data;
 
