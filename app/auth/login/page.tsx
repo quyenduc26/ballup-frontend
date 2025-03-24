@@ -59,6 +59,7 @@ export default function Login() {
     try {
       setLoading(true);
       const response = await authApi.login(formData);
+
       console.log("Login response:", response);
 
       if (response.data) {
