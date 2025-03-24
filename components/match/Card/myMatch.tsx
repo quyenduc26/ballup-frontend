@@ -36,31 +36,34 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
 
   const handleCancelMatch = () => {
     // Using toast.promise with a confirmation dialog
-    toast.custom((t) => (
-      <div className="bg-white rounded-lg shadow-lg p-4 max-w-md">
-        <h3 className="font-bold text-lg mb-2">Cancel Match</h3>
-        <p className="mb-4">Are you sure you want to cancel this match?</p>
-        <div className="flex justify-end gap-2">
-          <button
-            className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
-            onClick={() => toast.dismiss(t)}
-          >
-            No
-          </button>
-          <button
-            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-            onClick={() => {
-              toast.dismiss(t);
-              performCancellation();
-            }}
-          >
-            Yes, Cancel
-          </button>
+    toast.custom(
+      (t) => (
+        <div className="bg-white rounded-lg shadow-lg p-4 max-w-md">
+          <h3 className="font-bold text-lg mb-2">Cancel Match</h3>
+          <p className="mb-4">Are you sure you want to cancel this match?</p>
+          <div className="flex justify-end gap-2">
+            <button
+              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+              onClick={() => toast.dismiss(t)}
+            >
+              No
+            </button>
+            <button
+              className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+              onClick={() => {
+                toast.dismiss(t);
+                performCancellation();
+              }}
+            >
+              Yes, Cancel
+            </button>
+          </div>
         </div>
-      </div>
-    ), {
-      duration: 10000, // 10 seconds to make a decision
-    });
+      ),
+      {
+        duration: 10000, // 10 seconds to make a decision
+      },
+    );
   };
 
   const performCancellation = async () => {
@@ -70,14 +73,11 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
       const parsedData = data ? JSON.parse(data) : null;
       const userId = parsedData.id;
 
-      await toast.promise(
-        matchApi.cancelGame(match.id, userId),
-        {
-          loading: 'Cancelling match...',
-          success: 'Match cancelled successfully',
-          error: 'Failed to cancel match'
-        }
-      );
+      await toast.promise(matchApi.cancelGame(match.id, userId), {
+        loading: "Cancelling match...",
+        success: "Match cancelled successfully",
+        error: "Failed to cancel match",
+      });
 
       // Call onUpdate to refresh the matches list
       if (onUpdate) {
