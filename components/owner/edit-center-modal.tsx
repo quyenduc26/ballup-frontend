@@ -284,9 +284,7 @@ const EditCenterModal: React.FC<EditCenterModalProps> = ({
                         </button>
                       </div>
                     ) : (
-                      <div
-                        className="flex flex-col items-center justify-center w-full h-full border-2 border-dashed rounded-md cursor-pointer hover:bg-gray-50"
-                      >
+                      <div className="flex flex-col items-center justify-center w-full h-full border-2 border-dashed rounded-md cursor-pointer hover:bg-gray-50">
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                           <p className="text-xs text-gray-500">Upload image</p>
                         </div>

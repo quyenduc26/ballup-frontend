@@ -6,7 +6,6 @@ import TeamHeader from "../inforTeam/intro";
 
 import TeamDetailApi from "@/service/teamDetail";
 import { DetailTeam, Player } from "@/types/form";
-import { getImageUrl } from "@/utils/getImage";
 
 export default function TeamDetail() {
   const [team, setTeam] = useState<DetailTeam | null>(null);
@@ -16,36 +15,73 @@ export default function TeamDetail() {
 
   const data = localStorage.getItem("data");
   const parsedData = data ? JSON.parse(data) : null;
-  const userId = parsedData.id;
+  const userId = parsedData?.id;
 
   const { detailID } = useParams();
+  const parsedTeamId = detailID ? parseInt(detailID as string, 10) : NaN;
 
-  console.log(detailID);
-  const parsedTeamId = parseInt(detailID as string, 10);
+  const fetchTeamDetail = async () => {
+    if (isNaN(parsedTeamId) || !userId) {
+      setError("Thông tin đội hoặc người dùng không hợp lệ");
+      setLoading(false);
+
+      return;
+    }
+
+    try {
+      console.log(
+        "Fetching team detail for teamId:",
+        parsedTeamId,
+        "userId:",
+        userId,
+      );
+      const response = await TeamDetailApi.getTeamDetail(parsedTeamId, userId);
+
+      console.log("Team detail response:", response);
+
+      if (response?.data) {
+        setTeam(response.data);
+
+        console.log("Members data:", response.data.members);
+
+        const processedPlayers = Array.isArray(response.data.members)
+          ? response.data.members.map((player: any) => {
+              const nameFromApi =
+                player.name && typeof player.name === "string"
+                  ? player.name
+                  : null;
+              const lastName = player.lastName || "";
+              const firstName = player.firstName || "";
+              const fullName =
+                nameFromApi || `${lastName} ${firstName}`.trim() || "Unknown";
+
+              console.log(
+                `Player ID: ${player.id}, nameFromApi: ${nameFromApi}, lastName: ${lastName}, firstName: ${firstName}, fullName: ${fullName}`,
+              );
+
+              return {
+                ...player,
+                name: fullName,
+              };
+            })
+          : [];
+
+        setPlayers(processedPlayers);
+      } else {
+        throw new Error("Dữ liệu không hợp lệ");
+      }
+    } catch (err: any) {
+      console.error("API Error:", err.response?.data || err);
+      setError(
+        err?.response?.data?.message ||
+          "Lỗi khi tải dữ liệu. Vui lòng thử lại.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchTeamDetail = async () => {
-      try {
-        const response = await TeamDetailApi.getTeamDetail(
-          parsedTeamId,
-          userId,
-        );
-
-        if (response?.data) {
-          setTeam(response.data);
-          setPlayers(
-            Array.isArray(response.data.members) ? response.data.members : [],
-          );
-        } else {
-          throw new Error("Dữ liệu không hợp lệ");
-        }
-      } catch (err: any) {
-        setError(err?.response?.data?.message || "Lỗi khi tải dữ liệu");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchTeamDetail();
   }, [detailID, userId]);
 
@@ -76,9 +112,9 @@ export default function TeamDetail() {
                           alt={player.name}
                           className="w-20 h-20 object-cover"
                           src={
-                            player.avatar
-                              ? getImageUrl(player.avatar)
-                              : "/default-avatar.png"
+                            player?.avatar
+                              ? `${player.avatar}?t=${new Date().getTime()}`
+                              : "/images/userProfile.png"
                           }
                         />
                       </td>

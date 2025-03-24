@@ -116,6 +116,8 @@ export type Player = {
   avatar?: string;
   height?: number;
   weight?: number;
+  firstName?: string;
+  lastName?: string;
 };
 
 export type DetailTeam = {
@@ -126,8 +128,9 @@ export type DetailTeam = {
   logo?: string;
   cover: string;
   sport: string;
-  members: Player[];
+  members?: Player[];
   owner: boolean;
+  totalMembers: number;
 };
 
 export type KickMemberType = {

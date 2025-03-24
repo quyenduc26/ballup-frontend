@@ -121,7 +121,7 @@ const Header = () => {
                 <img
                   alt="User Avatar"
                   className="w-14 h-12 rounded-full object-cover mr-12"
-                  src={avatar}
+                  src={avatar || "/images/userProfile.png"}
                 />
               ) : (
                 <div className="w-10 h-10 bg-gray-300 rounded-full" />
