@@ -3,11 +3,11 @@ import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
 import UpdateTeamDetail from "../inforTeam/UpdateTeamDetail"; // Giả sử đường dẫn đúng
+
 import TeamDetailApi from "@/service/teamDetail";
 import { DetailTeam, Player } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import { SonnerToast } from "@/components/sonnerMesage";
-import TeamHeader from "../inforTeam/intro";
 export default function TeamDetail() {
   const [team, setTeam] = useState<DetailTeam | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
@@ -29,12 +29,13 @@ export default function TeamDetail() {
   const parsedTeamId = detailID ? parseInt(detailID as string, 10) : NaN;
 
   const [teamId, setTeamId] = useState<string | null>(
-    parsedTeamId ? String(parsedTeamId) : null
+    parsedTeamId ? String(parsedTeamId) : null,
   );
 
   useEffect(() => {
     if (!parsedTeamId) {
       const storedTeamId = localStorage.getItem("teamId");
+
       if (storedTeamId) {
         setTeamId(storedTeamId);
       }
@@ -110,6 +111,7 @@ export default function TeamDetail() {
   const hanUpdateForm = () => {
     if (!teamId) {
       alert("No team ID available. Cannot edit.");
+
       return;
     }
     editDialogRef.current?.showModal();
@@ -118,6 +120,7 @@ export default function TeamDetail() {
   const handleDeleteTeam = async () => {
     if (!teamId) {
       alert("No team ID found. Cannot delete team.");
+
       return;
     }
 
@@ -135,6 +138,7 @@ export default function TeamDetail() {
           message: "User not found. Please log in again.",
           type: "error",
         });
+
         return;
       }
 
@@ -177,6 +181,7 @@ export default function TeamDetail() {
           message: "User not found. Please log in again.",
           type: "error",
         });
+
         return;
       }
 
@@ -226,15 +231,18 @@ export default function TeamDetail() {
                 <img
                   alt="Team Logo"
                   className="w-36 h-36 rounded-full border-2 border-white object-cover"
-                  src={team.logo ? getImageUrl(team.logo) : "/images/arsenal.png"}
+                  src={
+                    team.logo ? getImageUrl(team.logo) : "/images/arsenal.png"
+                  }
                 />
               </div>
               <div className="flex-1 text-center md:text-left mt-4 md:mt-0">
-                <h1 className="text-xl md:text-2xl font-bold text-black">{team.name}</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-black">
+                  {team.name}
+                </h1>
                 <p className="text-sm text-gray-600">{team.intro}</p>
                 <p className="text-sm text-gray-600">{team.address}</p>
               </div>
-              
             </div>
             <dialog
               ref={editDialogRef}
@@ -255,7 +263,9 @@ export default function TeamDetail() {
                   onUpdateSuccess={() => setRefresh((prev) => !prev)}
                 />
               ) : (
-                <p className="text-red-500">No team ID available. Cannot edit.</p>
+                <p className="text-red-500">
+                  No team ID available. Cannot edit.
+                </p>
               )}
             </dialog>
           </div>

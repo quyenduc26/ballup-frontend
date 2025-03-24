@@ -4,6 +4,7 @@ import { Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { SonnerToast } from "../sonnerMesage";
+
 import { CreateTeamData } from "@/types/form";
 import createTeamApi from "@/service/createTeamApi";
 import { uploadImage } from "@/utils/uploadImage";
@@ -20,7 +21,9 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
     userId: 1,
   });
 
-  const [coverPreview, setCoverPreview] = useState<string | undefined>(undefined);
+  const [coverPreview, setCoverPreview] = useState<string | undefined>(
+    undefined,
+  );
   const [logoPreview, setLogoPreview] = useState<string | undefined>(undefined);
   const [errors, setErrors] = useState({
     cover: false,
@@ -32,25 +35,27 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
   });
   const [toastData, setToastData] = useState<
     | {
-      heading?: string;
-      message?: string;
-      type?: "error" | "success" | "info" | "warning";
-      duration?: number;
-    }
+        heading?: string;
+        message?: string;
+        type?: "error" | "success" | "info" | "warning";
+        duration?: number;
+      }
     | undefined
   >();
   const router = useRouter();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
+
     setFormData({ ...formData, [name]: value });
     setErrors((prev) => ({ ...prev, [name]: false }));
   };
 
   const handleChangeSport = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value as "FOOTBALL" | "BADMINTON" | "";
+
     setFormData({ ...formData, sport: value });
     if (value) {
       setErrors((prev) => ({ ...prev, sport: false }));
@@ -59,7 +64,7 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
 
   const handleImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "cover" | "logo"
+    type: "cover" | "logo",
   ) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -72,12 +77,15 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
           message: "Image size should not exceed 5MB",
           duration: 3000,
         });
+
         return;
       }
 
       const filename = await uploadImage(file);
+
       if (filename) {
         const imageUrl = getImageUrl(filename);
+
         if (type === "cover") {
           setFormData({ ...formData, cover: filename });
           setCoverPreview(imageUrl);
@@ -122,6 +130,7 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
         message: "Please fill in all required fields!",
         duration: 3000,
       });
+
       return;
     }
 
@@ -249,7 +258,6 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
         </div>
       </div>
 
-
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4 mb-4 mt-14">
           <div>
@@ -257,8 +265,9 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
               TEAM NAME <span className="text-red-500">*</span>
             </label>
             <input
-              className={`w-full p-2 border rounded ${errors.name ? "border-red-500" : "border-gray-300"
-                }`}
+              className={`w-full p-2 border rounded ${
+                errors.name ? "border-red-500" : "border-gray-300"
+              }`}
               id="name"
               name="name"
               type="text"
@@ -276,8 +285,9 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
               ADDRESS <span className="text-red-500">*</span>
             </label>
             <input
-              className={`w-full p-2 border rounded ${errors.address ? "border-red-500" : "border-gray-300"
-                }`}
+              className={`w-full p-2 border rounded ${
+                errors.address ? "border-red-500" : "border-gray-300"
+              }`}
               id="address"
               name="address"
               type="text"
@@ -297,8 +307,9 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
             TEAM OVERVIEW <span className="text-red-500">*</span>
           </label>
           <textarea
-            className={`w-full p-2 border rounded ${errors.intro ? "border-red-500" : "border-gray-300"
-              }`}
+            className={`w-full p-2 border rounded ${
+              errors.intro ? "border-red-500" : "border-gray-300"
+            }`}
             id="overview"
             name="intro"
             value={formData.intro}
@@ -316,13 +327,14 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
             SPORT <span className="text-red-500">*</span>
           </label>
           <select
-            className={`w-full p-2 border rounded h-10 ${errors.sport ? "border-red-500" : "border-gray-300"
-              }`}
+            className={`w-full p-2 border rounded h-10 ${
+              errors.sport ? "border-red-500" : "border-gray-300"
+            }`}
             id="sport"
             value={formData.sport || ""}
             onChange={handleChangeSport}
           >
-            <option value="" disabled>
+            <option disabled value="">
               Type Of Sport
             </option>
             <option value="FOOTBALL">Football</option>

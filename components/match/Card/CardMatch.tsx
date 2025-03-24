@@ -172,7 +172,9 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
                     <img
                       alt={`${member.firstName} ${member.lastName}`}
                       className="w-5 h-5 rounded-full flex-shrink-0"
-                      src={getImageUrl(member.avatar) || "/images/userprofile.png"}
+                      src={
+                        getImageUrl(member.avatar) || "/images/userprofile.png"
+                      }
                     />
                     <span className="text-xs truncate">
                       {member.lastName} {member.firstName}
@@ -204,7 +206,9 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
           </div>
 
           <div className="flex flex-col items-center mt-20">
-            <h2 className="text-sm sm:text-base font-bold text-center">TEAM B</h2>
+            <h2 className="text-sm sm:text-base font-bold text-center">
+              TEAM B
+            </h2>
             <ul className="text-xs text-gray-600 space-y-1 mt-1 w-full max-w-[150px] mx-auto">
               {teamBPlayers.length > 0 ? (
                 teamBPlayers.slice(0, 3).map((player, index) => (
@@ -215,7 +219,9 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
                     <img
                       alt={`${player.firstName} ${player.lastName}`}
                       className="w-5 h-5 rounded-full flex-shrink-0"
-                      src={getImageUrl(player.avatar) || "/images/userprofile.png"}
+                      src={
+                        getImageUrl(player.avatar) || "/images/userprofile.png"
+                      }
                     />
                     <span className="text-xs truncate">
                       {player.lastName} {player.firstName}

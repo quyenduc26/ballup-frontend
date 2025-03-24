@@ -54,6 +54,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
         ...editedUser,
         phone: editedUser.number, // Gửi phone thay vì number
       };
+
       console.log("Data sent to API:", updatedData);
       const response = await userApi.UpdateInfo(editedUser.id, updatedData);
 
@@ -101,6 +102,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
       !editedUser.confirmPassword
     ) {
       setToastData({ type: "warning", message: "Please fill in all fields." });
+
       return;
     }
 
@@ -109,6 +111,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
         type: "error",
         message: "New password and confirm password do not match!",
       });
+
       return;
     }
 
@@ -331,7 +334,11 @@ const EditProfile: React.FC<EditProfileProps> = ({
                   type="button"
                   onClick={toggleConfirmPasswordVisibility}
                 >
-                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
                 </button>
               </div>
             </div>
@@ -397,8 +404,8 @@ const EditProfile: React.FC<EditProfileProps> = ({
           </button>
           <button
             className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
-            onClick={handleSaveProfile}
             disabled={isSaving}
+            onClick={handleSaveProfile}
           >
             {isSaving ? "Saving..." : "Save"}
           </button>
