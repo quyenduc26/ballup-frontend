@@ -61,7 +61,7 @@ export default function SibavSidebar() {
   }, [userId]);
 
   return (
-    <div className="flex min-h-screen relative mt-10">
+    <div className="flex min-h-screen relative ">
       {/* Mobile Menu Button */}
       <button
         className="md:hidden fixed top-4 left-4 z-50 p-2 bg-gray-200 rounded-md"

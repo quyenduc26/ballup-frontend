@@ -5,7 +5,6 @@ export default function IntroHomePage() {
   const sports = [
     { name: "FOOTBALL", link: "/football" },
     { name: "BADMINTON", link: "/badminton" },
-    { name: "PICKLEBALL", link: "/pickleball" },
   ];
 
   return (
