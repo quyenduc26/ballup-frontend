@@ -7,7 +7,7 @@ import Image from "next/image";
 import { ChevronDown, ChevronUp, Pencil, Trash2 } from "lucide-react";
 import { Card, CardHeader, CardBody } from "@heroui/react";
 import { Button } from "@heroui/react";
-import { toast, Toaster } from "sonner"; // Added Sonner imports
+import { toast, Toaster } from "sonner";
 
 import image from "@/public/images/image 3.png";
 import ownerApi from "@/service/ownerApi";
@@ -42,9 +42,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
 
   const handleEditSuccess = () => {
     setIsRefresh((prev) => !prev);
-    toast.success("Center updated successfully", {
-      duration: 3000,
-    });
+    toast.success("Center updated successfully", { duration: 3000 });
   };
 
   useEffect(() => {
@@ -60,9 +58,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
         }
       } catch (error) {
         console.error("Error fetching fields:", error);
-        toast.error("Failed to fetch fields", {
-          duration: 3000,
-        });
+        toast.error("Failed to fetch fields", { duration: 3000 });
       }
     };
 
@@ -70,7 +66,6 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
   }, [isRefresh]);
 
   const handleDelete = async (fieldId: string) => {
-    // Using toast.promise for the delete operation with confirmation-like behavior
     toast("Are you sure you want to delete this center?", {
       action: {
         label: "Delete",
@@ -80,14 +75,10 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
             setFields((prevFields) =>
               prevFields.filter((field) => field.id !== fieldId),
             );
-            toast.success("Center deleted successfully", {
-              duration: 3000,
-            });
+            toast.success("Center deleted successfully", { duration: 3000 });
           } catch (error) {
             console.error("Error deleting center:", error);
-            toast.error("Failed to delete center", {
-              duration: 3000,
-            });
+            toast.error("Failed to delete center", { duration: 3000 });
           }
         },
       },
@@ -100,44 +91,48 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
   };
 
   return (
-    <div className="w-full p-1 sm:p-2 md:p-4 lg:p-6">
-      <Toaster richColors position="top-center" />{" "}
-      {/* Added Toaster component */}
-      <div className="flex justify-between mb-6">
-        <h1 className="text-xl font-bold mb-4">Management Fields</h1>
+    <div className="w-full p-2 sm:p-4 lg:p-6">
+      <Toaster richColors position="top-center" />
+      <div className="flex flex-col sm:flex-row justify-between mb-4 sm:mb-6">
+        <h1 className="text-lg sm:text-xl font-bold mb-2 sm:mb-0">
+          Management Fields
+        </h1>
         <Button
-          className="bg-black rounded-none text-white"
+          className="bg-black rounded-none text-white text-sm sm:text-base py-2 px-4"
           onPress={() => setActiveTab("CreateCenter")}
         >
           Create center
         </Button>
       </div>
-      {/* Table header with grid layout */}
-      <div className="grid grid-cols-4 font-semibold border-b pb-2 text-xs sm:text-sm md:text-base w-full">
-        <div className="pl-2 md:pl-4 lg:pl-6">Field Name</div>
+
+      {/* Table header - Ẩn trên mobile, chỉ hiển thị từ sm trở lên */}
+      <div className="hidden sm:grid sm:grid-cols-4 font-semibold border-b pb-2 text-xs sm:text-sm w-full">
+        <div className="pl-4">Field Name</div>
         <div className="text-center">Image</div>
         <div className="text-center">Location</div>
-        <div className="text-right pr-2 md:pr-6">Action</div>
+        <div className="text-right pr-6">Action</div>
       </div>
+
       {/* Field List */}
-      <div className="space-y-2 sm:space-y-3 md:space-y-4 mt-2 md:mt-4">
+      <div className="space-y-3 mt-2">
         {fields.map((field, index) => (
           <Card key={index} className="overflow-hidden">
             <CardHeader className="p-0">
-              <div
-                key={field.id}
-                className="grid grid-cols-4 items-center w-full gap-4 p-4 bg-stone-100 rounded-lg hover:bg-stone-200 transition-colors"
-              >
+              <div className="flex flex-col sm:grid sm:grid-cols-4 items-start sm:items-center w-full gap-2 sm:gap-4 p-3 sm:p-4 bg-stone-100 rounded-lg hover:bg-stone-200 transition-colors">
                 {/* Field Name */}
-                <div className="pl-2 md:pl-4">
-                  <h1 className="text-sm md:text-base font-medium">
+                <div className="w-full sm:pl-4">
+                  <h1 className="text-sm font-medium sm:text-base">
                     {field.name}
                   </h1>
+                  {/* Hiển thị address trên mobile */}
+                  <p className="text-xs text-gray-600 sm:hidden">
+                    {field.address}
+                  </p>
                 </div>
 
                 {/* Image */}
-                <div className="flex justify-center">
-                  <div className="relative w-full max-w-[176px] aspect-[16/9]">
+                <div className="flex justify-center w-full sm:w-auto">
+                  <div className="relative w-full max-w-[120px] sm:max-w-[176px] aspect-[16/9]">
                     <Image
                       fill
                       alt={field.name}
@@ -147,47 +142,44 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                   </div>
                 </div>
 
-                {/* Location */}
-                <div className="flex items-center justify-center">
-                  <p className="text-xs md:text-sm text-gray-600">
+                {/* Location - Ẩn trên mobile */}
+                <div className="hidden sm:flex sm:items-center sm:justify-center">
+                  <p className="text-xs sm:text-sm text-gray-600">
                     {field.address}
                   </p>
                 </div>
 
-                {/* Expand/Collapse Button */}
+                {/* Actions */}
                 {field.slots?.length > 0 && (
-                  <div className="flex justify-end gap-1">
+                  <div className="flex justify-end gap-1 w-full sm:w-auto">
                     <Button
-                      className="h-8 w-8 md:h-10 md:w-10"
+                      className="h-8 w-8"
                       size="sm"
                       variant="ghost"
                       onClick={() => handleEdit(field.id)}
                     >
-                      <Pencil className="h-4 w-4 md:h-5 md:w-5" />
+                      <Pencil className="h-4 w-4" />
                     </Button>
-
                     <Button
-                      className="h-8 w-8 md:h-10 md:w-10 text-red-500 hover:bg-red-100"
+                      className="h-8 w-8 text-red-500 hover:bg-red-100"
                       size="sm"
                       variant="ghost"
                       onClick={() => handleDelete(field.id)}
                     >
-                      <Trash2 className="h-4 w-4 md:h-5 md:w-5" />
+                      <Trash2 className="h-4 w-4" />
                     </Button>
-
                     <Button
-                      className="h-8 w-8 md:h-10 md:w-10"
+                      className="h-8 w-8"
                       size="sm"
                       variant="ghost"
                       onClick={() => toggleSubFields(field.id)}
                     >
                       {expandedFields[field.id] ? (
-                        <ChevronUp className="h-4 w-4 md:h-5 md:w-5" />
+                        <ChevronUp className="h-4 w-4" />
                       ) : (
-                        <ChevronDown className="h-4 w-4 md:h-5 md:w-5" />
+                        <ChevronDown className="h-4 w-4" />
                       )}
                     </Button>
-
                     <PlayingSlot
                       action="CREATE"
                       field={field}
@@ -200,61 +192,55 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
 
             {/* SubFields */}
             {field.slots?.length > 0 && expandedFields[field.id] && (
-              <CardBody className="border-t bg-white p-1 sm:p-2 md:p-4">
-                <div className="space-y-2 sm:space-y-3">
-                  <div className="overflow-auto max-h-[400px]">
-                    {/* Fixed header */}
-                    <div className="sticky top-0 z-10 bg-stone-200">
-                      <div className="grid grid-cols-4 items-center gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4">
-                        <div className="text-left md:pl-4">
+              <CardBody className="border-t bg-white p-2 sm:p-4">
+                <div className="space-y-2">
+                  <div className="overflow-auto max-h-[300px]">
+                    {/* Fixed header - Chỉ hiển thị từ sm trở lên */}
+                    <div className="hidden sm:block sticky top-0 z-10 bg-stone-200">
+                      <div className="grid grid-cols-4 items-center gap-3 py-2 px-4">
+                        <div className="text-left pl-4">
                           <h2 className="text-xs sm:text-sm font-medium">
                             Name
                           </h2>
                         </div>
-
                         <div className="text-center">
-                          <span className="text-[10px] sm:text-xs md:text-sm font-medium">
+                          <span className="text-xs sm:text-sm font-medium">
                             Primary price
                           </span>
                         </div>
-
                         <div className="text-center">
-                          <span className="text-[10px] sm:text-xs md:text-sm font-medium">
+                          <span className="text-xs sm:text-sm font-medium">
                             Night price
                           </span>
                         </div>
-
-                        <div className="text-right md:pr-4">
+                        <div className="text-right pr-4">
                           <span className="text-xs font-medium">Actions</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Scrollable content */}
+                    {/* Scrollable content - Responsive trên mobile */}
                     {field.slots.map((slot) => (
                       <div
                         key={slot.id}
-                        className="grid grid-cols-4 items-center gap-2 md:gap-3 py-2 px-1 sm:px-2 md:px-4 bg-stone-100 rounded-md shadow-sm"
+                        className="flex flex-col sm:grid sm:grid-cols-4 items-start sm:items-center gap-2 py-2 px-2 sm:px-4 bg-stone-100 rounded-md shadow-sm"
                       >
-                        <div className="text-left md:pl-4">
+                        <div className="text-left sm:pl-4">
                           <h2 className="text-xs sm:text-sm font-medium">
                             {slot.name}
                           </h2>
                         </div>
-
-                        <div className="text-center">
-                          <span className="text-[10px] sm:text-xs md:text-sm">
-                            {slot.primaryPrice}
+                        <div className="text-left sm:text-center">
+                          <span className="text-[10px] sm:text-xs">
+                            Primary: {slot.primaryPrice}
                           </span>
                         </div>
-
-                        <div className="text-center">
-                          <span className="text-[10px] sm:text-xs md:text-sm">
-                            {slot.nightPrice}
+                        <div className="text-left sm:text-center">
+                          <span className="text-[10px] sm:text-xs">
+                            Night: {slot.nightPrice}
                           </span>
                         </div>
-
-                        <div className="text-right md:pr-4">
+                        <div className="text-right sm:pr-4">
                           <PlayingSlot
                             action="UPDATE"
                             field={field}

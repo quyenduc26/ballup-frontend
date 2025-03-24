@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import TeamCard from "./CardTeam";
+
 import teamApi from "@/service/teamCardApi";
 import { Team } from "@/types/form";
 
@@ -16,6 +18,7 @@ const ListTeamCard: React.FC<ListTeamCardProps> = ({ onTeamJoined }) => {
     const fetchTeams = async () => {
       try {
         const response = await teamApi.getAllTeams({ timestamp: Date.now() });
+
         console.log("Fetched teams:", response.data);
         setTeams(response.data);
       } catch (err: any) {
@@ -29,7 +32,8 @@ const ListTeamCard: React.FC<ListTeamCardProps> = ({ onTeamJoined }) => {
     fetchTeams();
   }, []);
 
-  if (loading) return <p className="text-center text-gray-500 mt-6">Loading teams...</p>;
+  if (loading)
+    return <p className="text-center text-gray-500 mt-6">Loading teams...</p>;
   if (error) return <p className="text-center text-red-500 mt-6">{error}</p>;
 
   return (
@@ -41,13 +45,18 @@ const ListTeamCard: React.FC<ListTeamCardProps> = ({ onTeamJoined }) => {
               key={`team-${team.id}`}
               team={team}
               onJoinSuccess={(teamId) => {
-                console.log("TeamCard onJoinSuccess triggered with teamId:", teamId);
+                console.log(
+                  "TeamCard onJoinSuccess triggered with teamId:",
+                  teamId,
+                );
                 onTeamJoined?.(teamId);
               }}
             />
           ))
         ) : (
-          <p className="text-center col-span-3 text-gray-500">No teams found.</p>
+          <p className="text-center col-span-3 text-gray-500">
+            No teams found.
+          </p>
         )}
       </div>
     </div>

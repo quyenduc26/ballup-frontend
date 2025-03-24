@@ -5,17 +5,16 @@ export default function IntroHomePage() {
   const sports = [
     { name: "FOOTBALL", link: "/football" },
     { name: "BADMINTON", link: "/badminton" },
-    { name: "PICKLEBALL", link: "/pickleball" },
   ];
 
   return (
-    <div className=" flex items-center justify-center bg-white px-10 py-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-5xl w-full">
+    <div className=" flex items-center justify-center bg-white px-10 py-10 mt-10 mb-10 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-40 max-w-7xl w-full">
         <div>
           <h2 className="text-xl md:text-2xl font-bold text-black">
             OUR SPORTS
           </h2>
-          <p className="mt-4 text-gray-700 text-sm md:text-base leading-relaxed">
+          <p className="mt-4 text-gray-700 text-sm md:text-lg leading-relaxed">
             Sports not only provide health benefits but also help develop
             teamwork, perseverance, and a winning spirit. From football and
             badminton to other sports, each discipline offers unique experiences

@@ -7,7 +7,7 @@ import TeamDetailApi from "@/service/teamDetail";
 import { DetailTeam, Player } from "@/types/form";
 import { getImageUrl } from "@/utils/getImage";
 import { SonnerToast } from "@/components/sonnerMesage";
-
+import TeamHeader from "../inforTeam/intro";
 export default function TeamDetail() {
   const [team, setTeam] = useState<DetailTeam | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
@@ -45,12 +45,19 @@ export default function TeamDetail() {
     if (isNaN(parsedTeamId) || !userId) {
       setError("Thông tin đội hoặc người dùng không hợp lệ");
       setLoading(false);
+
       return;
     }
 
     try {
-      console.log("Fetching team detail for teamId:", parsedTeamId, "userId:", userId);
+      console.log(
+        "Fetching team detail for teamId:",
+        parsedTeamId,
+        "userId:",
+        userId,
+      );
       const response = await TeamDetailApi.getTeamDetail(parsedTeamId, userId);
+
       console.log("Team detail response:", response);
 
       if (response?.data) {
@@ -60,12 +67,18 @@ export default function TeamDetail() {
 
         const processedPlayers = Array.isArray(response.data.members)
           ? response.data.members.map((player: any) => {
-              const nameFromApi = player.name && typeof player.name === "string" ? player.name : null;
+              const nameFromApi =
+                player.name && typeof player.name === "string"
+                  ? player.name
+                  : null;
               const lastName = player.lastName || "";
               const firstName = player.firstName || "";
-              const fullName = nameFromApi || `${lastName} ${firstName}`.trim() || "Unknown";
+              const fullName =
+                nameFromApi || `${lastName} ${firstName}`.trim() || "Unknown";
 
-              console.log(`Player ID: ${player.id}, nameFromApi: ${nameFromApi}, lastName: ${lastName}, firstName: ${firstName}, fullName: ${fullName}`);
+              console.log(
+                `Player ID: ${player.id}, nameFromApi: ${nameFromApi}, lastName: ${lastName}, firstName: ${firstName}, fullName: ${fullName}`,
+              );
 
               return {
                 ...player,
@@ -73,13 +86,17 @@ export default function TeamDetail() {
               };
             })
           : [];
+
         setPlayers(processedPlayers);
       } else {
         throw new Error("Dữ liệu không hợp lệ");
       }
     } catch (err: any) {
       console.error("API Error:", err.response?.data || err);
-      setError(err?.response?.data?.message || "Lỗi khi tải dữ liệu. Vui lòng thử lại.");
+      setError(
+        err?.response?.data?.message ||
+          "Lỗi khi tải dữ liệu. Vui lòng thử lại.",
+      );
     } finally {
       setLoading(false);
     }
@@ -284,7 +301,7 @@ export default function TeamDetail() {
               </table>
             ) : (
               <p className="text-center text-gray-500 mt-4">
-                Don't have players
+                Don&apos;t have players
               </p>
             )}
           </div>

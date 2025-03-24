@@ -272,3 +272,15 @@ export type PlayingCenterEditType = {
   ownerId: number;
   centerType: string;
 };
+
+export interface PaymentMethodRequest {
+  id?: string;
+  name: string;
+  bankName: string;
+  accountNumber: string;
+  accountHolderName: string;
+  bankBranch?: string;
+  qrImageUrl: string;
+  instructions?: string;
+  isActive: boolean;
+}

@@ -17,7 +17,11 @@ import { toast, Toaster } from "sonner";
 
 import bookingRequestApi from "@/service/bookingRequestApi";
 
-export default function BookingTable() {
+export default function BookingTable({
+  handleReadBooking,
+}: {
+  handleReadBooking: () => Promise<void>;
+}) {
   const [bookings, setBookings] = useState<BookingField[]>([]);
   const [loading, setLoading] = useState(false);
   const [ownerId, setOwnerId] = useState<number | null>(null);
@@ -48,6 +52,7 @@ export default function BookingTable() {
         const response = await bookingRequestApi.getBookings(ownerId);
 
         setBookings(response.data);
+        handleReadBooking();
       } catch (error) {
         console.error("Error fetching bookings:", error);
         toast.error("Error fetching booking requests");

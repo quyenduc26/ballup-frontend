@@ -24,10 +24,12 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
 
   // Xử lý danh sách players để đảm bảo tên được hiển thị đúng
   const processedPlayers = players.map((player) => {
-    const nameFromApi = player.name && typeof player.name === "string" ? player.name : null;
+    const nameFromApi =
+      player.name && typeof player.name === "string" ? player.name : null;
     const lastName = player.lastName || "";
     const firstName = player.firstName || "";
-    const fullName = nameFromApi || `${lastName} ${firstName}`.trim() || "Unknown";
+    const fullName =
+      nameFromApi || `${lastName} ${firstName}`.trim() || "Unknown";
 
     return {
       ...player,

@@ -185,7 +185,7 @@ export default function ModernProfileLayout() {
                 <h1 className="text-2xl font-bold text-gray-900">
                   {user?.firstName} {user?.lastName}
                 </h1>
-                <p className="text-gray-500">{user?.username}</p>
+                <p className="text-gray-500">{editedUser?.username}</p>
               </div>
               {!isEditing && (
                 <button

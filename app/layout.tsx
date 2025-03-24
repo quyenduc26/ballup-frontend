@@ -10,6 +10,7 @@ import { fontSans } from "@/config/fonts";
 import Header from "@/components/Header";
 import { BookingHistory } from "@/components/booking/bookingHistory";
 import { UserProvider } from "@/context/UserContext";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: {
@@ -53,7 +54,7 @@ export default function RootLayout({
                 <main>{children}</main>
               </div>
             </Providers>
-            {/* <Footer /> */}
+            <Footer />
             <BookingHistory />
           </Suspense>
         </UserProvider>
