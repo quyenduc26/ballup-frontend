@@ -241,7 +241,7 @@ export type UserInfo = {
   firstName?: string;
   lastName?: string;
   username?: string;
-  phone?: string;
+  number?: string;
   email?: string;
   height?: number;
   weight?: number;

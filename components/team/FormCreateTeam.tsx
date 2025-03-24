@@ -3,8 +3,7 @@ import { useState } from "react";
 import { Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { SonnerToast } from "../sonnerMesage"; // ✅ Import SonnerToast
-
+import { SonnerToast } from "../sonnerMesage";
 import { CreateTeamData } from "@/types/form";
 import createTeamApi from "@/service/createTeamApi";
 import { uploadImage } from "@/utils/uploadImage";
@@ -21,54 +20,72 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
     userId: 1,
   });
 
-  const [coverPreview, setCoverPreview] = useState<string | undefined>(
-    undefined,
-  );
+  const [coverPreview, setCoverPreview] = useState<string | undefined>(undefined);
   const [logoPreview, setLogoPreview] = useState<string | undefined>(undefined);
+  const [errors, setErrors] = useState({
+    cover: false,
+    logo: false,
+    name: false,
+    address: false,
+    intro: false,
+    sport: false,
+  });
   const [toastData, setToastData] = useState<
     | {
-        heading?: string;
-        message?: string;
-        type?: "error" | "success" | "info" | "warning";
-        duration?: number;
-      }
+      heading?: string;
+      message?: string;
+      type?: "error" | "success" | "info" | "warning";
+      duration?: number;
+    }
     | undefined
   >();
   const router = useRouter();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setErrors((prev) => ({ ...prev, [name]: false }));
   };
 
   const handleChangeSport = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      sport: event.target.value as "FOOTBALL" | "BADMINTON",
-    });
+    const value = event.target.value as "FOOTBALL" | "BADMINTON" | "";
+    setFormData({ ...formData, sport: value });
+    if (value) {
+      setErrors((prev) => ({ ...prev, sport: false }));
+    }
   };
 
   const handleImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "cover" | "logo",
+    type: "cover" | "logo"
   ) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      const maxSize = 5 * 1024 * 1024; // 5MB
 
-      if (type === "cover") {
-        let coverImg = await uploadImage(file);
+      if (file.size > maxSize) {
+        setToastData({
+          type: "error",
+          heading: "File Too Large ❗",
+          message: "Image size should not exceed 5MB",
+          duration: 3000,
+        });
+        return;
+      }
 
-        if (coverImg != null) {
-          setFormData({ ...formData, cover: coverImg });
-          setCoverPreview(getImageUrl(coverImg));
-        }
-      } else {
-        let logoImg = await uploadImage(file);
-
-        if (logoImg != null) {
-          setFormData({ ...formData, logo: logoImg });
-          setLogoPreview(getImageUrl(logoImg));
+      const filename = await uploadImage(file);
+      if (filename) {
+        const imageUrl = getImageUrl(filename);
+        if (type === "cover") {
+          setFormData({ ...formData, cover: filename });
+          setCoverPreview(imageUrl);
+          setErrors((prev) => ({ ...prev, cover: false }));
+        } else {
+          setFormData({ ...formData, logo: filename });
+          setLogoPreview(imageUrl);
+          setErrors((prev) => ({ ...prev, logo: false }));
         }
       }
     }
@@ -87,19 +104,24 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (
-      !formData.name ||
-      !formData.address ||
-      !formData.intro ||
-      !formData.sport
-    ) {
+    const newErrors = {
+      cover: !formData.cover,
+      logo: !formData.logo,
+      name: !formData.name.trim(),
+      address: !formData.address.trim(),
+      intro: !formData.intro.trim(),
+      sport: !formData.sport,
+    };
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some((error) => error)) {
       setToastData({
         type: "error",
         heading: "Validation Error ❗",
         message: "Please fill in all required fields!",
         duration: 3000,
       });
-
       return;
     }
 
@@ -129,6 +151,31 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
     }
   };
 
+  const handleCancel = () => {
+    // Reset form data
+    setFormData({
+      cover: "",
+      logo: "",
+      name: "",
+      address: "",
+      intro: "",
+      sport: "",
+      userId: 1,
+    });
+    setCoverPreview(undefined);
+    setLogoPreview(undefined);
+    setErrors({
+      cover: false,
+      logo: false,
+      name: false,
+      address: false,
+      intro: false,
+      sport: false,
+    });
+    // Đóng form bằng cách gọi setIsOpen
+    setIsOpen();
+  };
+
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg mt-5 border border-gray-300">
       <SonnerToast toast={toastData} />
@@ -142,7 +189,6 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
 
       <h2 className="text-2xl font-bold text-center mb-4">CREATE TEAM</h2>
 
-      {/* Cover Image with Logo Overlay */}
       <div className="relative w-full h-60 bg-gray-300 flex justify-center items-center rounded-md overflow-hidden mb-6">
         {coverPreview ? (
           <>
@@ -165,7 +211,6 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
               <span>Upload Cover</span>
             </div>
             <input
-              accept="image/*"
               className="absolute inset-0 opacity-0 cursor-pointer"
               type="file"
               onChange={(e) => handleImageUpload(e, "cover")}
@@ -173,7 +218,6 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
           </>
         )}
 
-        {/* Logo Overlay (Chồng lên ảnh cover) */}
         <div className="absolute top-1/3 w-32 h-32 sm:w-40 sm:h-40 bg-gray-200 flex items-center justify-center overflow-hidden mr-96">
           {logoPreview ? (
             <>
@@ -196,7 +240,6 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
                 <span>Upload Logo</span>
               </div>
               <input
-                accept="image/*"
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 type="file"
                 onChange={(e) => handleImageUpload(e, "logo")}
@@ -206,72 +249,97 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
         </div>
       </div>
 
-      {/* Form nhập thông tin */}
+
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4 mb-4 mt-14">
           <div>
             <label className="text-sm font-semibold" htmlFor="name">
-              TEAM NAME
+              TEAM NAME <span className="text-red-500">*</span>
             </label>
             <input
-              required
-              className="w-full p-2 border rounded"
+              className={`w-full p-2 border rounded ${errors.name ? "border-red-500" : "border-gray-300"
+                }`}
               id="name"
               name="name"
               type="text"
               value={formData.name}
               onChange={handleChange}
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">
+                Please enter a team name
+              </p>
+            )}
           </div>
           <div>
             <label className="text-sm font-semibold" htmlFor="address">
-              ADDRESS
+              ADDRESS <span className="text-red-500">*</span>
             </label>
             <input
-              required
-              className="w-full p-2 border rounded"
+              className={`w-full p-2 border rounded ${errors.address ? "border-red-500" : "border-gray-300"
+                }`}
               id="address"
               name="address"
               type="text"
               value={formData.address}
               onChange={handleChange}
             />
+            {errors.address && (
+              <p className="text-red-500 text-sm mt-1">
+                Please enter an address
+              </p>
+            )}
           </div>
         </div>
 
         <div className="mb-4">
           <label className="text-sm font-semibold" htmlFor="overview">
-            TEAM OVERVIEW
+            TEAM OVERVIEW <span className="text-red-500">*</span>
           </label>
           <textarea
-            required
-            className="w-full p-2 border rounded"
+            className={`w-full p-2 border rounded ${errors.intro ? "border-red-500" : "border-gray-300"
+              }`}
             id="overview"
             name="intro"
             value={formData.intro}
             onChange={handleChange}
           />
+          {errors.intro && (
+            <p className="text-red-500 text-sm mt-1">
+              Please enter a team overview
+            </p>
+          )}
         </div>
 
         <div>
           <label className="text-sm font-semibold" htmlFor="sport">
-            SPORT
+            SPORT <span className="text-red-500">*</span>
           </label>
           <select
-            className="w-full p-2 border rounded h-10"
+            className={`w-full p-2 border rounded h-10 ${errors.sport ? "border-red-500" : "border-gray-300"
+              }`}
             id="sport"
             value={formData.sport || ""}
             onChange={handleChangeSport}
           >
-            <option value="">Type Of Sport</option>
+            <option value="" disabled>
+              Type Of Sport
+            </option>
             <option value="FOOTBALL">Football</option>
             <option value="BADMINTON">Badminton</option>
           </select>
+          {errors.sport && (
+            <p className="text-red-500 text-sm mt-1">Please select a sport</p>
+          )}
         </div>
 
         <div className="flex justify-end gap-4 mt-4">
-          <button className="px-4 py-2 border rounded" type="button">
-            DISCARD
+          <button
+            className="px-4 py-2 border rounded"
+            type="button"
+            onClick={handleCancel}
+          >
+            CANCEL
           </button>
           <button
             className="px-4 py-2 bg-black text-white rounded"
