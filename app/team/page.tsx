@@ -16,14 +16,21 @@ const Team = () => {
   const [showCreateTeam, setShowCreateTeam] = useState(false);
   const [myTeams, setMyTeams] = useState<DetailTeam[] | null>(null);
   const [myTeamIndex, setMyTeamIndex] = useState<number | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
+
 
   const handleSetMyTeamIndex = (index: number) => {
     setMyTeamIndex(index);
   };
 
-  const data = localStorage.getItem("data");
-  const parsedData = data ? JSON.parse(data) : null;
-  const userId = parseInt(parsedData.id);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const data = localStorage.getItem("data");
+      const parsedData = data ? JSON.parse(data) : null;
+      setUserId(parsedData ? parseInt(parsedData.id) : null);
+    }
+  }, []);
+
 
   useEffect(() => {
     const getMyTeams = async (userId: number) => {
@@ -31,8 +38,7 @@ const Team = () => {
 
       setMyTeams(myTeams.data);
     };
-
-    getMyTeams(userId);
+    if (userId) getMyTeams(userId);
   }, [showExplore]);
 
   const onTeamJoined = (teamId: number) => {
@@ -49,9 +55,8 @@ const Team = () => {
 
       <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 md:gap-8 p-5 ml-2">
         <button
-          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${
-            showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
-          }`}
+          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
+            }`}
           onClick={() => {
             setShowExplore(true);
             console.log("Switching to EXPLORE");
@@ -60,9 +65,8 @@ const Team = () => {
           EXPLORE
         </button>
         <button
-          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${
-            !showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
-          }`}
+          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${!showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
+            }`}
           onClick={() => {
             const teamIdFromStorage = localStorage.getItem("joinedTeamId");
 
