@@ -7,9 +7,9 @@ import { useRouter } from "next/navigation"; // Import useRouter
 import ListTeamCard from "../team/teamCard/ListTeamCard";
 
 export default function TeamSection() {
-  const router = useRouter(); 
+  const router = useRouter();
   const handleSeeMore = () => {
-    router.push("/team"); 
+    router.push("/team");
   };
 
   return (

@@ -289,7 +289,7 @@ const PlayingSlot = ({
             <Plus className="w-4 h-4" />
           </>
         ) : (
-          <>  
+          <>
             <Edit className="w-4 h-4" /> Edit
           </>
         )}

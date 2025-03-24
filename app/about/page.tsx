@@ -1,4 +1,5 @@
 import { Facebook, Instagram, Youtube } from "lucide-react";
+
 import HeroSection from "@/components/Banner";
 import ContactForm from "@/components/about/about";
 
@@ -73,11 +74,11 @@ export default function Home() {
             teammates, opponents, and sports venues.
           </p>
           <p className="text-gray-700 mt-3 text-sm sm:text-base">
-            Convenience – Our seamless booking system and AI-powered search
-            help users quickly find and reserve courts, saving time and effort.
+            Convenience – Our seamless booking system and AI-powered search help
+            users quickly find and reserve courts, saving time and effort.
           </p>
           <p className="text-gray-700 mt-3 text-sm sm:text-base">
-            Inclusivity – Whether you're a beginner or a pro, we provide a
+            Inclusivity – Whether you&apos;re a beginner or a pro, we provide a
             welcoming platform for everyone to enjoy sports.
           </p>
           <p className="text-gray-700 mt-3 text-sm sm:text-base">
@@ -102,12 +103,27 @@ export default function Home() {
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 justify-center">
           {[
-            { src: "/images/quyen.jpg", name: "Mr. Quyen", role: "Back-end Developer" },
+            {
+              src: "/images/quyen.jpg",
+              name: "Mr. Quyen",
+              role: "Back-end Developer",
+            },
             { src: "/images/lananh.jpg", name: "Ms. Lan Anh", role: "Tester" },
-            { src: "/images/tan.jpg", name: "Mr. Tan", role: "Front-end Developer" },
-            { src: "/images/bon.jpg", name: "Mr. Bon", role: "Front-end Developer" },
+            {
+              src: "/images/tan.jpg",
+              name: "Mr. Tan",
+              role: "Front-end Developer",
+            },
+            {
+              src: "/images/bon.jpg",
+              name: "Mr. Bon",
+              role: "Front-end Developer",
+            },
           ].map((member, index) => (
-            <div key={index} className="flex flex-col items-center w-full sm:w-40">
+            <div
+              key={index}
+              className="flex flex-col items-center w-full sm:w-40"
+            >
               <div className="bg-sky-100 rounded-md overflow-hidden w-32 sm:w-48 h-32 sm:h-48 mb-4">
                 <img
                   alt={`Team member ${member.name}`}
@@ -115,17 +131,30 @@ export default function Home() {
                   src={member.src}
                 />
               </div>
-              <h3 className="font-bold text-base sm:text-lg mb-1">{member.name}</h3>
-              <p className="text-gray-600 text-xs sm:text-sm mb-2">{member.role}</p>
+              <h3 className="font-bold text-base sm:text-lg mb-1">
+                {member.name}
+              </h3>
+              <p className="text-gray-600 text-xs sm:text-sm mb-2">
+                {member.role}
+              </p>
               <div className="flex space-x-2 sm:space-x-3">
-                <a className="text-gray-700 hover:text-black" href="youtube.com">
-                  <Youtube size={16} className="sm:size-5" />
+                <a
+                  className="text-gray-700 hover:text-black"
+                  href="youtube.com"
+                >
+                  <Youtube className="sm:size-5" size={16} />
                 </a>
-                <a className="text-gray-700 hover:text-black" href="instagram.com">
-                  <Instagram size={16} className="sm:size-5" />
+                <a
+                  className="text-gray-700 hover:text-black"
+                  href="instagram.com"
+                >
+                  <Instagram className="sm:size-5" size={16} />
                 </a>
-                <a className="text-gray-700 hover:text-black" href="facebook.com">
-                  <Facebook size={16} className="sm:size-5" />
+                <a
+                  className="text-gray-700 hover:text-black"
+                  href="facebook.com"
+                >
+                  <Facebook className="sm:size-5" size={16} />
                 </a>
               </div>
             </div>

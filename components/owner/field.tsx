@@ -22,7 +22,9 @@ type FieldListProps = {
 export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
   const [fields, setFields] = useState<Field[]>([]);
   const [isRefresh, setIsRefresh] = useState(false);
-  const [expandedFields, setExpandedFields] = useState<Record<string, boolean>>({});
+  const [expandedFields, setExpandedFields] = useState<Record<string, boolean>>(
+    {},
+  );
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedCenterId, setSelectedCenterId] = useState<number | null>(null);
 
@@ -51,6 +53,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
 
         if (userId) {
           const response = await ownerApi.getOwnerCenter(userId);
+
           setFields(response.data);
         }
       } catch (error) {
@@ -69,7 +72,9 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
         onClick: async () => {
           try {
             await playingApi.deletePlayingCenter(Number(fieldId));
-            setFields((prevFields) => prevFields.filter((field) => field.id !== fieldId));
+            setFields((prevFields) =>
+              prevFields.filter((field) => field.id !== fieldId),
+            );
             toast.success("Center deleted successfully", { duration: 3000 });
           } catch (error) {
             console.error("Error deleting center:", error);
@@ -89,7 +94,9 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
     <div className="w-full p-2 sm:p-4 lg:p-6">
       <Toaster richColors position="top-center" />
       <div className="flex flex-col sm:flex-row justify-between mb-4 sm:mb-6">
-        <h1 className="text-lg sm:text-xl font-bold mb-2 sm:mb-0">Management Fields</h1>
+        <h1 className="text-lg sm:text-xl font-bold mb-2 sm:mb-0">
+          Management Fields
+        </h1>
         <Button
           className="bg-black rounded-none text-white text-sm sm:text-base py-2 px-4"
           onPress={() => setActiveTab("CreateCenter")}
@@ -111,14 +118,16 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
         {fields.map((field, index) => (
           <Card key={index} className="overflow-hidden">
             <CardHeader className="p-0">
-              <div
-                className="flex flex-col sm:grid sm:grid-cols-4 items-start sm:items-center w-full gap-2 sm:gap-4 p-3 sm:p-4 bg-stone-100 rounded-lg hover:bg-stone-200 transition-colors"
-              >
+              <div className="flex flex-col sm:grid sm:grid-cols-4 items-start sm:items-center w-full gap-2 sm:gap-4 p-3 sm:p-4 bg-stone-100 rounded-lg hover:bg-stone-200 transition-colors">
                 {/* Field Name */}
                 <div className="w-full sm:pl-4">
-                  <h1 className="text-sm font-medium sm:text-base">{field.name}</h1>
+                  <h1 className="text-sm font-medium sm:text-base">
+                    {field.name}
+                  </h1>
                   {/* Hiển thị address trên mobile */}
-                  <p className="text-xs text-gray-600 sm:hidden">{field.address}</p>
+                  <p className="text-xs text-gray-600 sm:hidden">
+                    {field.address}
+                  </p>
                 </div>
 
                 {/* Image */}
@@ -135,7 +144,9 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
 
                 {/* Location - Ẩn trên mobile */}
                 <div className="hidden sm:flex sm:items-center sm:justify-center">
-                  <p className="text-xs sm:text-sm text-gray-600">{field.address}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">
+                    {field.address}
+                  </p>
                 </div>
 
                 {/* Actions */}
@@ -188,13 +199,19 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                     <div className="hidden sm:block sticky top-0 z-10 bg-stone-200">
                       <div className="grid grid-cols-4 items-center gap-3 py-2 px-4">
                         <div className="text-left pl-4">
-                          <h2 className="text-xs sm:text-sm font-medium">Name</h2>
+                          <h2 className="text-xs sm:text-sm font-medium">
+                            Name
+                          </h2>
                         </div>
                         <div className="text-center">
-                          <span className="text-xs sm:text-sm font-medium">Primary price</span>
+                          <span className="text-xs sm:text-sm font-medium">
+                            Primary price
+                          </span>
                         </div>
                         <div className="text-center">
-                          <span className="text-xs sm:text-sm font-medium">Night price</span>
+                          <span className="text-xs sm:text-sm font-medium">
+                            Night price
+                          </span>
                         </div>
                         <div className="text-right pr-4">
                           <span className="text-xs font-medium">Actions</span>
@@ -209,7 +226,9 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                         className="flex flex-col sm:grid sm:grid-cols-4 items-start sm:items-center gap-2 py-2 px-2 sm:px-4 bg-stone-100 rounded-md shadow-sm"
                       >
                         <div className="text-left sm:pl-4">
-                          <h2 className="text-xs sm:text-sm font-medium">{slot.name}</h2>
+                          <h2 className="text-xs sm:text-sm font-medium">
+                            {slot.name}
+                          </h2>
                         </div>
                         <div className="text-left sm:text-center">
                           <span className="text-[10px] sm:text-xs">
