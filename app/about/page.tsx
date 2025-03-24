@@ -4,6 +4,28 @@ import HeroSection from "@/components/Banner";
 import ContactForm from "@/components/about/about";
 
 export default function Home() {
+  const teamMembers = [
+    {
+      src: "/images/quyen.jpg",
+      name: "Mr. Quyen",
+      role: "Back-end Developer",
+    },
+    {
+      src: "/images/lananh.jpg",
+      name: "Ms. Lan Anh",
+      role: "Tester, Business Analyst",
+    },
+    {
+      src: "/images/tan.jpg",
+      name: "Mr. Tan",
+      role: "Front-end Developer",
+    },
+    {
+      src: "/images/bon.jpg",
+      name: "Mr. Bon",
+      role: "Front-end Developer",
+    },
+  ]
   return (
     <main className="">
       {/* ABOUT Section */}
@@ -91,74 +113,55 @@ export default function Home() {
       </section>
 
       {/* MEET OUR TEAM Section */}
-      <section className="max-w-7xl mx-auto px-4 py-8 mb-12">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-center mb-6">
-          MEET OUR TEAM
-        </h2>
+      <section className="max-w-8xl mx-auto px-4 py-8 mb-12">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-center mb-6">MEET OUR TEAM</h2>
         <p className="text-gray-700 text-center text-sm sm:text-base max-w-3xl mx-auto mb-8">
-          Our team consists of passionate sports and technology enthusiasts. We
-          are committed to creating a high-quality application to connect the
-          sports community together.
+          Our team consists of passionate sports and technology enthusiasts. We are committed to creating a high-quality
+          application to connect the sports community together.
         </p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 justify-center">
-          {[
-            {
-              src: "/images/quyen.jpg",
-              name: "Mr. Quyen",
-              role: "Back-end Developer",
-            },
-            { src: "/images/lananh.jpg", name: "Ms. Lan Anh", role: "Tester" },
-            {
-              src: "/images/tan.jpg",
-              name: "Mr. Tan",
-              role: "Front-end Developer",
-            },
-            {
-              src: "/images/bon.jpg",
-              name: "Mr. Bon",
-              role: "Front-end Developer",
-            },
-          ].map((member, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center w-full sm:w-40"
-            >
-              <div className="bg-sky-100 rounded-md overflow-hidden w-32 sm:w-48 h-32 sm:h-48 mb-4">
-                <img
-                  alt={`Team member ${member.name}`}
-                  className="w-full h-full object-cover"
-                  src={member.src}
-                />
+        <div className="flex justify-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-20 md:gap-20">
+            {teamMembers.map((member, index) => (
+              <div key={index} className="flex flex-col items-center">
+                <div className="bg-sky-100 rounded-md overflow-hidden w-36 h-36 sm:w-40 sm:h-40 md:w-48 md:h-48 mb-4">
+                  <img
+                    alt={`Team member ${member.name}`}
+                    className="w-full h-full object-cover"
+                    src={member.src || "/placeholder.svg"}
+                  />
+                </div>
+                <h3 className="font-bold text-base sm:text-lg mb-1 text-center">{member.name}</h3>
+                <p className="text-gray-600 text-xs sm:text-sm mb-2 text-center">{member.role}</p>
+                <div className="flex space-x-3">
+                  <a
+                    className="text-gray-700 hover:text-black"
+                    href="https://youtube.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Youtube className="size-5" />
+                  </a>
+                  <a
+                    className="text-gray-700 hover:text-black"
+                    href="https://instagram.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Instagram className="size-5" />
+                  </a>
+                  <a
+                    className="text-gray-700 hover:text-black"
+                    href="https://facebook.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Facebook className="size-5" />
+                  </a>
+                </div>
               </div>
-              <h3 className="font-bold text-base sm:text-lg mb-1">
-                {member.name}
-              </h3>
-              <p className="text-gray-600 text-xs sm:text-sm mb-2">
-                {member.role}
-              </p>
-              <div className="flex space-x-2 sm:space-x-3">
-                <a
-                  className="text-gray-700 hover:text-black"
-                  href="youtube.com"
-                >
-                  <Youtube className="sm:size-5" size={16} />
-                </a>
-                <a
-                  className="text-gray-700 hover:text-black"
-                  href="instagram.com"
-                >
-                  <Instagram className="sm:size-5" size={16} />
-                </a>
-                <a
-                  className="text-gray-700 hover:text-black"
-                  href="facebook.com"
-                >
-                  <Facebook className="sm:size-5" size={16} />
-                </a>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
       <ContactForm />
