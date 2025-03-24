@@ -25,7 +25,8 @@ export default function Home() {
       name: "Mr. Bon",
       role: "Front-end Developer",
     },
-  ]
+  ];
+
   return (
     <main className="">
       {/* ABOUT Section */}
@@ -114,10 +115,13 @@ export default function Home() {
 
       {/* MEET OUR TEAM Section */}
       <section className="max-w-8xl mx-auto px-4 py-8 mb-12">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-center mb-6">MEET OUR TEAM</h2>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-center mb-6">
+          MEET OUR TEAM
+        </h2>
         <p className="text-gray-700 text-center text-sm sm:text-base max-w-3xl mx-auto mb-8">
-          Our team consists of passionate sports and technology enthusiasts. We are committed to creating a high-quality
-          application to connect the sports community together.
+          Our team consists of passionate sports and technology enthusiasts. We
+          are committed to creating a high-quality application to connect the
+          sports community together.
         </p>
 
         <div className="flex justify-center">
@@ -131,30 +135,34 @@ export default function Home() {
                     src={member.src || "/placeholder.svg"}
                   />
                 </div>
-                <h3 className="font-bold text-base sm:text-lg mb-1 text-center">{member.name}</h3>
-                <p className="text-gray-600 text-xs sm:text-sm mb-2 text-center">{member.role}</p>
+                <h3 className="font-bold text-base sm:text-lg mb-1 text-center">
+                  {member.name}
+                </h3>
+                <p className="text-gray-600 text-xs sm:text-sm mb-2 text-center">
+                  {member.role}
+                </p>
                 <div className="flex space-x-3">
                   <a
                     className="text-gray-700 hover:text-black"
                     href="https://youtube.com"
-                    target="_blank"
                     rel="noopener noreferrer"
+                    target="_blank"
                   >
                     <Youtube className="size-5" />
                   </a>
                   <a
                     className="text-gray-700 hover:text-black"
                     href="https://instagram.com"
-                    target="_blank"
                     rel="noopener noreferrer"
+                    target="_blank"
                   >
                     <Instagram className="size-5" />
                   </a>
                   <a
                     className="text-gray-700 hover:text-black"
                     href="https://facebook.com"
-                    target="_blank"
                     rel="noopener noreferrer"
+                    target="_blank"
                   >
                     <Facebook className="size-5" />
                   </a>
