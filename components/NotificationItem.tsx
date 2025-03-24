@@ -31,7 +31,7 @@ export default function NotificationItem({
           </Button>
         }
         title={title}
-        variant={notification.isRead ? "flat" : "bordered"}
+        variant={notification.read ? "flat" : "bordered"}
       />
     </div>
   );
