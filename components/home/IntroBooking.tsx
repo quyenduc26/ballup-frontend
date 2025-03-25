@@ -6,7 +6,11 @@ import { useRouter } from "next/navigation";
 import { CardFieldType } from "@/types/form";
 import CardList from "@/components/center/CardList";
 
-export default function BookingSection({ centers }: { centers: CardFieldType[] }) {
+export default function BookingSection({
+  centers,
+}: {
+  centers: CardFieldType[];
+}) {
   const router = useRouter();
   const handleSeeMore = () => {
     router.push("/booking");
@@ -33,7 +37,6 @@ export default function BookingSection({ centers }: { centers: CardFieldType[] }
             </button>
           </div>
         </div>
-
       </div>
       <div className="flex justify-between">
         <CardList fields={centers} />

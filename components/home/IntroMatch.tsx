@@ -1,11 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { FiExternalLink } from "react-icons/fi";
 import { useRouter } from "next/navigation";
+
 import { GameResponse } from "@/types";
 import MatchCard from "@/components/match/Card/CardMatch";
-
 
 export default function MatchSection({ matches }: { matches: GameResponse[] }) {
   const router = useRouter();
@@ -34,10 +33,11 @@ export default function MatchSection({ matches }: { matches: GameResponse[] }) {
             </button>
           </div>
         </div>
-
       </div>
       <div className="flex justify-between">
-        {matches.map((match, index) => <MatchCard match={match} />)}
+        {matches.map((match, index) => (
+          <MatchCard key={index} match={match} />
+        ))}
       </div>
       <hr className="w-full border-t border-gray-500 my-12 md:my-6 md:mb-16 mb-20 mt-5" />
     </div>

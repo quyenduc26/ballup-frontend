@@ -84,7 +84,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
       },
       cancel: {
         label: "Cancel",
-        onClick: () => { },
+        onClick: () => {},
       },
       duration: 5000,
     });

@@ -56,12 +56,11 @@ const TeamCard: React.FC<TeamCardProps & { onJoinSuccess?: () => void }> = ({
           duration: 3000,
         });
         localStorage.setItem("joinedTeamId", team.id.toString());
-        if(onJoinSuccess) onJoinSuccess();
+        if (onJoinSuccess) onJoinSuccess();
       } else {
         // Giả lập để test
         localStorage.setItem("joinedTeamId", team.id.toString());
-        if(onJoinSuccess) onJoinSuccess();
-
+        if (onJoinSuccess) onJoinSuccess();
       }
     } catch (error: any) {
       setToastData({
@@ -70,7 +69,7 @@ const TeamCard: React.FC<TeamCardProps & { onJoinSuccess?: () => void }> = ({
         type: "error",
       });
       localStorage.setItem("joinedTeamId", team.id.toString());
-      if(onJoinSuccess) onJoinSuccess();
+      if (onJoinSuccess) onJoinSuccess();
     } finally {
       setLoading(false);
     }

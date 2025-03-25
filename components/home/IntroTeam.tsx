@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { FiExternalLink } from "react-icons/fi";
 import { useRouter } from "next/navigation"; // Import useRouter
 
-import ListTeamCard from "../team/teamCard/ListTeamCard";
 import { DetailTeam } from "@/types";
 import TeamCard from "@/components/team/teamCard/CardTeam";
 
@@ -33,14 +31,13 @@ export default function TeamSection({ teams }: { teams: DetailTeam[] }) {
             </button>
           </div>
         </div>
-
-      
       </div>
       <div className="flex justify-between">
-        {teams.map((team, index) => <TeamCard team={team} />)}
+        {teams.map((team, index) => (
+          <TeamCard key={index} team={team} />
+        ))}
       </div>
       <hr className="w-full border-t border-gray-500 my-12 md:my-6 md:mb-16 mb-20 mt-5" />
-
     </div>
   );
 }
