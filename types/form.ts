@@ -88,16 +88,7 @@ export type Team = {
 };
 
 export type TeamCardProps = {
-  team: {
-    id: number;
-    name: string;
-    logo: string;
-    cover: string;
-    intro: string;
-    address: string;
-    sport: string;
-    totalMembers: number;
-  };
+  team: DetailTeam;
 };
 
 export type TeamHeaderProps = {
@@ -124,12 +115,12 @@ export type DetailTeam = {
   id: number;
   name: string;
   address: string;
-  intro?: string;
+  intro: string;
   logo?: string;
   cover: string;
   sport: string;
   members?: Player[];
-  owner: boolean;
+  owner?: boolean;
   totalMembers: number;
 };
 

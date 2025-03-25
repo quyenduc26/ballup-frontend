@@ -1,7 +1,7 @@
 import api from "@/config/api";
 
 const userApi = {
-  getAll: () => api.get("/hello"),
+  geHomepageItems: () => api.get("/home"),
 
   getUserInfo: (userId: string) => api.get(`/user/${userId}/info`),
 
