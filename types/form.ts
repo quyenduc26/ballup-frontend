@@ -120,7 +120,7 @@ export type DetailTeam = {
   cover: string;
   sport: string;
   members?: Player[];
-  owner: boolean;
+  owner?: boolean;
   totalMembers: number;
 };
 
