@@ -157,23 +157,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                         className="h-8 w-8"
                         size="sm"
                         variant="ghost"
-                        onClick={() => handleEdit(field.id)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        className="h-8 w-8 text-red-500 hover:bg-red-100"
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => handleDelete(field.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        className="h-8 w-8"
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => toggleSubFields(field.id)}
+                        onPress={() => toggleSubFields(field.id)}
                       >
                         {expandedFields[field.id] ? (
                           <ChevronUp className="h-4 w-4" />
@@ -183,11 +167,29 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                       </Button>
                     </>
                   )}
-                  <PlayingSlot
-                    action="CREATE"
-                    field={field}
-                    refresh={() => setIsRefresh(true)}
-                  />
+                  <>
+                    <Button
+                      className="h-8 w-8"
+                      size="sm"
+                      variant="ghost"
+                      onPress={() => handleEdit(field.id)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      className="h-8 w-8 text-red-500 hover:bg-red-100"
+                      size="sm"
+                      variant="ghost"
+                      onPress={() => handleDelete(field.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                    <PlayingSlot
+                      action="CREATE"
+                      field={field}
+                      refresh={() => setIsRefresh(true)}
+                    />
+                  </>
                 </div>
               </div>
             </CardHeader>
