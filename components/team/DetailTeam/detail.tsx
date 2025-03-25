@@ -44,6 +44,7 @@ export default function TeamDetail() {
 
   const fetchTeamDetail = async () => {
     if (isNaN(parsedTeamId) || !userId) {
+      console.log(isNaN(parsedTeamId) || !userId);
       setError("Thông tin đội hoặc người dùng không hợp lệ");
       setLoading(false);
 

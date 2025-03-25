@@ -19,7 +19,15 @@ const Team = () => {
   const [userId, setUserId] = useState<number | null>(null);
 
   const handleSetMyTeamIndex = (index: number) => {
+    console.log(index);
+    if (!myTeams) return;
+
     setMyTeamIndex(index);
+    const teamId = myTeams[index]?.id;
+
+    if (teamId) {
+      localStorage.setItem("teamId", teamId.toString());
+    }
   };
 
   useEffect(() => {
@@ -41,8 +49,7 @@ const Team = () => {
     if (userId) getMyTeams(userId);
   }, [showExplore]);
 
-  const onTeamJoined = (teamId: number) => {
-    console.log("ListTeamCard onTeamJoined triggered with teamId:", teamId);
+  const onTeamJoined = () => {
     setShowExplore(false);
   };
 
@@ -97,9 +104,9 @@ const Team = () => {
         <CreateTeam setIsOpen={() => setShowCreateTeam(false)} />
       ) : showExplore ? (
         <ListTeamCard onTeamJoined={onTeamJoined} />
-      ) : myTeams?.length && myTeams.length > 0 && myTeams.length < 2 ? (
+      ) : myTeams?.length && myTeams.length == 1 ? (
         <TeamIntro teamDetail={myTeams[0]} />
-      ) : myTeams && myTeamIndex === null ? (
+      ) : myTeams && myTeamIndex == null ? (
         <ListMyTeam
           listMyTeam={myTeams}
           setMyTeamIndex={handleSetMyTeamIndex}

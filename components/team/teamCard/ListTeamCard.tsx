@@ -6,7 +6,7 @@ import teamApi from "@/service/teamCardApi";
 import { Team } from "@/types/form";
 
 interface ListTeamCardProps {
-  onTeamJoined?: (teamId: number) => void;
+  onTeamJoined: () => void;
 }
 
 const ListTeamCard: React.FC<ListTeamCardProps> = ({ onTeamJoined }) => {
@@ -44,13 +44,7 @@ const ListTeamCard: React.FC<ListTeamCardProps> = ({ onTeamJoined }) => {
             <TeamCard
               key={`team-${team.id}`}
               team={team}
-              onJoinSuccess={(teamId) => {
-                console.log(
-                  "TeamCard onJoinSuccess triggered with teamId:",
-                  teamId,
-                );
-                onTeamJoined?.(teamId);
-              }}
+              onJoinSuccess={onTeamJoined}
             />
           ))
         ) : (
