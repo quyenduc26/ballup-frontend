@@ -1,3 +1,4 @@
+import { CardFieldType, DetailTeam, GameResponse } from "@/types/form";
 import { NOTIFICATIONS } from "./../constant/index";
 export type ToastType = {
   heading?: string;
@@ -29,3 +30,9 @@ export type NotificationType = {
 };
 
 export type NotificationContentType = keyof typeof NOTIFICATIONS;
+
+export type HomepageItems = {
+  games: GameResponse[],
+  teams: DetailTeam[] ,
+  centers: CardFieldType[]
+}

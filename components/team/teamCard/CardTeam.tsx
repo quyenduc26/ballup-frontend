@@ -14,7 +14,7 @@ const truncateText = (text: string, maxLength: number) => {
   return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
 };
 
-const TeamCard: React.FC<TeamCardProps & { onJoinSuccess: () => void }> = ({
+const TeamCard: React.FC<TeamCardProps & { onJoinSuccess?: () => void }> = ({
   team,
   onJoinSuccess,
 }) => {
@@ -56,11 +56,12 @@ const TeamCard: React.FC<TeamCardProps & { onJoinSuccess: () => void }> = ({
           duration: 3000,
         });
         localStorage.setItem("joinedTeamId", team.id.toString());
-        onJoinSuccess();
+        if(onJoinSuccess) onJoinSuccess();
       } else {
         // Giả lập để test
         localStorage.setItem("joinedTeamId", team.id.toString());
-        onJoinSuccess();
+        if(onJoinSuccess) onJoinSuccess();
+
       }
     } catch (error: any) {
       setToastData({
@@ -69,7 +70,7 @@ const TeamCard: React.FC<TeamCardProps & { onJoinSuccess: () => void }> = ({
         type: "error",
       });
       localStorage.setItem("joinedTeamId", team.id.toString());
-      onJoinSuccess();
+      if(onJoinSuccess) onJoinSuccess();
     } finally {
       setLoading(false);
     }
@@ -105,7 +106,7 @@ const TeamCard: React.FC<TeamCardProps & { onJoinSuccess: () => void }> = ({
         <div className="p-5 flex flex-col flex-grow">
           <h2 className="text-xl font-bold text-black mb-2">{team.name}</h2>
           <p className="text-gray-600 text-base mb-4 flex-grow">
-            {truncateText(team.intro, 50)}
+            {truncateText(team?.intro, 50)}
           </p>
           <div className="grid grid-cols-3 gap-3 text-gray-700 mb-4">
             <div className="flex flex-col items-center p-2 rounded-lg bg-gray-50">
