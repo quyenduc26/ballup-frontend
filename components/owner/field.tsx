@@ -84,7 +84,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
       },
       cancel: {
         label: "Cancel",
-        onClick: () => {},
+        onClick: () => { },
       },
       duration: 5000,
     });
@@ -150,43 +150,45 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                 </div>
 
                 {/* Actions */}
-                {field.slots?.length > 0 && (
-                  <div className="flex justify-end gap-1 w-full sm:w-auto">
-                    <Button
-                      className="h-8 w-8"
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleEdit(field.id)}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      className="h-8 w-8 text-red-500 hover:bg-red-100"
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleDelete(field.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      className="h-8 w-8"
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => toggleSubFields(field.id)}
-                    >
-                      {expandedFields[field.id] ? (
-                        <ChevronUp className="h-4 w-4" />
-                      ) : (
-                        <ChevronDown className="h-4 w-4" />
-                      )}
-                    </Button>
-                    <PlayingSlot
-                      action="CREATE"
-                      field={field}
-                      refresh={() => setIsRefresh(true)}
-                    />
-                  </div>
-                )}
+                <div className="flex justify-end gap-1 w-full sm:w-auto">
+                  {field.slots?.length > 0 && (
+                    <>
+                      <Button
+                        className="h-8 w-8"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleEdit(field.id)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        className="h-8 w-8 text-red-500 hover:bg-red-100"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleDelete(field.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        className="h-8 w-8"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => toggleSubFields(field.id)}
+                      >
+                        {expandedFields[field.id] ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </>
+                  )}
+                  <PlayingSlot
+                    action="CREATE"
+                    field={field}
+                    refresh={() => setIsRefresh(true)}
+                  />
+                </div>
               </div>
             </CardHeader>
 

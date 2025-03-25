@@ -3,8 +3,8 @@ import { FiExternalLink } from "react-icons/fi";
 
 export default function IntroHomePage() {
   const sports = [
-    { name: "FOOTBALL", link: "/football" },
-    { name: "BADMINTON", link: "/badminton" },
+    { name: "FOOTBALL", link: "/booking?sport=Football" },
+    { name: "BADMINTON", link: "/booking?sport=Badmiton" },
   ];
 
   return (
