@@ -29,7 +29,7 @@ export default function MatchSection({ matches }: { matches: GameResponse[] }) {
               className="group flex items-center gap-2 text-sm sm:text-lg text-black border border-gray-300 
                         px-6 py-4 rounded-lg bg-white hover:bg-gradient-to-r hover:from-orange-400 
                         hover:to-yellow-300 shadow-md transition-all duration-300 
-                        hover:shadow-lg hover:scale-105 active:scale-100"
+                        hover:shadow-lg hover:scale-105 active:scale-100 hover:border-0"
               onClick={handleSeeMore}
             >
               <FiExternalLink

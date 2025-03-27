@@ -39,11 +39,12 @@ export default function TeamSection({ teams }: { teams: DetailTeam[] }) {
           </div>
         </div>
       </div>
-      <div className="flex justify-between">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {teams.map((team, index) => (
           <TeamCard key={index} team={team} />
         ))}
       </div>
+
       <hr className="w-full border-t border-gray-500 my-12 md:my-6 md:mb-16 mb-20 mt-5" />
     </div>
   );

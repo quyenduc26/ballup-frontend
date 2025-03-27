@@ -18,16 +18,18 @@ const Team = () => {
   const [myTeamIndex, setMyTeamIndex] = useState<number | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
 
-  const handleSetMyTeamIndex = (index: number) => {
+  const handleSetMyTeamIndex = (index: number | null) => {
     console.log(index);
     if (!myTeams) return;
 
     setMyTeamIndex(index);
-    const teamId = myTeams[index]?.id;
-
-    if (teamId) {
-      localStorage.setItem("teamId", teamId.toString());
+    if(index != null) {
+      const teamId = myTeams[index]?.id;
+      if (teamId) {
+        localStorage.setItem("teamId", teamId.toString());
+      }
     }
+
   };
 
   useEffect(() => {
@@ -112,7 +114,7 @@ const Team = () => {
           setMyTeamIndex={handleSetMyTeamIndex}
         />
       ) : myTeams && myTeamIndex !== null && myTeamIndex < myTeams.length ? (
-        <TeamIntro teamDetail={myTeams[myTeamIndex]} />
+        <TeamIntro teamDetail={myTeams[myTeamIndex]}  setMyTeamIndex={handleSetMyTeamIndex} />
       ) : (
         <p>Danh sách đội trống hoặc chưa tải xong!</p>
       )}
