@@ -321,14 +321,14 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
                           >
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
-                          <span>ĐÃ THANH TOÁN</span>
+                          <span>PAID</span>
                         </>
                       )}
                     </button>
                     <div className="flex gap-3">
                       <button
                         className="flex-1 border border-gray-300 hover:bg-gray-50 py-2 px-4 rounded-md flex items-center justify-center"
-                        onClick={() => router.back()}
+                        onClick={() => router.push("/")}
                       >
                         <svg
                           className="mr-2"
@@ -345,7 +345,7 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
                           <line x1="19" x2="5" y1="12" y2="12" />
                           <polyline points="12 19 5 12 12 5" />
                         </svg>
-                        QUAY LẠI
+                        BACK TO HOMEPAGE
                       </button>
                       <button
                         className="flex-1 border border-gray-300 hover:bg-gray-50 py-2 px-4 rounded-md flex items-center justify-center"
@@ -366,7 +366,7 @@ export default function ScanPayment({ bookingId }: { bookingId: number }) {
                           <circle cx="12" cy="12" r="10" />
                           <polyline points="12 6 12 12 16 14" />
                         </svg>
-                        ĐỂ SAU
+                        PAY FOR LATER
                       </button>
                     </div>
                   </>

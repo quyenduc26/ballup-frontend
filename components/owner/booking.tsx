@@ -172,7 +172,10 @@ export default function BookingTable({
                   </TableColumn>
                 </TableHeader>
                 <TableBody>
-                  {bookings.map((booking) => (
+                  {bookings
+                  .slice()
+                  .reverse()
+                  .map((booking) => (
                     <TableRow
                       key={booking.id}
                       className="border-b border-gray-200 hover:bg-gray-50 transition-colors"

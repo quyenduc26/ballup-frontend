@@ -158,7 +158,10 @@ export default function PaymentTable({
                 </TableHeader>
 
                 <TableBody>
-                  {payments.map((payment) => (
+                  {payments
+                  .slice()
+                  .reverse()
+                  .map((payment) => (
                     <TableRow
                       key={payment.id}
                       className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
