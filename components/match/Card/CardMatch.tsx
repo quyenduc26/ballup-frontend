@@ -247,14 +247,14 @@ export default function MatchCard({ match, onUpdate }: MatchCardProps) {
                 disabled={loadingTeam || hasJoined}
                 onClick={handleJoinTeam}
               >
-                {loadingTeam ? "Joining..." : "JOIN MATCH"}
+                {loadingTeam ? "Joining..." : "JOIN AS TEAM"}
               </button>
               <button
                 className="bg-black text-white py-3 text-sm font-bold rounded hover:bg-gray-800 transition-colors disabled:opacity-50"
                 disabled={loadingSingle || hasJoined}
                 onClick={handleJoinSingle}
               >
-                {loadingSingle ? "Joining..." : "JOIN SINGLE"}
+                {loadingSingle ? "Joining..." : "JOIN AS SINGLE"}
               </button>
             </div>
           )}

@@ -22,6 +22,10 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [toastData, setToastData] = useState<any>(null);
 
+  const data = localStorage.getItem("data");
+  const parsedData = data ? JSON.parse(data) : null;
+  const userId = parsedData?.id;
+
   // Xử lý danh sách players để đảm bảo tên được hiển thị đúng
   const processedPlayers = players.map((player) => {
     const nameFromApi =
@@ -42,9 +46,6 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
 
     setLoadingId(id);
     try {
-      const data = localStorage.getItem("data");
-      const parsedData = data ? JSON.parse(data) : null;
-      const userId = parsedData?.id;
 
       await TeamDetailApi.kickMember(id, { userId, teamId });
 
@@ -84,43 +85,44 @@ const PlayerTable: React.FC<PlayerTableProps> = ({
         </thead>
         <tbody>
           {processedPlayers.map((player) => (
-            <tr key={player.id} className="border-b">
+            <tr
+              key={player.id}
+              className={`border-b ${player.id === userId ? "bg-blue-200 text-blue-800 font-bold" : ""}`}
+            >
               <td className="px-4 md:px-6 py-3">
                 <img
                   alt={player.name}
                   className="w-20 h-20 object-cover"
-                  src={
-                    player.avatar
-                      ? getImageUrl(player.avatar)
-                      : "/images/userProfile.png"
-                  }
+                  src={player.avatar ? getImageUrl(player.avatar) : "/images/userProfile.png"}
                 />
               </td>
               <td className="px-4 md:px-6 py-3 font-semibold">{player.name}</td>
+              <td className="px-4 md:px-6 py-3">{player.height ? `${player.height} cm` : "N/A"}</td>
+              <td className="px-4 md:px-6 py-3">{player.weight ? `${player.weight} kg` : "N/A"}</td>
               <td className="px-4 md:px-6 py-3">
-                {player.height ? `${player.height} cm` : "N/A"}
-              </td>
-              <td className="px-4 md:px-6 py-3">
-                {player.weight ? `${player.weight} kg` : "N/A"}
-              </td>
-              <td className="px-4 md:px-6 py-3 flex space-x-2">
-                <Link href={`/team/players/${player.id}`}>
-                  <span className="text-blue-500 cursor-pointer">
-                    <Eye />
-                  </span>
-                </Link>
-                <Link href={`/team/players/edit/${player.id}`}>
-                  <span className="text-green-500 cursor-pointer">
-                    <Pencil />
-                  </span>
-                </Link>
-                <button
-                  className="text-red-500"
-                  disabled={loadingId === player.id}
-                  onClick={() => handleKickMember(player.id)}
-                >
-                  {loadingId === player.id ? "Removing..." : <UserX />}
-                </button>
+                {player.id !== userId ? (
+                  <div className="flex space-x-2">
+                    <Link href={`/team/players/${player.id}`}>
+                      <span className="text-blue-500 cursor-pointer">
+                        <Eye />
+                      </span>
+                    </Link>
+                    <Link href={`/team/players/edit/${player.id}`}>
+                      <span className="text-green-500 cursor-pointer">
+                        <Pencil />
+                      </span>
+                    </Link>
+                    <button
+                      className="text-red-500"
+                      disabled={loadingId === player.id}
+                      onClick={() => handleKickMember(player.id)}
+                    >
+                      {loadingId === player.id ? "Removing..." : <UserX />}
+                    </button>
+                  </div>
+                ) : (
+                  <span className="text-blue-800 italic">You</span>
+                )}
               </td>
             </tr>
           ))}

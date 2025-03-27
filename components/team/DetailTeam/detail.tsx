@@ -69,24 +69,24 @@ export default function TeamDetail() {
 
         const processedPlayers = Array.isArray(response.data.members)
           ? response.data.members.map((player: any) => {
-              const nameFromApi =
-                player.name && typeof player.name === "string"
-                  ? player.name
-                  : null;
-              const lastName = player.lastName || "";
-              const firstName = player.firstName || "";
-              const fullName =
-                nameFromApi || `${lastName} ${firstName}`.trim() || "Unknown";
+            const nameFromApi =
+              player.name && typeof player.name === "string"
+                ? player.name
+                : null;
+            const lastName = player.lastName || "";
+            const firstName = player.firstName || "";
+            const fullName =
+              nameFromApi || `${lastName} ${firstName}`.trim() || "Unknown";
 
-              console.log(
-                `Player ID: ${player.id}, nameFromApi: ${nameFromApi}, lastName: ${lastName}, firstName: ${firstName}, fullName: ${fullName}`,
-              );
+            console.log(
+              `Player ID: ${player.id}, nameFromApi: ${nameFromApi}, lastName: ${lastName}, firstName: ${firstName}, fullName: ${fullName}`,
+            );
 
-              return {
-                ...player,
-                name: fullName,
-              };
-            })
+            return {
+              ...player,
+              name: fullName,
+            };
+          })
           : [];
 
         setPlayers(processedPlayers);
@@ -97,7 +97,7 @@ export default function TeamDetail() {
       console.error("API Error:", err.response?.data || err);
       setError(
         err?.response?.data?.message ||
-          "Lỗi khi tải dữ liệu. Vui lòng thử lại.",
+        "Lỗi khi tải dữ liệu. Vui lòng thử lại.",
       );
     } finally {
       setLoading(false);
@@ -285,35 +285,26 @@ export default function TeamDetail() {
                 </thead>
                 <tbody>
                   {players.map((player) => (
-                    <tr key={player.id} className="border-b">
+                    <tr
+                      key={player.id}
+                      className={`border-b ${player.id === userId ? "bg-blue-200 text-blue-800 font-bold" : ""}`}
+                    >
                       <td className="px-4 md:px-6 py-3">
                         <img
                           alt={player.name}
                           className="w-20 h-20 object-cover"
-                          src={
-                            player?.avatar
-                              ? `${player.avatar}?t=${new Date().getTime()}`
-                              : "/images/userProfile.png"
-                          }
+                          src={player?.avatar ? `${player.avatar}?t=${new Date().getTime()}` : "/images/userProfile.png"}
                         />
                       </td>
-                      <td className="px-4 md:px-6 py-3 font-semibold">
-                        {player.name}
-                      </td>
-                      <td className="px-4 md:px-6 py-3">
-                        {player.height ? `${player.height} cm` : "N/A"}
-                      </td>
-                      <td className="px-4 md:px-6 py-3">
-                        {player.weight ? `${player.weight} kg` : "N/A"}
-                      </td>
+                      <td className="px-4 md:px-6 py-3 font-semibold">{player.name}</td>
+                      <td className="px-4 md:px-6 py-3">{player.height ? `${player.height} cm` : "N/A"}</td>
+                      <td className="px-4 md:px-6 py-3">{player.weight ? `${player.weight} kg` : "N/A"}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <p className="text-center text-gray-500 mt-4">
-                Don&apos;t have players
-              </p>
+              <p className="text-center text-gray-500 mt-4">Don&apos;t have players</p>
             )}
           </div>
         </>

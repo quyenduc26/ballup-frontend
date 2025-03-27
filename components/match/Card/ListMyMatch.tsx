@@ -58,7 +58,7 @@ export default function ListMyMatch() {
       </h1>
 
       {matches.length === 0 ? (
-        <div className="text-center py-10 text-gray-500">No matches found</div>
+        <div className="text-center py-10 text-gray-500">No matches found. Create match to enjoy</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {matches.map((match) => (

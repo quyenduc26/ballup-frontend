@@ -29,6 +29,8 @@ const matchApi = {
     api.post(`/game/${gameId}/join-team`, null, { params: { userId } }),
   cancelGame: (gameId: number, userId: number) =>
     api.delete(`/game/${gameId}/cancel-game`, { params: { userId } }),
+  leaveGame: (gameId: number, userId: number) =>
+    api.patch(`/game/${gameId}/leave?userId=${userId}`),
 };
 
 export default matchApi;
