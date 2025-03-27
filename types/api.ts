@@ -37,3 +37,15 @@ export type BlockedSlot = {
 export type Error = {
   message: string;
 };
+
+
+export type CompletedBookingResponse = {
+  id: number;
+  slotId: number;
+  creator: string;
+  centerName: string;
+  fromTime: string; // ISO string format
+  toTime: string; // ISO string format
+  amount: number;
+  createdAt: string; // ISO string format
+};

@@ -287,16 +287,21 @@ export default function TeamDetail() {
                   {players.map((player) => (
                     <tr
                       key={player.id}
-                      className={`border-b ${player.id === userId ? "bg-blue-200 text-blue-800 font-bold" : ""}`}
+                      className={`border-b transition-colors ${player.id === userId
+                          ? "bg-gradient-to-r from-orange-100 to-yellow-100 border-l-4 border-l-orange-400"
+                          : "hover:bg-gray-50"
+                        }`}
                     >
                       <td className="px-4 md:px-6 py-3">
                         <img
                           alt={player.name}
                           className="w-20 h-20 object-cover"
-                          src={player?.avatar ? `${player.avatar}?t=${new Date().getTime()}` : "/images/userProfile.png"}
+                          src={player.avatar ? getImageUrl(player.avatar) : "/images/userProfile.png"}
                         />
                       </td>
-                      <td className="px-4 md:px-6 py-3 font-semibold">{player.name}</td>
+                      <td className={`px-4 md:px-6 py-3 font-semibold ${player.id === userId ? "text-orange-600" : ""}`}>
+                        {player.name}
+                      </td>
                       <td className="px-4 md:px-6 py-3">{player.height ? `${player.height} cm` : "N/A"}</td>
                       <td className="px-4 md:px-6 py-3">{player.weight ? `${player.weight} kg` : "N/A"}</td>
                     </tr>
