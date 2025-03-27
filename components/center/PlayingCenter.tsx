@@ -93,7 +93,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
         setFormData((prev) => {
           const updatedImages = [...prev.images];
 
-          if (imageUrl) updatedImages[index] = imageUrl;
+          if (imageUrl) updatedImages[index] = filename;
 
           return { ...prev, images: updatedImages };
         });
@@ -151,7 +151,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
       });
 
       setTimeout(() => {
-        router.push("/");
+        setActiveTab("Field")
       }, 3000);
     } catch (error) {
       console.error("API Error:", error);
@@ -209,7 +209,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
                 <img
                   alt={`Uploaded ${index}`}
                   className="w-full h-full object-cover rounded-lg"
-                  src={image}
+                  src={getImageUrl(image)}
                 />
                 <button
                   className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full"

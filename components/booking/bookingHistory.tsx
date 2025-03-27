@@ -288,7 +288,7 @@ export function BookingHistory() {
           <div className="flex space-x-2 mt-3">
             <button
               className="px-3 py-1.5 bg-gray-50 text-gray-600 rounded-md text-sm font-medium hover:bg-gray-100 transition-colors flex items-center"
-              onClick={(e) => handleViewDetails(booking.bookingId, e)}
+              onClick={() => toggleBookingDetails(booking.bookingId)}
             >
               <Info className="h-4 w-4 mr-1.5" />
               Detail
@@ -412,7 +412,11 @@ export function BookingHistory() {
                 </div>
               ) : (
                 // Bookings list
-                filteredBookings.map((booking) => {
+                filteredBookings
+                .slice()
+                .reverse()
+                .map
+                ((booking) => {
                   const statusInfo = getStatusInfo(booking.status);
                   const isExpanded = expandedBookingId === booking.bookingId;
 

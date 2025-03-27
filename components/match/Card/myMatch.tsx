@@ -9,6 +9,7 @@ import MatchEditModal from "./FormEditMatch/MatchEditModal";
 import { getImageUrl } from "@/utils/getImage";
 import { formatTimestamp } from "@/utils/formatTimestamp";
 import matchApi from "@/service/matchApi";
+import { SonnerToast } from "@/components/sonnerMesage";
 
 interface CardMyMatchProps {
   match: MyGameResponse;
@@ -18,6 +19,10 @@ interface CardMyMatchProps {
 export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+  const data = localStorage.getItem("data");
+  const [toastData, setToastData] = useState<any>(null);
+  const parsedData = data ? JSON.parse(data) : null;
+  const userId = parsedData.id;
 
   const handleEditClick = () => {
     setIsEditModalOpen(true);
@@ -69,10 +74,6 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
   const performCancellation = async () => {
     try {
       setIsCancelling(true);
-      const data = localStorage.getItem("data");
-      const parsedData = data ? JSON.parse(data) : null;
-      const userId = parsedData.id;
-
       await toast.promise(matchApi.cancelGame(match.id, userId), {
         loading: "Cancelling match...",
         success: "Match cancelled successfully",
@@ -89,9 +90,37 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
       setIsCancelling(false);
     }
   };
+  const leaveMatch = async () => {
+    if (!match?.id || !userId) {
+      setToastData({
+        heading: "Error",
+        message: "Invalid match or user information!",
+        type: "error",
+      });
+      return;
+    }
+
+    try {
+      await matchApi.leaveGame(match.id, userId);
+      setToastData({
+        heading: "Success",
+        message: "You have successfully left the match!",
+        type: "success",
+      });
+    } catch (error) {
+      console.error("Error leaving match:", error);
+      setToastData({
+        heading: "Error",
+        message: "Failed to leave the match!",
+        type: "error",
+      });
+    }
+  };
+
 
   return (
     <>
+      {toastData && <SonnerToast toast={toastData} />}
       <div className="bg-white shadow-md rounded-lg overflow-hidden transition transform hover:scale-105 border border-gray-200 w-full mx-auto my-4">
         {/* Cover image section */}
         <div className="relative">
@@ -182,15 +211,9 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
             </button>
             <button
               className="bg-black text-white w-1/3 py-2 sm:py-3 sm:text-sm text-xs font-medium rounded hover:bg-gray-800"
-              onClick={() => {
-                if (match.conversationId) {
-                  window.location.href = `/conversation/${match.conversationId}`;
-                } else {
-                  toast.error("No conversation available");
-                }
-              }}
+              onClick={leaveMatch}
             >
-              MESSAGE
+              Leave match
             </button>
             <button
               className="border border-red-400 text-black w-1/3 py-2 sm:py-3 sm:text-sm text-xs font-medium rounded hover:bg-red-500 hover:text-white"

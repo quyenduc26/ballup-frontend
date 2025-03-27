@@ -1,7 +1,9 @@
+"use client";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Spinner } from "@heroui/react";
 
 import TeamCard from "./CardTeam";
-
 import teamApi from "@/service/teamCardApi";
 import { Team } from "@/types/form";
 
@@ -14,26 +16,61 @@ const ListTeamCard: React.FC<ListTeamCardProps> = ({ onTeamJoined }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // State to store search parameters
+  const [params, setParams] = useState<Record<string, string>>({
+    name: "",
+    address: "",
+    sport: "",
+  });
+
+  const searchParams = useSearchParams();
+
+  // Update params from URL
+  const updateParams = () => {
+    const newParams: Record<string, string> = {};
+
+    if (searchParams.get("name")) newParams.name = searchParams.get("name")!;
+    if (searchParams.get("address")) newParams.address = searchParams.get("address")!;
+    if (searchParams.get("sport")) newParams.sport = searchParams.get("sport")?.toUpperCase()!;
+
+    setParams(newParams);
+  };
+
+  // Fetch teams with search parameters
+  const fetchTeams = async () => {
+    setLoading(true);
+    try {
+      const response = await teamApi.getAllTeams(params);
+
+      console.log("Fetched teams:", response.data);
+      setTeams(response.data);
+      setError(null);
+    } catch (err: any) {
+      console.error("API error in getAllTeams:", err);
+      setError(err.response?.data?.message || "Failed to fetch teams");
+      setTeams([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Update params when search params change
   useEffect(() => {
-    const fetchTeams = async () => {
-      try {
-        const response = await teamApi.getAllTeams({ timestamp: Date.now() });
+    updateParams();
+  }, [searchParams]);
 
-        console.log("Fetched teams:", response.data);
-        setTeams(response.data);
-      } catch (err: any) {
-        console.error("API error in getAllTeams:", err);
-        setError(err.response?.data?.message || "Failed to fetch teams");
-      } finally {
-        setLoading(false);
-      }
-    };
-
+  // Fetch teams when params change
+  useEffect(() => {
     fetchTeams();
-  }, []);
+  }, [params]);
 
   if (loading)
-    return <p className="text-center text-gray-500 mt-6">Loading teams...</p>;
+    return (
+      <div className="flex justify-center items-center">
+        <Spinner className="mb-5" color="default" />
+      </div>
+    );
+
   if (error) return <p className="text-center text-red-500 mt-6">{error}</p>;
 
   return (

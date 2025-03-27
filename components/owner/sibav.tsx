@@ -60,6 +60,11 @@ export default function SibavSidebar() {
     }
   };
 
+  const handleLogOut = () => {
+    localStorage.removeItem("data"); 
+    window.location.href = "/auth/login"; 
+  }
+  
   const handleTabClick = async (tab: string) => {
     setActiveTab(tab);
     if (window.innerWidth < 768) {
@@ -125,11 +130,10 @@ export default function SibavSidebar() {
         )}
       </button>
       <div
-        className={`fixed md:static w-64 md:w-1/5 border-r border-gray-200 bg-white min-h-screen pl-5 pt-16 md:pt-10 transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        } z-40`}
+        className={`fixed md:static w-64 md:w-1/5 border-r border-gray-200 mb-10 bg-white min-h-screen pl-5 pt-16 md:pt-10 flex flex-col transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          } z-40`}
       >
-        <ul className="space-y-4">
+        <ul className="space-y-4 flex-grow">
           {[
             { key: "Field", label: "Manage Fields" },
             { key: "PaymentHistory", label: "Payment History" },
@@ -149,16 +153,13 @@ export default function SibavSidebar() {
               <Badge
                 color="danger"
                 content={
-                  badgeCount && badgeCount > 0
-                    ? badgeCount.toString()
-                    : undefined
+                  badgeCount && badgeCount > 0 ? badgeCount.toString() : undefined
                 }
                 placement="top-right"
               >
                 <button
-                  className={`w-full text-left font-bold uppercase p-2 text-sm md:text-base transition-colors hover:bg-blue-50 ${
-                    activeTab === key ? "text-blue bg-blue-50" : "text-gray-500"
-                  }`}
+                  className={`w-full text-left font-bold uppercase p-2 text-sm md:text-base transition-colors hover:bg-blue-50 ${activeTab === key ? "text-blue bg-blue-50" : "text-gray-500"
+                    }`}
                   onClick={() => handleTabClick(key)}
                 >
                   {label}
@@ -167,6 +168,14 @@ export default function SibavSidebar() {
             </li>
           ))}
         </ul>
+
+        {/* Log out button ở dưới cùng */}
+        <button
+          onClick={handleLogOut}
+          className=" p-2 text-center text-white font-semibold uppercase transition mr-5 rounded-md bg-red-500 hover:bg-red-600 "
+        >
+          Log out
+        </button>
       </div>
       <div className="flex-1 p-4 md:p-6 md:w-4/5 pt-16 md:pt-6">
         {activeTab === "Field" && <FieldList setActiveTab={setActiveTab} />}

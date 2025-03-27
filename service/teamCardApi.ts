@@ -1,7 +1,7 @@
 import api from "@/config/api";
 
 const TeamApi = {
-  getAllTeams: (params: any) => api.get(`/team`, { params }),
+  getAllTeams: (params?: Record<string, string>) => api.get(`/team`, { params }),
 
   joinTeam: (user_id: number, team_id: number) =>
     api.post(`/team/join?userId=${user_id}&teamId=${team_id}`),

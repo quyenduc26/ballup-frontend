@@ -1,8 +1,8 @@
+
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 import { Suspense } from "react";
-
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";

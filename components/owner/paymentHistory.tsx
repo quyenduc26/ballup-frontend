@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Card,
   Table,
@@ -7,70 +8,79 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/react";
+import { CompletedBookingResponse } from "@/types/api";
+import bookingRequestApi from "@/service/bookingRequestApi";
 
-import { SubPayment } from "@/types/owner";
 
-const subFields: SubPayment[] = [
-  {
-    id: "1",
-    name: "Winwin Field",
-    date: "Mar 1, 2023",
-    time: "10:30AM",
-    amount: 100,
-  },
-  {
-    id: "2",
-    name: "Winwin Field",
-    date: "Jan 26, 2023",
-    time: "7:00PM",
-    amount: 300,
-  },
-  {
-    id: "3",
-    name: "Winwin Field",
-    date: "Feb 12, 2033",
-    time: "8:00AM",
-    amount: 100,
-  },
-  {
-    id: "4",
-    name: "Winwin Field",
-    date: "Feb 12, 2033",
-    time: "5:00AM",
-    amount: 500,
-  },
-];
 
-export default function PaymentTable() {
+export default function CompletedBookingTable() {
+  const data = localStorage.getItem("data");
+  const parsedData = data ? JSON.parse(data) : null;
+  const ownerId = parsedData.id;
+  const [bookings, setBookings] = useState<CompletedBookingResponse[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const getBookings = async () => {
+      setLoading(true);
+      const completedBooking = await bookingRequestApi.getCompleted(ownerId);
+      setBookings(completedBooking.data);
+      setLoading(false);
+    };
+    getBookings();
+  }, []);
+
   return (
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Management Payment History</h1>
+      <h1 className="text-xl font-bold mb-4">Completed Bookings</h1>
       <Card className="p-4">
-        <Table>
-          {/* Table Header */}
-          <TableHeader>
-            <TableColumn>Field Name</TableColumn>
-            <TableColumn>Field Number</TableColumn>
-            <TableColumn>User</TableColumn>
-            <TableColumn>Date</TableColumn>
-            <TableColumn>Time</TableColumn>
-            <TableColumn>Amount</TableColumn>
-          </TableHeader>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <Table>
+            {/* Table Header */}
+            <TableHeader>
+              <TableColumn>Booking ID</TableColumn>
+              <TableColumn>Slot ID</TableColumn>
+              <TableColumn>Creator</TableColumn>
+              <TableColumn>Center Name</TableColumn>
+              <TableColumn>From</TableColumn>
+              <TableColumn>To</TableColumn>
+              <TableColumn>Amount</TableColumn>
+              <TableColumn>Created At</TableColumn>
+            </TableHeader>
 
-          {/* Table Body */}
-          <TableBody>
-            {subFields.map((sub, index) => (
-              <TableRow key={sub.id}>
-                <TableCell>{sub.name}</TableCell>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>-</TableCell>
-                <TableCell>{sub.date}</TableCell>
-                <TableCell>{sub.time}</TableCell>
-                <TableCell>{sub.amount.toLocaleString()} VND</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            {/* Table Body */}
+            <TableBody>
+              {bookings.length > 0 ? (
+                bookings.map((booking) => (
+                  <TableRow key={booking.id}>
+                    <TableCell>{booking.id}</TableCell>
+                    <TableCell>{booking.slotId}</TableCell>
+                    <TableCell>{booking.creator}</TableCell>
+                    <TableCell>{booking.centerName}</TableCell>
+                    <TableCell>
+                      {new Date(booking.fromTime).toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(booking.toTime).toLocaleString()}
+                    </TableCell>
+                    <TableCell>{booking.amount.toLocaleString()} VND</TableCell>
+                    <TableCell>
+                      {new Date(booking.createdAt).toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center">
+                    No completed bookings found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )}
       </Card>
     </div>
   );

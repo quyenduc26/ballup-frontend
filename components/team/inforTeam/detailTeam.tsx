@@ -7,8 +7,10 @@ import PlayerTable from "../inforTeam/tableTeam";
 
 import { DetailTeam } from "@/types/form";
 import TeamDetailApi from "@/service/teamDetail";
+import { useRouter } from "next/navigation";
 
-export default function TeamIntro({ teamDetail }: { teamDetail: DetailTeam }) {
+export default function TeamIntro({ teamDetail, setMyTeamIndex }: { teamDetail: DetailTeam, setMyTeamIndex?: (index: number | null) => void; }) {
+  const router = useRouter();
   const [teamData, setTeamData] = useState<DetailTeam | null>(teamDetail);
 
   useEffect(() => {
@@ -36,6 +38,17 @@ export default function TeamIntro({ teamDetail }: { teamDetail: DetailTeam }) {
 
   return (
     <div className="w-full mx-auto mt-10 p-4">
+      {/* Nút quay lại */}
+      <div className="flex w-full mb-6">
+        <button
+          className="bg-black text-white hover:bg-gray-500 hover:scale-105 transition py-2 px-6 rounded-md flex items-center justify-center"
+          onClick={() => setMyTeamIndex?.(null)}
+        >
+          <span>← Quay lại</span>
+        </button>
+      </div>
+
+      {/* Nội dung chính */}
       {teamData ? (
         <>
           <TeamHeader
@@ -55,5 +68,6 @@ export default function TeamIntro({ teamDetail }: { teamDetail: DetailTeam }) {
         </p>
       )}
     </div>
+
   );
 }

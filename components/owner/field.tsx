@@ -14,6 +14,7 @@ import ownerApi from "@/service/ownerApi";
 import PlayingSlot from "@/components/center/PlayingSlot";
 import EditCenterModal from "@/components/owner/edit-center-modal";
 import playingApi from "@/service/playingApi";
+import { getImageUrl } from "@/utils/getImage";
 
 type FieldListProps = {
   setActiveTab: (tab: string) => void;
@@ -91,7 +92,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
   };
 
   return (
-    <div className="w-full p-2 sm:p-4 lg:p-6">
+    <div className="w-full p-2 sm:p-4 lg:p-6 h-screen overflow-auto">
       <Toaster richColors position="top-center" />
       <div className="flex flex-col sm:flex-row justify-between mb-4 sm:mb-6">
         <h1 className="text-lg sm:text-xl font-bold mb-2 sm:mb-0">
@@ -114,7 +115,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
       </div>
 
       {/* Field List */}
-      <div className="space-y-3 mt-2">
+      <div className="space-y-3 mt-2 ">
         {fields.map((field, index) => (
           <Card key={index} className="overflow-hidden">
             <CardHeader className="p-0">
@@ -133,12 +134,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                 {/* Image */}
                 <div className="flex justify-center w-full sm:w-auto">
                   <div className="relative w-full max-w-[120px] sm:max-w-[176px] aspect-[16/9]">
-                    <Image
-                      fill
-                      alt={field.name}
-                      className="rounded-md object-cover"
-                      src={image || "/placeholder.svg"}
-                    />
+                    <img src={getImageUrl(field.imageUrls[0])} alt="" />
                   </div>
                 </div>
 
@@ -217,8 +213,8 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                             Night price
                           </span>
                         </div>
-                        <div className="text-right pr-4">
-                          <span className="text-xs font-medium">Actions</span>
+                        <div className="text-left pr-4">
+                          <span className="text-xs font-medium sm:text-sm ">Actions</span>
                         </div>
                       </div>
                     </div>
@@ -244,7 +240,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                             Night: {slot.nightPrice}
                           </span>
                         </div>
-                        <div className="text-right sm:pr-4">
+                        <div className="text-left sm:pr-4">
                           <PlayingSlot
                             action="UPDATE"
                             field={field}
