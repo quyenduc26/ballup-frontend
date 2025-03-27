@@ -8,10 +8,9 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/react";
+
 import { CompletedBookingResponse } from "@/types/api";
 import bookingRequestApi from "@/service/bookingRequestApi";
-
-
 
 export default function CompletedBookingTable() {
   const data = localStorage.getItem("data");
@@ -24,9 +23,11 @@ export default function CompletedBookingTable() {
     const getBookings = async () => {
       setLoading(true);
       const completedBooking = await bookingRequestApi.getCompleted(ownerId);
+
       setBookings(completedBooking.data);
       setLoading(false);
     };
+
     getBookings();
   }, []);
 
@@ -73,7 +74,7 @@ export default function CompletedBookingTable() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center">
+                  <TableCell className="text-center" colSpan={8}>
                     No completed bookings found.
                   </TableCell>
                 </TableRow>

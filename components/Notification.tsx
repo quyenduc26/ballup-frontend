@@ -151,12 +151,12 @@ export default function Notification() {
             {notifications.length > 0 ? (
               <div className="chat-box p-2 rounded-b-lg bg-white shadow-md max-h-[300px] overflow-y-auto">
                 {notifications.map((notification) => (
-                    <NotificationItem
-                      key={notification.id}
-                      notification={notification}
-                      onClickDetail={handleOnclickNotification}
-                    />
-                  ))}
+                  <NotificationItem
+                    key={notification.id}
+                    notification={notification}
+                    onClickDetail={handleOnclickNotification}
+                  />
+                ))}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center max-h-[250px] py-4 px-4 text-center bg-white rounded-b-lg">

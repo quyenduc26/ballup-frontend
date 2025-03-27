@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { Spinner } from "@heroui/react";
 
 import TeamCard from "./CardTeam";
+
 import teamApi from "@/service/teamCardApi";
 import { Team } from "@/types/form";
 
@@ -30,8 +31,10 @@ const ListTeamCard: React.FC<ListTeamCardProps> = ({ onTeamJoined }) => {
     const newParams: Record<string, string> = {};
 
     if (searchParams.get("name")) newParams.name = searchParams.get("name")!;
-    if (searchParams.get("address")) newParams.address = searchParams.get("address")!;
-    if (searchParams.get("sport")) newParams.sport = searchParams.get("sport")?.toUpperCase()!;
+    if (searchParams.get("address"))
+      newParams.address = searchParams.get("address")!;
+    if (searchParams.get("sport"))
+      newParams.sport = searchParams.get("sport")?.toUpperCase()!;
 
     setParams(newParams);
   };

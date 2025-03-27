@@ -146,7 +146,7 @@ const CreateTeam = ({ setIsOpen }: { setIsOpen: () => void }) => {
         });
 
         setTimeout(() => {
-          setIsOpen()
+          setIsOpen();
         }, 3000);
       }
     } catch (error) {

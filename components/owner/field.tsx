@@ -3,13 +3,11 @@ import type React from "react";
 import type { Field } from "@/types";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { ChevronDown, ChevronUp, Pencil, Trash2 } from "lucide-react";
 import { Card, CardHeader, CardBody } from "@heroui/react";
 import { Button } from "@heroui/react";
 import { toast, Toaster } from "sonner";
 
-import image from "@/public/images/image 3.png";
 import ownerApi from "@/service/ownerApi";
 import PlayingSlot from "@/components/center/PlayingSlot";
 import EditCenterModal from "@/components/owner/edit-center-modal";
@@ -134,7 +132,7 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                 {/* Image */}
                 <div className="flex justify-center w-full sm:w-auto">
                   <div className="relative w-full max-w-[120px] sm:max-w-[176px] aspect-[16/9]">
-                    <img src={getImageUrl(field.imageUrls[0])} alt="" />
+                    <img alt="" src={getImageUrl(field.imageUrls[0])} />
                   </div>
                 </div>
 
@@ -214,7 +212,9 @@ export const FieldList: React.FC<FieldListProps> = ({ setActiveTab }) => {
                           </span>
                         </div>
                         <div className="text-left pr-4">
-                          <span className="text-xs font-medium sm:text-sm ">Actions</span>
+                          <span className="text-xs font-medium sm:text-sm ">
+                            Actions
+                          </span>
                         </div>
                       </div>
                     </div>

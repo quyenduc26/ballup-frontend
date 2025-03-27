@@ -413,97 +413,97 @@ export function BookingHistory() {
               ) : (
                 // Bookings list
                 filteredBookings
-                .slice()
-                .reverse()
-                .map
-                ((booking) => {
-                  const statusInfo = getStatusInfo(booking.status);
-                  const isExpanded = expandedBookingId === booking.bookingId;
+                  .slice()
+                  .reverse()
+                  .map((booking) => {
+                    const statusInfo = getStatusInfo(booking.status);
+                    const isExpanded = expandedBookingId === booking.bookingId;
 
-                  return (
-                    <div
-                      key={booking.bookingId}
-                      className="border border-gray-200 rounded-lg overflow-hidden shadow-sm transition-all duration-200 hover:shadow-md"
-                    >
-                      <div className="p-4">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="font-medium text-gray-900 text-lg">
-                              {booking.centerName}
-                            </h3>
-                            <p className="text-gray-600 text-sm mt-0.5">
-                              {booking.slotName}
-                            </p>
+                    return (
+                      <div
+                        key={booking.bookingId}
+                        className="border border-gray-200 rounded-lg overflow-hidden shadow-sm transition-all duration-200 hover:shadow-md"
+                      >
+                        <div className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <h3 className="font-medium text-gray-900 text-lg">
+                                {booking.centerName}
+                              </h3>
+                              <p className="text-gray-600 text-sm mt-0.5">
+                                {booking.slotName}
+                              </p>
+                            </div>
+                            <span
+                              className={`px-2.5 py-1 text-xs rounded-full flex items-center font-semibold ${statusInfo.color}`}
+                            >
+                              {statusInfo.icon}
+                              {booking.status}
+                            </span>
                           </div>
-                          <span
-                            className={`px-2.5 py-1 text-xs rounded-full flex items-center font-semibold ${statusInfo.color}`}
-                          >
-                            {statusInfo.icon}
-                            {booking.status}
-                          </span>
+
+                          <div className="mt-3 space-y-2">
+                            <div className="flex items-center text-sm text-gray-600">
+                              <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
+                              {formatTimestamp(booking.fromTime)?.slice(9)}
+                            </div>
+                            <div className="flex items-center text-sm text-gray-600">
+                              <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
+                              {formatTimestamp(booking.fromTime)?.slice(
+                                0,
+                                8,
+                              )} -{" "}
+                              {formatTimestamp(booking.toTime)?.slice(0, 8)}
+                            </div>
+                          </div>
+
+                          {/* Action buttons based on status */}
+                          {renderActionButtons(booking)}
+
+                          {/* Expanded details */}
+                          {isExpanded && (
+                            <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                              <div className="flex items-start">
+                                <MapPin className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0 text-gray-500" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900">
+                                    Center Address
+                                  </div>
+                                  <div className="text-sm text-gray-600">
+                                    {booking.centerAddress}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="flex items-start">
+                                <User className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0 text-gray-500" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900">
+                                    User
+                                  </div>
+                                  <div className="text-sm text-gray-600">
+                                    {booking.user}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="flex items-start">
+                                <CreditCard className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0 text-gray-500" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900">
+                                    Amount
+                                  </div>
+                                  <div className="text-sm text-gray-600">
+                                    {formatCurrency(booking.amount)}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </div>
-
-                        <div className="mt-3 space-y-2">
-                          <div className="flex items-center text-sm text-gray-600">
-                            <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
-                            {formatTimestamp(booking.fromTime)?.slice(9)}
-                          </div>
-                          <div className="flex items-center text-sm text-gray-600">
-                            <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
-                            {formatTimestamp(booking.fromTime)?.slice(
-                              0,
-                              8,
-                            )} - {formatTimestamp(booking.toTime)?.slice(0, 8)}
-                          </div>
-                        </div>
-
-                        {/* Action buttons based on status */}
-                        {renderActionButtons(booking)}
-
-                        {/* Expanded details */}
-                        {isExpanded && (
-                          <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
-                            <div className="flex items-start">
-                              <MapPin className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0 text-gray-500" />
-                              <div>
-                                <div className="text-sm font-medium text-gray-900">
-                                  Center Address
-                                </div>
-                                <div className="text-sm text-gray-600">
-                                  {booking.centerAddress}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="flex items-start">
-                              <User className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0 text-gray-500" />
-                              <div>
-                                <div className="text-sm font-medium text-gray-900">
-                                  User
-                                </div>
-                                <div className="text-sm text-gray-600">
-                                  {booking.user}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="flex items-start">
-                              <CreditCard className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0 text-gray-500" />
-                              <div>
-                                <div className="text-sm font-medium text-gray-900">
-                                  Amount
-                                </div>
-                                <div className="text-sm text-gray-600">
-                                  {formatCurrency(booking.amount)}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
                       </div>
-                    </div>
-                  );
-                })
+                    );
+                  })
               )}
             </div>
           </div>

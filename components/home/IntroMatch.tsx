@@ -36,7 +36,9 @@ export default function MatchSection({ matches }: { matches: GameResponse[] }) {
                 className="w-[30px] sm:w-[35px] transition-transform duration-300 
                           group-hover:text-white group-hover:translate-y-[-2px]"
               />
-              <span className="transition-colors duration-300 group-hover:text-white">SEE MORE</span>
+              <span className="transition-colors duration-300 group-hover:text-white">
+                SEE MORE
+              </span>
             </button>
           </div>
         </div>

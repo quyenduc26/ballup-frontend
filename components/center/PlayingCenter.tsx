@@ -151,7 +151,7 @@ export const PlayingCenter: React.FC<PlayingCenterProps> = ({
       });
 
       setTimeout(() => {
-        setActiveTab("Field")
+        setActiveTab("Field");
       }, 3000);
     } catch (error) {
       console.error("API Error:", error);

@@ -38,7 +38,6 @@ export type Error = {
   message: string;
 };
 
-
 export type CompletedBookingResponse = {
   id: number;
   slotId: number;

@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Button } from "@heroui/react";
+import { Alert } from "@heroui/react";
 
 import { NotificationType } from "@/types/common";
 import { getNotificationData } from "@/utils/getNotificationType";

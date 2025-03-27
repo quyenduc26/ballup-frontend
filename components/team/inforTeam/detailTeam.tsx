@@ -1,15 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import TeamHeader from "../inforTeam/intro";
 import PlayerTable from "../inforTeam/tableTeam";
 
 import { DetailTeam } from "@/types/form";
 import TeamDetailApi from "@/service/teamDetail";
-import { useRouter } from "next/navigation";
 
-export default function TeamIntro({ teamDetail, setMyTeamIndex }: { teamDetail: DetailTeam, setMyTeamIndex?: (index: number | null) => void; }) {
+export default function TeamIntro({
+  teamDetail,
+  setMyTeamIndex,
+}: {
+  teamDetail: DetailTeam;
+  setMyTeamIndex?: (index: number | null) => void;
+}) {
   const router = useRouter();
   const [teamData, setTeamData] = useState<DetailTeam | null>(teamDetail);
 
@@ -68,6 +74,5 @@ export default function TeamIntro({ teamDetail, setMyTeamIndex }: { teamDetail: 
         </p>
       )}
     </div>
-
   );
 }

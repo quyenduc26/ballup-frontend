@@ -97,6 +97,7 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
         message: "Invalid match or user information!",
         type: "error",
       });
+
       return;
     }
 
@@ -116,7 +117,6 @@ export default function CardMyMatch({ match, onUpdate }: CardMyMatchProps) {
       });
     }
   };
-
 
   return (
     <>

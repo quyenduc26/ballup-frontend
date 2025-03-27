@@ -25,6 +25,7 @@ const Header = () => {
         setIsLoggedIn(false);
         setAvatar(null);
         setRole(null);
+
         return;
       }
 
