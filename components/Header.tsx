@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AlignJustify, X } from "lucide-react";
+import { getImageUrl } from "@/utils/getImage";
 
 const Notification = dynamic(() => import("@/components/Notification"), {
   ssr: false,
@@ -156,7 +157,7 @@ const Header = () => {
               <img
                 alt="User Avatar"
                 className="w-14 h-14 rounded-full object-cover mr-12"
-                src={avatarSrc}
+                src={getImageUrl(avatarSrc)}
               />
             </Link>
           ) : (

@@ -164,7 +164,7 @@ export default function ModernProfileLayout() {
                     className="object-cover w-full h-full"
                     src={
                       editedUser?.avatar
-                        ? `${editedUser.avatar}?t=${new Date().getTime()}`
+                        ? getImageUrl(editedUser.avatar)
                         : "/images/userProfile.png"
                     }
                   />
