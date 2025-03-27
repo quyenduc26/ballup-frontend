@@ -29,6 +29,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isSavingPass, setIsSavingPass] = useState(false);
   const [toastData, setToastData] = useState<any>(null);
 
   const toggleOldPasswordVisibility = (e: React.MouseEvent) => {
@@ -115,7 +116,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
       return;
     }
 
-    setIsSaving(true);
+    setIsSavingPass(true);
     try {
       await userApi.changePassword(editedUser.id, {
         oldPassword: editedUser.oldPassword,
@@ -150,7 +151,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
         setToastData({ type: "error", message: "Failed to change password." });
       }
     } finally {
-      setIsSaving(false);
+      setIsSavingPass(false);
     }
   };
 
@@ -346,10 +347,10 @@ const EditProfile: React.FC<EditProfileProps> = ({
           <div className="flex justify-end space-x-3 pt-4">
             <button
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-              disabled={isSaving}
+              disabled={isSavingPass}
               onClick={handleChangePassword}
             >
-              {isSaving ? "Changing..." : "Save Password"}
+              {isSavingPass ? "Changing..." : "Save Password"}
             </button>
           </div>
         </div>
