@@ -134,7 +134,7 @@ const BookingDetail = ({ centerInfor }: { centerInfor: FieldDetailType }) => {
           <div className="flex-1 space-y-4">
             <img
               alt="Main field"
-              className="rounded-xl w-full h-[650px] object-cover shadow-lg"
+              className="rounded-xl w-full h-[400px] object-cover shadow-lg"
               src={
                 getImageUrl(centerInfor.imageUrls?.[0]) || "/images/default.png"
               }
