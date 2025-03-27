@@ -19,7 +19,7 @@ export default function ListMyTeam({
     return <p>Dữ liệu listMyTeam là null</p>;
   }
   if (listMyTeam.length === 0) {
-    return <p>Danh sách đội trống</p>;
+    return <p className="w-full text-center">Danh sách đội trống</p>;
   }
   console.log(
     "Members of each team:",

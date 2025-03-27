@@ -17,13 +17,19 @@ const Team = () => {
   const [myTeams, setMyTeams] = useState<DetailTeam[] | null>(null);
   const [myTeamIndex, setMyTeamIndex] = useState<number | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
+  // State lưu trữ các params
+    const [params, setParams] = useState<Record<string, string>>({
+      name: "",
+      address: "",
+      sport: "",
+    });
 
   const handleSetMyTeamIndex = (index: number | null) => {
     console.log(index);
     if (!myTeams) return;
 
     setMyTeamIndex(index);
-    if(index != null) {
+    if (index != null) {
       const teamId = myTeams[index]?.id;
       if (teamId) {
         localStorage.setItem("teamId", teamId.toString());
@@ -64,9 +70,8 @@ const Team = () => {
 
       <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 md:gap-8 p-5 ml-2">
         <button
-          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${
-            showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
-          }`}
+          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
+            }`}
           onClick={() => {
             setShowExplore(true);
             console.log("Switching to EXPLORE");
@@ -75,9 +80,8 @@ const Team = () => {
           EXPLORE
         </button>
         <button
-          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${
-            !showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
-          }`}
+          className={`text-lg md:text-2xl font-semibold transition-all hover:underline ${!showExplore ? "text-blue-500" : "text-black hover:text-blue-500"
+            }`}
           onClick={() => {
             const teamIdFromStorage = localStorage.getItem("joinedTeamId");
 
@@ -98,9 +102,12 @@ const Team = () => {
         </button>
       </div>
 
-      <div className="flex justify-center">
-        <SearchBar />
-      </div>
+      {showExplore && (
+        <div className="flex justify-center">
+          <SearchBar />
+        </div>
+      )}
+
 
       {showCreateTeam ? (
         <CreateTeam setIsOpen={() => setShowCreateTeam(false)} />
@@ -114,7 +121,7 @@ const Team = () => {
           setMyTeamIndex={handleSetMyTeamIndex}
         />
       ) : myTeams && myTeamIndex !== null && myTeamIndex < myTeams.length ? (
-        <TeamIntro teamDetail={myTeams[myTeamIndex]}  setMyTeamIndex={handleSetMyTeamIndex} />
+        <TeamIntro teamDetail={myTeams[myTeamIndex]} setMyTeamIndex={handleSetMyTeamIndex} />
       ) : (
         <p>Danh sách đội trống hoặc chưa tải xong!</p>
       )}

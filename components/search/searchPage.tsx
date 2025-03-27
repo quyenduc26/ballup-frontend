@@ -81,18 +81,6 @@ const SearchBar = () => {
           <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white w-4 h-4 pointer-events-none" />
         </div>
 
-        <div className="relative w-full md:w-[150px] flex-1">
-          <select
-            className="p-2 md:p-3 border border-gray-300 rounded-md bg-black text-white shadow-sm cursor-pointer w-full appearance-none pr-8"
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-          >
-            <option value="">SORT</option>
-            <option value="ASC">Ascending</option>
-            <option value="DESC">Descending</option>
-          </select>
-          <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white w-4 h-4 pointer-events-none" />
-        </div>
       </div>
     </div>
   );

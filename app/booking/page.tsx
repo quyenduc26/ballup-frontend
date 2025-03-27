@@ -21,7 +21,6 @@ export default function Booking() {
     fromTime: "",
     toTime: "",
     sport: "",
-    sort: "",
   });
 
   // State kiểm tra quá trình tải dữ liệu
