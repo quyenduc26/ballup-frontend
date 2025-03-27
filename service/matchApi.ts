@@ -4,8 +4,8 @@ import { CreateMatchType, PlayingCenterType } from "@/types";
 const matchApi = {
   createMatch: (formData: CreateMatchType) =>
     api.post("/game/create", formData),
-  getPlayingCenter: (formData: PlayingCenterType) =>
-    api.get("/center", { params: formData }),
+  getPlayingCenterBySport: ( sportType: string) =>
+    api.get(`/center?sport=${sportType}`),
   getPlayingSlot: (id: number) => api.get(`/center/${id}/slot`),
   checkSlotAvailability: (slotId: number, fromTime: number, toTime: number) =>
     api.get(`/unavailable-slot/check/${slotId}`, {

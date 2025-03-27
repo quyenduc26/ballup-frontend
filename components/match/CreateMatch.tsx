@@ -155,16 +155,7 @@ export default function CreateMatch() {
   const fetchPlayingCenters = async (sportType: string) => {
     try {
       setLoading(true);
-      const playingCenterParams: PlayingCenterType = {
-        id: 0,
-        name: "",
-        address: "",
-        description: "",
-        images: [],
-        ownerId: 0,
-        centerType: "",
-      };
-      const response = await matchApi.getPlayingCenter(playingCenterParams);
+      const response = await matchApi.getPlayingCenterBySport(sportType);
 
       if (response.data && Array.isArray(response.data)) {
         setPlayingCenters(response.data);
@@ -328,7 +319,7 @@ export default function CreateMatch() {
       }
     } catch (error) {
       console.error("Error fetching team data:", error);
-      toast.error("Unable to load team information. Please try again.");
+      toast.error("Your team may not has the same type");
     } finally {
       setLoading(false);
     }
