@@ -25,12 +25,19 @@ export default function MatchSection({ matches }: { matches: GameResponse[] }) {
             </h2>
           </div>
           <div className=" w-[200px] sm:w-[200px] flex items-center">
-            <button
-              className="flex items-center gap-2 text-sm sm:text-lg text-black border border-gray-300 px-6 py-4 rounded-lg hover:bg-gray-100"
-              onClick={handleSeeMore}
-            >
-              <FiExternalLink className="w-[30px] sm:w" /> SEE MORE
-            </button>
+              <button
+      className="group flex items-center gap-2 text-sm sm:text-lg text-black border border-gray-300 
+                px-6 py-4 rounded-lg bg-white hover:bg-gradient-to-r hover:from-orange-400 
+                hover:to-yellow-300 shadow-md transition-all duration-300 
+                hover:shadow-lg hover:scale-105 active:scale-100"
+      onClick={handleSeeMore}
+    >
+      <FiExternalLink
+        className="w-[30px] sm:w-[35px] transition-transform duration-300 
+                              group-hover:text-white group-hover:translate-y-[-2px]"
+      />
+      <span className="transition-colors duration-300 group-hover:text-white">SEE MORE</span>
+    </button>
           </div>
         </div>
       </div>
