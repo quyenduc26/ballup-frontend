@@ -177,12 +177,12 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
         </div>
 
         <div className="flex space-x-2 mt-4 md:mt-0">
-          <button className="bg-black text-white px-4 md:px-6 py-2 font-medium">
+          {/* <button className="bg-black text-white px-4 md:px-6 py-2 font-medium">
             CHAT
           </button>
           <button className="border border-gray-300 bg-white text-black px-4 md:px-6 py-2 font-medium">
             LIKE
-          </button>
+          </button> */}
 
           <div className="relative">
             <button
@@ -196,12 +196,12 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({
             {showOptions && (
               <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-md">
                 {/* Khi nhấn Edit sẽ gọi hanUpdateForm */}
-                <button
+                {/* <button
                   className="block w-full px-4 py-2 text-left hover:bg-gray-100"
                   onClick={hanUpdateForm}
                 >
                   Edit
-                </button>
+                </button> */}
                 <button
                   className="block w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100"
                   onClick={handleDeleteTeam}

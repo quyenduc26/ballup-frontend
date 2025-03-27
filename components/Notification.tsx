@@ -150,10 +150,7 @@ export default function Notification() {
 
             {notifications.length > 0 ? (
               <div className="chat-box p-2 rounded-b-lg bg-white shadow-md max-h-[300px] overflow-y-auto">
-                {notifications
-                  .slice()
-                  .reverse()
-                  .map((notification) => (
+                {notifications.map((notification) => (
                     <NotificationItem
                       key={notification.id}
                       notification={notification}
