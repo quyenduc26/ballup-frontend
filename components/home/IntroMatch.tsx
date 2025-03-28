@@ -43,7 +43,7 @@ export default function MatchSection({ matches }: { matches: GameResponse[] }) {
           </div>
         </div>
       </div>
-      <div className="flex justify-between">
+      <div className="grid grid-cols-2 gap-4">
         {matches.map((match, index) => (
           <MatchCard key={index} match={match} />
         ))}
